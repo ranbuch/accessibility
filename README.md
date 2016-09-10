@@ -31,8 +31,8 @@ initialize component:
 }, false);`
 
 ###multi language example:
-`
-var labels = {
+
+`var labels = {
     menuTitle: 'title (in my language)',
     increaseText: 'increase text size (in my language)',
     decreaseText: 'decrease text size (in my language)',
@@ -41,11 +41,8 @@ var labels = {
     underlineLinks: 'underline links (in my language)',
     textToSpeech: 'text to speech (in my language)'
 };
-
 var options = {labels};
-
-window.Accessibility.init(options);
-`
+window.Accessibility.init(options);`
 
 ###LIMITATIONS:
 * works with html5 brousers only (no IE8 and below)
