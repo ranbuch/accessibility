@@ -1,0 +1,32 @@
+{
+  "name": "accessibility",
+  "version": "0.0.1",
+  "description": "add accessibility to your website",
+  "main": "accessibility.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel src -d dist"
+  },
+  "keywords": [
+    "accessibility",
+    "website",
+    "increase",
+    "text",
+    "size",
+    "underline",
+    "links",
+    "text",
+    "to",
+    "speech",
+    "invert",
+    "colors"
+  ],
+  "author": "Ran Buchnik <ranbuch@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-cli": "^6.14.0",
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "webpack": "^1.13.2"
+  }
+}
