@@ -1,8 +1,10 @@
 # accessibility
-add accessibility to your website
+add accessibility toolbar to your website with one line of code.
+
+![Alt text](/accessibility.png "Optional Title")
 
 ### alpha version!
-  * first copy and past /dist/accessibility.min.js to your site (with dev tools)
+  * first copy and past /dist/accessibility.min.js to your site (via dev tools)
   * then enter window.Accessibility.init();
   * works for your site? use it! not working? open an issue or request a feature
 
@@ -39,10 +41,11 @@ var labels = {
     underlineLinks: 'underline links (in my language)',
     textToSpeech: 'text to speech (in my language)'
 };
+
 var options = {labels};
+
 window.Accessibility.init(options);
 `
 
 ###LIMITATIONS:
 * works with html5 brousers only (no IE8 and below)
-
