@@ -14,6 +14,9 @@ add accessibility to your website
 * underline links
 * text to speech 
 
+Does not require any other directory (jQuery not needed).
+Easy to use!
+
 ###USAGE:
 
 `npm install accessibility`
@@ -25,7 +28,8 @@ initialize component:
     window.Accessibility.init();
 }, false);`
 
-###multi language?
+###multi language example:
+`
 var labels = {
     menuTitle: 'title (in my language)',
     increaseText: 'increase text size (in my language)',
@@ -37,3 +41,8 @@ var labels = {
 };
 var options = {labels};
 window.Accessibility.init(options);
+`
+
+###LIMITATIONS:
+* works with html5 brousers only (no IE8 and below)
+
