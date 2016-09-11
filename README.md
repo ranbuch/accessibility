@@ -41,7 +41,7 @@ initialize component:
     underlineLinks: 'underline links (in my language)',
     textToSpeech: 'text to speech (in my language)'
 };
-var options = {labels};
+var options = { labels: labels };
 window.Accessibility.init(options);`
 
 ###LIMITATIONS:
