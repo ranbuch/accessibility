@@ -36,6 +36,15 @@
             grayHues: 'gray hues',
             underlineLinks: 'underline links',
             textToSpeech: 'text to speech'
+        },
+        textToSpeechLang: 'en-US',
+        modules: {
+            increaseText: true,
+            decreaseText: true,
+            invertColors: true,
+            grayHues: true,
+            underlineLinks: true,
+            textToSpeech: true
         }
     };
 
@@ -206,10 +215,14 @@
             border-radius: 4px;
             transition-duration: .3s;
             font-size: 18px !important;
+            text-indent: 5px;
         }
         ._access-menu ul li:hover, ._access-menu ul li.active {
             color: #fff;
             background-color: #000;
+        }
+        ._access-menu ul li.not-supported {
+            display: none;
         }
         ._access-menu ul li:before {
             content: ' ';
@@ -228,6 +241,7 @@
             left: 8px;
             position: absolute;
             color: rgba(100,100,100,0.7);
+            text-indent: -5px;
         }
         ._access-menu ul li:hover:before, ._access-menu ul li.active:before {
             color: rgba(200,200,200,0.7);
@@ -419,7 +433,7 @@
         closeBtn.addEventListener('click', toggleMenu, false);
         let resetBtn = document.querySelector('._access-menu ._menu-reset-btn');
         resetBtn.addEventListener('click', resetAll, false);
-        
+
         return menuElem;
     }
 
@@ -473,6 +487,23 @@
     let textToSpeech = (text) => {
         if (!SpeechSynthesisUtterance || !window.speechSynthesis) return;
         let msg = new SpeechSynthesisUtterance(text);
+        msg.lang = options.textToSpeechLang;
+        let voices = window.speechSynthesis.getVoices();
+        let isLngSupported = false;
+        for (let i = 0; i < voices.length; i++) {
+            if (voices[i].lang === msg.lang) {
+                msg.voice = voices[i];
+                isLngSupported = true;
+                break;
+            }
+        }
+        if (!isLngSupported) {
+            let msg = 'text to speech language not supported!';
+            if (console.warn)
+                console.warn(msg);
+            else
+                console.log(msg);
+        }
         window.speechSynthesis.speak(msg);
     };
 
@@ -578,11 +609,37 @@
         }
     };
 
+    let disableUnsupportedModules = () => {
+        for (let i in options.modules) {
+            if (!options.modules[i]) {
+                let moduleLi = document.querySelector('li[data-access-action="' + i + '"]');
+                if (moduleLi) {
+                    moduleLi.classList.add('not-supported');
+                }
+            }
+        }
+    };
+
+    let setMinHeight = () => {
+        try {
+            let lis = document.querySelectorAll('._access-menu ul li.not-supported');
+            let lih = 52 * lis.length;
+            if (lih) {
+                let menu = document.querySelector('._access-menu');
+                let mh = getComputedStyle(menu).minHeight.replace('px', '') * 1;
+                menu.style.minHeight = (mh - lih) + 'px';
+            }
+        }
+        catch (e) { }
+    };
+
     let init = function () {
         injectCss();
         injectIcon();
         injectMenu();
         addListeners();
+        disableUnsupportedModules();
+        setMinHeight();
 
         icon.addEventListener('click', toggleMenu, false);
     };
