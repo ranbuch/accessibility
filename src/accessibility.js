@@ -1,5 +1,5 @@
 'use strict';
-//import common from './common';
+import common from './common';
 
 (function () {
     let body = document.body || document.getElementsByTagName('body')[0];
@@ -7,77 +7,7 @@
     let icon = null;
 
     window.Accessibility = {};
-
-    let common = {
-        jsonToHtml: (obj, reasource) => {
-            let elm = document.createElement(obj.type);
-            for (let i in obj.attrs) {
-                if (i.indexOf('#') === 0 && reasource)
-                    elm.setAttribute(obj.attrs[i], reasource[i.substring(1)]);
-                else
-                    elm.setAttribute(i, obj.attrs[i]);
-            }
-            for (let i in obj.children) {
-                let newElem = null;
-                if (obj.children[i].type == '#text') {
-                    if (obj.children[i].text.indexOf('#') == 0)
-                        newElem = document.createTextNode(reasource[obj.children[i].text.substring(1)])
-                    else
-                        newElem = document.createTextNode(obj.children[i].text);
-                }
-                else
-                    newElem = common.jsonToHtml(obj.children[i], reasource);
-                if ((newElem && newElem.tagName && newElem.tagName.toLowerCase() !== 'undefined') || newElem.nodeType == 3)
-                    elm.appendChild(newElem);
-            }
-            return elm;
-        },
-        injectStyle: (css, innerOptions = {}) => {
-            let sheet = document.createElement('style');
-            sheet.appendChild(document.createTextNode(css));
-            if (innerOptions.className)
-                sheet.classList.add(innerOptions.className);
-            body.appendChild(sheet);
-        },
-        getFormattedDim: (value) => {
-            if (!value) return null;
-
-            value = String(value);
-
-            let returnBySufix = function (val, sufix) {
-                return {
-                    size: val.substring(0, val.indexOf(sufix)),
-                    sufix: sufix
-                }
-            }
-
-            if (value.indexOf('%') > -1)
-                return returnBySufix(value, '%');
-            if (value.indexOf('px') > -1)
-                return returnBySufix(value, 'px');
-            if (value.indexOf('em') > -1)
-                return returnBySufix(value, 'em');
-            if (value.indexOf('rem') > -1)
-                return returnBySufix(value, 'rem');
-            if (value.indexOf('pt') > -1)
-                return returnBySufix(value, 'pt');
-            if (value == 'auto')
-                return returnBySufix(value, '');
-        },
-        extend: (src, dest) => {
-            for (let i in src) {
-                if (typeof src[i] === 'object') {
-                    if (dest && dest[i])
-                        src[i] = common.extend(src[i], dest[i]);
-                }
-                else if (typeof dest === 'object' && typeof dest[i] !== 'undefined') {
-                    src[i] = dest[i];
-                }
-            }
-            return src;
-        }
-    };
-
+    
     let options = {
         icon: {
             position: {
@@ -136,6 +66,8 @@
             background-repeat: no-repeat;
             background-size: contain;
             cursor: pointer;
+            opacity: 0;
+            transition-duration: .5s;
         }
         ._access-menu {
             position: fixed;
@@ -184,6 +116,7 @@
             font-size: 24px !important; 
             margin-top: 20px;
             margin-bottom: 20px;
+            padding: 0;
         }
         ._access-menu ._menu-close-btn {
             left: 5px;
@@ -204,6 +137,7 @@
             padding: 0;
             position: relative;
             font-size: 18px !important;
+            margin: 0;
         }
         ._access-menu ul li {
             list-style-type: none;
@@ -220,13 +154,13 @@
             font-size: 18px !important;
             text-indent: 5px;
         }
-        ._access-menu ul li.active {
+        ._access-menu ul li.active, ._access-menu ul li.active:hover {
             color: #fff;
             background-color: #000;
         }
         ._access-menu ul li:hover {
             color: #fff;
-            background-color: #333;
+            background-color: #444;
         }
         ._access-menu ul li.not-supported {
             display: none;
@@ -248,7 +182,6 @@
             left: 8px;
             position: absolute;
             color: rgba(100,100,100,0.7);
-            text-indent: -5px;
         }
         ._access-menu ul li:hover:before, ._access-menu ul li.active:before {
             color: rgba(200,200,200,0.7);
@@ -649,6 +582,9 @@
         setMinHeight();
 
         icon.addEventListener('click', toggleMenu, false);
+        setTimeout(() => {
+            icon.style.opacity = '1';
+        }, 10);
     };
 
     window.Accessibility.init = function (_options) {

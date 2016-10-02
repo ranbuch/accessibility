@@ -1,3 +1,6 @@
+'use strict';
+let body = document.body || document.getElementsByTagName('body')[0];
+
 let common = {
     jsonToHtml: (obj, reasource) => {
         let elm = document.createElement(obj.type);
