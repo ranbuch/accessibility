@@ -1,5 +1,5 @@
-# accessibility
-add accessibility toolbar to your website with one line of code.
+# Accessibility
+>Add **accessibility toolbar** to your website with one line of code!
 
 ![Alt text](https://raw.githubusercontent.com/ranbuch/accessibility/master/accessibility.png "accessibility icon")
 
@@ -8,55 +8,59 @@ add accessibility toolbar to your website with one line of code.
   * then enter `window.Accessibility.init();`
   * works for your site? use it! not working? open an issue or request a feature
 
-###DESCRIPTION:
-* increase text size
-* decrease text size
-* invert colors
-* gray hues
-* underline links
-* text to speech 
+### DESCRIPTION:
+**Features:**
+- [x]  increase text size
+- [x]  decrease text size
+- [x]  invert colors
+- [x]  gray hues
+- [x]  underline links
+- [x]  text to speech 
 
-Does not require any other directory (jQuery not needed).
+>Does not depend any other directory (**jQuery is not required**).  
 Easy to use!
 
-###USAGE:
+### USAGE:
 
 `npm install accessibility`
 
-include script:
-`<script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"></script>`
-initialize component:
+include script:  
+`<script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"></script>`  
+initialize component:  
 `window.addEventListener('load', function() {
     window.Accessibility.init();
 }, false);`
 
-###LIMITATIONS:
-* works with html5 brousers only (no IE8 and below)
-* text to speech works in supported brousers and languages only
+### LIMITATIONS:
+* Works with html5 brousers only (no IE8 and below)
+* Text to speech works in supported brousers and languages only
 
-###multi language example:
+### multi language example:
 
-`var labels = {
-    menuTitle: 'title (in my language)',
+`var labels = {`  
+    `menuTitle: 'title (in my language)',
     increaseText: 'increase text size (in my language)',
     decreaseText: 'decrease text size (in my language)',
     invertColors: 'invert colors (in my language)',
     grayHues: 'gray hues (in my language)',
     underlineLinks: 'underline links (in my language)',
-    textToSpeech: 'text to speech (in my language)'
-};
-var options = { labels: labels };
-options.textToSpeechLang = 'en-US'; // or any other language
-window.Accessibility.init(options);`
+    textToSpeech: 'text to speech (in my language)'`  
+    
+`};`  
 
-###disable features example:
-`options.modules = {
-    increaseText: [true/false],
-    decreaseText: [true/false],
-    invertColors: [true/false],
-    grayHues: [true/false],
-    underlineLinks: [true/false],
-    textToSpeech: [true/false]
-};`
+`var options = { labels: labels };`  
+`options.textToSpeechLang = 'en-US'; // or any other language`  
+`window.Accessibility.init(options);`
 
-when the default is true
+### disable features example:  
+`options.modules = {`  
+    `increaseText: [true/false],`  
+    `decreaseText: [true/false],`  
+    `invertColors: [true/false],`  
+    `grayHues: [true/false],`  
+    `underlineLinks: [true/false],`  
+    `textToSpeech: [true/false]`
+    
+`};`
+
+>When the default is **true**

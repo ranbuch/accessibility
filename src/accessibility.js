@@ -1,4 +1,5 @@
 'use strict';
+//import common from './common';
 
 (function () {
     let body = document.body || document.getElementsByTagName('body')[0];
@@ -6,47 +7,6 @@
     let icon = null;
 
     window.Accessibility = {};
-
-    let options = {
-        icon: {
-            position: {
-                bottom: { size: 50, units: 'px' },
-                right: { size: 0, units: 'px' }
-            },
-            dimensions: {
-                width: { size: 50, units: 'px' },
-                height: { size: 50, units: 'px' }
-            },
-            zIndex: '9999',
-            backgroundColor: '#4054b2',
-            color: '#fff'
-        },
-        menu: {
-            dimensions: {
-                width: { size: 25, units: 'vw' },
-                height: { size: 25, units: 'vw' }
-            },
-            fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
-        },
-        labels: {
-            menuTitle: 'Accessibility Options',
-            increaseText: 'increase text size',
-            decreaseText: 'decrease text size',
-            invertColors: 'invert colors',
-            grayHues: 'gray hues',
-            underlineLinks: 'underline links',
-            textToSpeech: 'text to speech'
-        },
-        textToSpeechLang: 'en-US',
-        modules: {
-            increaseText: true,
-            decreaseText: true,
-            invertColors: true,
-            grayHues: true,
-            underlineLinks: true,
-            textToSpeech: true
-        }
-    };
 
     let common = {
         jsonToHtml: (obj, reasource) => {
@@ -110,13 +70,56 @@
                     if (dest && dest[i])
                         src[i] = common.extend(src[i], dest[i]);
                 }
-                else if (typeof dest[i] !== 'undefined') {
+                else if (typeof dest === 'object' && typeof dest[i] !== 'undefined') {
                     src[i] = dest[i];
                 }
             }
             return src;
         }
     };
+
+    let options = {
+        icon: {
+            position: {
+                bottom: { size: 50, units: 'px' },
+                right: { size: 0, units: 'px' }
+            },
+            dimensions: {
+                width: { size: 50, units: 'px' },
+                height: { size: 50, units: 'px' }
+            },
+            zIndex: '9999',
+            backgroundColor: '#4054b2',
+            color: '#fff'
+        },
+        menu: {
+            dimensions: {
+                width: { size: 25, units: 'vw' },
+                height: { size: 25, units: 'vw' }
+            },
+            fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
+        },
+        labels: {
+            menuTitle: 'Accessibility Options',
+            increaseText: 'increase text size',
+            decreaseText: 'decrease text size',
+            invertColors: 'invert colors',
+            grayHues: 'gray hues',
+            underlineLinks: 'underline links',
+            textToSpeech: 'text to speech'
+        },
+        textToSpeechLang: 'en-US',
+        modules: {
+            increaseText: true,
+            decreaseText: true,
+            invertColors: true,
+            grayHues: true,
+            underlineLinks: true,
+            textToSpeech: true
+        }
+    };
+
+
 
     let injectCss = function () {
         let url = 'https://fonts.googleapis.com/icon?family=Material+Icons',
@@ -217,9 +220,13 @@
             font-size: 18px !important;
             text-indent: 5px;
         }
-        ._access-menu ul li:hover, ._access-menu ul li.active {
+        ._access-menu ul li.active {
             color: #fff;
             background-color: #000;
+        }
+        ._access-menu ul li:hover {
+            color: #fff;
+            background-color: #333;
         }
         ._access-menu ul li.not-supported {
             display: none;
