@@ -25,7 +25,7 @@ import common from './common';
         menu: {
             dimensions: {
                 width: { size: 25, units: 'vw' },
-                height: { size: 25, units: 'vw' }
+                height: { size: 'auto', units: '' }
             },
             fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
         },
@@ -82,8 +82,8 @@ import common from './common';
             border: solid 2px gray;
             font-family: ` + options.menu.fontFamily + `;
             min-width: 300px;
-            min-height: 385px;
             box-shadow: -2px -2px 3px #aaa;
+            ` + (getComputedStyle(body).direction == 'rtl' ? 'text-indent: -5px' : '') +`
         }
         ._access-menu.close {
             z-index: -1;
@@ -410,18 +410,6 @@ import common from './common';
         if (fSize && fSize.sufix && !isNaN(fSize.size * 1)) {
             body.style.fontSize = ((fSize.size * 1) + factor) + fSize.sufix;
         }
-
-        // let all = document.querySelectorAll('*:not(._access)');
-
-        // for (let i = 0; i < all.length; i++) {
-        //     let fSize = getComputedStyle(all[i]).fontSize;
-        //     if (fSize && (fSize.indexOf('px') > -1)) {
-        //         if (!all[i].getAttribute('data-init-font-size'))
-        //             all[i].setAttribute('data-init-font-size', fSize);
-        //         fSize = (fSize.replace('px', '') * 1) + factor;
-        //         all[i].style.fontSize = fSize + 'px';
-        //     }
-        // }
     };
 
     let textToSpeech = (text) => {
@@ -560,18 +548,18 @@ import common from './common';
         }
     };
 
-    let setMinHeight = () => {
-        try {
-            let lis = document.querySelectorAll('._access-menu ul li.not-supported');
-            let lih = 52 * lis.length;
-            if (lih) {
-                let menu = document.querySelector('._access-menu');
-                let mh = getComputedStyle(menu).minHeight.replace('px', '') * 1;
-                menu.style.minHeight = (mh - lih) + 'px';
-            }
-        }
-        catch (e) { }
-    };
+    // let setMinHeight = () => {
+    //     try {
+    //         let lis = document.querySelectorAll('._access-menu ul li.not-supported');
+    //         let lih = 52 * lis.length;
+    //         if (lih) {
+    //             let menu = document.querySelector('._access-menu');
+    //             let mh = getComputedStyle(menu).minHeight.replace('px', '') * 1;
+    //             menu.style.minHeight = (mh - lih) + 'px';
+    //         }
+    //     }
+    //     catch (e) { }
+    // };
 
     let init = function () {
         injectCss();
@@ -579,7 +567,7 @@ import common from './common';
         injectMenu();
         addListeners();
         disableUnsupportedModules();
-        setMinHeight();
+        //setMinHeight();
 
         icon.addEventListener('click', toggleMenu, false);
         setTimeout(() => {
