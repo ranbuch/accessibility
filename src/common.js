@@ -85,10 +85,11 @@ let common = {
         head.appendChild(link);
     },
     warn(msg) {
+        let prefix = 'Accessibility: ';
         if (console.warn)
-            console.warn(msg);
+            console.warn(prefix + msg);
         else
-            console.log(msg);
+            console.log(prefix + msg);
     },
     deployedObjects: {
         get: (key) => {

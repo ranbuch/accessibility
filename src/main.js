@@ -31,9 +31,11 @@ let _options = {
         invertColors: 'invert colors',
         grayHues: 'gray hues',
         underlineLinks: 'underline links',
-        textToSpeech: 'text to speech'
+        textToSpeech: 'text to speech',
+        speechToText: 'speech to text'
     },
     textToSpeechLang: 'en-US',
+    speechToTextLang: 'en-US',
     textPixelMode: false,
     modules: {
         increaseText: true,
@@ -41,7 +43,8 @@ let _options = {
         invertColors: true,
         grayHues: true,
         underlineLinks: true,
-        textToSpeech: true
+        textToSpeech: true,
+        speechToText: true
     }
 };
 
@@ -51,7 +54,23 @@ class Accessibility {
     constructor(options) {
         self = this;
         this.options = common.extend(_options, options);
+        this.disabledUnsupportedFeatures();
         this.build();
+    }
+
+    disabledUnsupportedFeatures() {
+        if (!('webkitSpeechRecognition' in window) || location.protocol != 'https:') {
+            common.warn('speech to text isn\'t supported in this brouser or in http protocol (https required)');
+            this.options.modules.speechToText = false;
+        }
+        if (!window.SpeechSynthesisUtterance || !window.speechSynthesis) {
+            common.warn('text to speech isn\'t supported in this brouser');
+            this.options.modules.textToSpeech = false;
+        }
+        if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+            common.warn('grayHues isn\'t supported in firefox');
+            this.options.modules.grayHues = false;
+        }
     }
 
     injectCss() {
@@ -201,9 +220,12 @@ class Accessibility {
         ._access-menu ul li[data-access-action="textToSpeech"]:before {
             content: 'record_voice_over';
         }
+        ._access-menu ul li[data-access-action="speechToText"]:before {
+            content: 'mic';
+        }
         `;
         let className = '_access-main-css';
-        common.injectStyle(css, {className: className});
+        common.injectStyle(css, { className: className });
         common.deployedObjects.set('.' + className, false);
     }
 
@@ -365,6 +387,18 @@ class Accessibility {
                                     text: this.options.labels.textToSpeech
                                 }
                             ]
+                        },
+                        {
+                            type: 'li',
+                            attrs: {
+                                'data-access-action': 'speechToText'
+                            },
+                            children: [
+                                {
+                                    type: '#text',
+                                    text: this.options.labels.speechToText
+                                }
+                            ]
                         }
                     ]
                 }
@@ -391,8 +425,9 @@ class Accessibility {
         let lis = document.querySelectorAll('._access-menu ul li');
 
         for (let i = 0; i < lis.length; i++) {
-            lis[i].addEventListener('click', (self) => {
-                this.invoke(window.event.target.getAttribute('data-access-action'));
+            lis[i].addEventListener('click', (e) => {
+                let evt = e || window.event  
+                this.invoke(evt.target.getAttribute('data-access-action'));
             }, false);
         }
     }
@@ -411,6 +446,7 @@ class Accessibility {
     resetAll() {
         //window.location.reload();
         this.menuInterface.textToSpeech(true);
+        this.menuInterface.speechToText(true);
         this.menuInterface.underlineLinks(true);
         this.menuInterface.grayHues(true);
         this.menuInterface.invertColors(true);
@@ -459,9 +495,50 @@ class Accessibility {
         }
     }
 
+    speechToText() {
+        if ('webkitSpeechRecognition' in window) {
+            this.recognition = new webkitSpeechRecognition();
+            this.recognition.continuous = true;
+            this.recognition.interimResults = true;
+            this.recognition.onstart = () => {
+                // TODO red color on mic icon
+                console.log('listening . . .');
+                if (this.speechToTextTarget)
+                    this.speechToTextTarget.parentElement.classList.add('_access-listening');
+            };
+
+            this.recognition.onresult = (event) => {
+                console.log('onresult listening');
+                let finalTranscript = '';
+                if (typeof (event.results) == 'undefined') {
+                    return;
+                }
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                    } 
+                    // else {
+                    //     interim_transcript += event.results[i][0].transcript;
+                    // }
+                }
+                if (finalTranscript && this.speechToTextTarget) {
+                    this.speechToTextTarget.parentElement.classList.remove('_access-listening');
+                    if (this.speechToTextTarget.tagName.toLowerCase() == 'input' || this.speechToTextTarget.tagName.toLowerCase() == 'textarea') {
+                        this.speechToTextTarget.value = finalTranscript;
+                    }
+                    else if (this.speechToTextTarget.getAttribute('contenteditable') != null) {
+                        this.speechToTextTarget.innerText = finalTranscript;
+                    }
+                }
+            };
+            this.recognition.lang = this.options.speechToTextLang;
+            this.recognition.start();
+        }
+    }
+
     textToSpeech(text) {
-        if (!SpeechSynthesisUtterance || !window.speechSynthesis) return;
-        let msg = new SpeechSynthesisUtterance(text);
+        if (!window.SpeechSynthesisUtterance || !window.speechSynthesis) return;
+        let msg = new window.SpeechSynthesisUtterance(text);
         msg.lang = this.options.textToSpeechLang;
         let voices = window.speechSynthesis.getVoices();
         let isLngSupported = false;
@@ -481,6 +558,14 @@ class Accessibility {
             //     console.log(msg);
         }
         window.speechSynthesis.speak(msg);
+    }
+
+    listen() {
+        let className = '_access-speech-to-text';
+        // window.event.preventDefault();
+        // window.event.stopPropagation();
+        self.speechToTextTarget = window.event.target;
+        self.speechToText(window.event.target.innerText);
     }
 
     read() {
@@ -523,7 +608,7 @@ class Accessibility {
             this.icon.style.opacity = '1';
         }, 10);
 
-        if (SpeechSynthesisUtterance || window.speechSynthesis) {
+        if (window.SpeechSynthesisUtterance || window.speechSynthesis) {
             let voices = window.speechSynthesis.getVoices();
         }
 
@@ -547,7 +632,7 @@ class Accessibility {
                     this.initialValues.invertColors = false;
                     return;
                 }
-                
+
 
                 document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
                 this.initialValues.invertColors = !this.initialValues.invertColors;
@@ -561,9 +646,9 @@ class Accessibility {
                 }
             },
             grayHues: (destroy) => {
-                if (typeof this.initialValues.body.filter === 'undefined') 
+                if (typeof this.initialValues.body.filter === 'undefined')
                     this.initialValues.body.filter = getComputedStyle(this.body).filter;
-                if (typeof this.initialValues.body.webkitFilter === 'undefined') 
+                if (typeof this.initialValues.body.webkitFilter === 'undefined')
                     this.initialValues.body.webkitFilter = getComputedStyle(this.body).webkitFilter;
                 if (typeof this.initialValues.body.mozFilter === 'undefined')
                     this.initialValues.body.mozFilter = getComputedStyle(this.body).mozFilter;
@@ -579,7 +664,7 @@ class Accessibility {
                     this.resetIfDefined(this.initialValues.body.msFilter, this.body.style, 'msFilter');
                     return;
                 }
-                
+
                 document.querySelector('._access-menu [data-access-action="grayHues"]').classList.toggle('active');
                 this.initialValues.grayHues = !this.initialValues.grayHues;
                 let val = this.initialValues.grayHues ? 'grayscale(1)' : 'grayscale(0)';
@@ -597,7 +682,7 @@ class Accessibility {
                         common.deployedObjects.remove('.' + className);
                     }
                 };
-                
+
                 if (destroy) {
                     this.initialValues.underlineLinks = false;
                     document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.remove('active');
@@ -641,13 +726,75 @@ class Accessibility {
                 this.initialValues.textToSpeech = !this.initialValues.textToSpeech;
                 if (this.initialValues.textToSpeech) {
                     let css = `
-                    *:hover {
-                        box-shadow: 2px 2px 2px rgba(180,180,180,0.7);
-                    }
-                `;
+                        *:hover {
+                            box-shadow: 2px 2px 2px rgba(180,180,180,0.7);
+                        }
+                    `;
                     common.injectStyle(css, { className: className });
                     common.deployedObjects.set('.' + className, true);
                     document.addEventListener('click', this.read, false);
+                }
+                else {
+                    remove();
+                }
+            },
+            speechToText: (destroy) => {
+                let className = '_access-speech-to-text';
+                let remove = () => {
+                    if (this.recognition) {
+                        this.recognition.stop();
+                    }
+                    let style = document.querySelector('.' + className);
+                    if (style) {
+                        style.parentElement.removeChild(style);
+                        common.deployedObjects.remove('.' + className);
+                    }
+                    let inputs = document.querySelectorAll('._access-mic');
+                    for (let i = 0; i < inputs.length; i++) {
+                        inputs[i].removeEventListener('focus', this.listen, false);
+                        inputs[i].classList.remove('_access-mic');
+                    }
+                };
+
+                if (destroy) {
+                    document.querySelector('._access-menu [data-access-action="speechToText"]').classList.remove('active');
+                    this.initialValues.speechToText = false;
+                    return remove();
+                }
+
+                document.querySelector('._access-menu [data-access-action="speechToText"]').classList.toggle('active');
+
+                this.initialValues.speechToText = !this.initialValues.speechToText;
+                if (this.initialValues.speechToText) {
+                    let css = `
+                        ._access-mic:after {
+                            content: 'mic';
+                            font-family: 'Material Icons';
+                            position: absolute;
+                            z-index: 1000;
+                            top: 0;
+                            right: 0; 
+                            width: 24px;
+                            height: 24px;
+                            font-size: 24px;
+                        }
+
+                        ._access-listening:after {
+                            animation: _access-listening-animation 2s infinite;
+                        }
+
+                        @keyframes _access-listening-animation {
+                            0%  {background-color: transparent;}
+                            50%  {background-color: red;}
+                        }
+                    `;
+                    common.injectStyle(css, { className: className });
+                    common.deployedObjects.set('.' + className, true);
+                    let inputs = document.querySelectorAll('input[type="text"], input[type="search"], textarea, [contenteditable]');
+                    for (let i = 0; i < inputs.length; i++) {
+                        inputs[i].addEventListener('focus', this.listen, false);
+                        inputs[i].parentElement.classList.add('_access-mic');
+                    }
                 }
                 else {
                     remove();
