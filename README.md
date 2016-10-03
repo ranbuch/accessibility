@@ -64,3 +64,8 @@ initialize component:
 `};`
 
 >When the default is **true**
+
+### text size manipulation approaches
+If text increase / decrease isn't working for your size your probablly not using responsive font size units (sutch as em, rem etc.).  
+In that case you can initialize the accessibility tool like this:  
+`Accessibility.init({textPixelMode: true})`

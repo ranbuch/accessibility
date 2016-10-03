@@ -7,7 +7,7 @@ import common from './common';
     let icon = null;
 
     window.Accessibility = {};
-    
+
     let options = {
         icon: {
             position: {
@@ -39,6 +39,7 @@ import common from './common';
             textToSpeech: 'text to speech'
         },
         textToSpeechLang: 'en-US',
+        textPixelMode: false,
         modules: {
             increaseText: true,
             decreaseText: true,
@@ -49,9 +50,7 @@ import common from './common';
         }
     };
 
-
-
-    let injectCss = function () {
+    let injectIconsCss = () => {
         let url = 'https://fonts.googleapis.com/icon?family=Material+Icons',
             head = document.getElementsByTagName('head')[0],
             link = document.createElement('link');
@@ -59,7 +58,9 @@ import common from './common';
         link.rel = "stylesheet"
         link.href = url;
         head.appendChild(link);
+    };
 
+    let injectCss = function () {
         let css = `
         ._access-icon {
             position: fixed;
@@ -83,7 +84,8 @@ import common from './common';
             font-family: ` + options.menu.fontFamily + `;
             min-width: 300px;
             box-shadow: -2px -2px 3px #aaa;
-            ` + (getComputedStyle(body).direction == 'rtl' ? 'text-indent: -5px' : '') +`
+            max-height: 100vh;
+            ` + (getComputedStyle(body).direction == 'rtl' ? 'text-indent: -5px' : '') + `
         }
         ._access-menu.close {
             z-index: -1;
@@ -401,14 +403,29 @@ import common from './common';
     };
 
     let alterTextSize = (isIncrease) => {
-        var factor = 2;
+        let factor = 2;
         if (!isIncrease)
             factor *= -1;
-        let fSize = common.getFormattedDim(getComputedStyle(body).fontSize);
-        if (!initialValues.fontSize)
-            initialValues.fontSize = fSize;
-        if (fSize && fSize.sufix && !isNaN(fSize.size * 1)) {
-            body.style.fontSize = ((fSize.size * 1) + factor) + fSize.sufix;
+        if (options.textPixelMode) {
+            let all = document.querySelectorAll('*:not(._access)');
+            
+            for (let i = 0; i < all.length; i++) {
+                let fSize = getComputedStyle(all[i]).fontSize;
+                if (fSize && (fSize.indexOf('px') > -1)) {
+                    if (!all[i].getAttribute('data-init-font-size'))
+                        all[i].setAttribute('data-init-font-size', fSize);
+                    fSize = (fSize.replace('px', '') * 1) + factor;
+                    all[i].style.fontSize = fSize + 'px';
+                }
+            }
+        }
+        else {
+            let fSize = common.getFormattedDim(getComputedStyle(body).fontSize);
+            if (!initialValues.fontSize)
+                initialValues.fontSize = fSize;
+            if (fSize && fSize.sufix && !isNaN(fSize.size * 1)) {
+                body.style.fontSize = ((fSize.size * 1) + factor) + fSize.sufix;
+            }
         }
     };
 
@@ -574,6 +591,8 @@ import common from './common';
             icon.style.opacity = '1';
         }, 10);
     };
+
+    injectIconsCss();
 
     window.Accessibility.init = function (_options) {
         options = common.extend(options, _options);
