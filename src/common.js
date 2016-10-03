@@ -1,6 +1,8 @@
 'use strict';
 let body = document.body || document.getElementsByTagName('body')[0];
 
+let deployedMap = new Map();
+
 let common = {
     jsonToHtml: (obj, reasource) => {
         let elm = document.createElement(obj.type);
@@ -31,6 +33,7 @@ let common = {
         if (innerOptions.className)
             sheet.classList.add(innerOptions.className);
         body.appendChild(sheet);
+        return sheet;
     },
     getFormattedDim: (value) => {
         if (!value) return null;
@@ -68,6 +71,41 @@ let common = {
             }
         }
         return src;
+    },
+    injectIconsCss() {
+        let url = 'https://fonts.googleapis.com/icon?family=Material+Icons',
+            head = document.getElementsByTagName('head')[0],
+            link = document.createElement('link');
+        link.type = "text/css";
+        link.rel = "stylesheet";
+        link.href = url;
+        link.className = "_access-material-icons";
+        common.deployedObjects.set('.' + link.className, true);
+        //deployedSelectors.push(link.id);
+        head.appendChild(link);
+    },
+    warn(msg) {
+        if (console.warn)
+            console.warn(msg);
+        else
+            console.log(msg);
+    },
+    deployedObjects: {
+        get: (key) => {
+            return deployedMap.get(key);
+        },
+        contains: (key) => {
+            return deployedMap.has(key);
+        },
+        set: (key, val) => {
+            deployedMap.set(key, val);
+        },
+        remove: (key) => {
+            deployedMap.delete(key);
+        },
+        getAll: () => {
+            return deployedMap;
+        }
     }
 };
 

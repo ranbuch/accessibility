@@ -5,7 +5,7 @@
 
 ### beta version!
   * first copy and past /dist/accessibility.min.js to your site (via dev tools)
-  * then enter `window.Accessibility.init();`
+  * then enter `new window.Accessibility();`
   * works for your site? use it! not working? open an issue or request a feature
 
 ### DESCRIPTION:
@@ -28,7 +28,7 @@ include script:
 `<script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"></script>`  
 initialize component:  
 `window.addEventListener('load', function() {
-    window.Accessibility.init();
+    new window.Accessibility();
 }, false);`
 
 ### LIMITATIONS:
@@ -50,7 +50,7 @@ initialize component:
 
 `var options = { labels: labels };`  
 `options.textToSpeechLang = 'en-US'; // or any other language`  
-`window.Accessibility.init(options);`
+`new window.Accessibility(options);`
 
 ### disable features example:  
 `options.modules = {`  
@@ -68,4 +68,7 @@ initialize component:
 ### text size manipulation approaches
 If text increase / decrease isn't working for your size your probablly not using responsive font size units (sutch as em, rem etc.).  
 In that case you can initialize the accessibility tool like this:  
-`Accessibility.init({textPixelMode: true})`
+`new window.Accessibility({textPixelMode: true})`
+
+### LICENSE
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://spdx.org/licenses/MIT)
