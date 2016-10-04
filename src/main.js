@@ -37,6 +37,9 @@ let _options = {
     textToSpeechLang: 'en-US',
     speechToTextLang: 'en-US',
     textPixelMode: false,
+    animations: {
+        buttons: true
+    },
     modules: {
         increaseText: true,
         decreaseText: true,
@@ -165,18 +168,42 @@ class Accessibility {
             padding: 10px 0 10px 30px;
             margin: 5px;
             border-radius: 4px;
-            transition-duration: .3s;
+            transition-duration: .5s;
+            transition-timing-function: ease-in-out;
             font-size: 18px !important;
             line-height: 18px !important;
             text-indent: 5px;
+            background: #E0E1E2;
+            color: rgba(0,0,0,.6);
+        }
+        ._access-menu ul.before-collapse li:nth-child(1) {
+            transform: translate3d(0px, -45px, 0px);
+        }
+        ._access-menu ul.before-collapse li:nth-child(2) {
+            transform: translate3d(0px, -90px, 0px);
+        }
+        ._access-menu ul.before-collapse li:nth-child(3) {
+            transform: translate3d(0px, -135px, 0px);
+        }
+        ._access-menu ul.before-collapse li:nth-child(4) {
+            transform: translate3d(0px, -180px, 0px);
+        }
+        ._access-menu ul.before-collapse li:nth-child(5) {
+            transform: translate3d(0px, -225px, 0px);
+        }
+        ._access-menu ul.before-collapse li:nth-child(6) {
+            transform: translate3d(0px, -270px, 0px);
+        }
+        ._access-menu ul.before-collapse li:nth-child(7) {
+            transform: translate3d(0px, -315px, 0px);
         }
         ._access-menu ul li.active, ._access-menu ul li.active:hover {
             color: #fff;
             background-color: #000;
         }
         ._access-menu ul li:hover {
-            color: #fff;
-            background-color: #444;
+            color: rgba(0,0,0,.8);
+            background-color: #CACBCD;
         }
         ._access-menu ul li.not-supported {
             display: none;
@@ -197,10 +224,13 @@ class Accessibility {
             -webkit-font-smoothing: antialiased;
             left: 8px;
             position: absolute;
-            color: rgba(100,100,100,0.7);
+            color: rgba(0,0,0,.6);
         }
-        ._access-menu ul li:hover:before, ._access-menu ul li.active:before {
-            color: rgba(200,200,200,0.7);
+        ._access-menu ul li:hover:before {
+            color: rgba(0,0,0,.8);
+        }
+        ._access-menu ul li.active:before {
+            color: #fff;
         }
         ._access-menu ul li[data-access-action="increaseText"]:before {
             content: 'zoom_in';
@@ -315,6 +345,9 @@ class Accessibility {
                 },
                 {
                     type: 'ul',
+                    attrs: {
+                        'class': (this.options.animations.buttons ? 'before-collapse' : '')
+                    },
                     children: [
                         {
                             type: 'li',
@@ -502,13 +535,19 @@ class Accessibility {
             this.recognition.interimResults = true;
             this.recognition.onstart = () => {
                 // TODO red color on mic icon
-                console.log('listening . . .');
-                if (this.speechToTextTarget)
-                    this.speechToTextTarget.parentElement.classList.add('_access-listening');
+                //console.log('listening . . .');
+                // if (this.speechToTextTarget)
+                //     this.speechToTextTarget.parentElement.classList.add('_access-listening');
+                this.body.classList.add('_access-listening');
+            };
+
+            this.recognition.onend = () => {
+                this.body.classList.remove('_access-listening');
+                //console.log('onend listening');
             };
 
             this.recognition.onresult = (event) => {
-                console.log('onresult listening');
+                ///console.log('onresult listening');
                 let finalTranscript = '';
                 if (typeof (event.results) == 'undefined') {
                     return;
@@ -564,6 +603,9 @@ class Accessibility {
         let className = '_access-speech-to-text';
         // window.event.preventDefault();
         // window.event.stopPropagation();
+        if (typeof self.recognition === 'object' && typeof self.recognition.stop === 'function')
+            self.recognition.stop();
+            
         self.speechToTextTarget = window.event.target;
         self.speechToText(window.event.target.innerText);
     }
@@ -579,7 +621,9 @@ class Accessibility {
     }
 
     toggleMenu() {
-        this.menu.classList.toggle('close');
+        if (this.options.animations && this.options.animations.buttons)
+            this.menu.querySelector('ul').classList.toggle('before-collapse');
+        setTimeout(() => {this.menu.classList.toggle('close');}, 10);
     }
 
     invoke(action) {
@@ -743,6 +787,7 @@ class Accessibility {
                 let remove = () => {
                     if (this.recognition) {
                         this.recognition.stop();
+                        this.body.classList.remove('_access-listening');
                     }
                     let style = document.querySelector('.' + className);
                     if (style) {
@@ -767,19 +812,22 @@ class Accessibility {
                 this.initialValues.speechToText = !this.initialValues.speechToText;
                 if (this.initialValues.speechToText) {
                     let css = `
-                        ._access-mic:after {
+                        body:after {
                             content: 'mic';
                             font-family: 'Material Icons';
                             position: absolute;
-                            z-index: 1000;
-                            top: 0;
-                            right: 0; 
-                            width: 24px;
-                            height: 24px;
-                            font-size: 24px;
+                            z-index: 1100;
+                            top: 1vw;
+                            right: 1vw; 
+                            width: 36px;
+                            height: 36px;
+                            font-size: 36px;
+                            line-height: 36px;
+                            border-radius: 50%;
+                            background: rgba(255,255,255,0.7);
                         }
 
-                        ._access-listening:after {
+                        body._access-listening:after {
                             animation: _access-listening-animation 2s infinite;
                         }
 
@@ -792,6 +840,10 @@ class Accessibility {
                     common.deployedObjects.set('.' + className, true);
                     let inputs = document.querySelectorAll('input[type="text"], input[type="search"], textarea, [contenteditable]');
                     for (let i = 0; i < inputs.length; i++) {
+                        inputs[i].addEventListener('blur', () => {
+                            if (typeof this.recognition === 'object' && typeof this.recognition.stop === 'function') 
+                                this.recognition.stop();
+                        }, false);
                         inputs[i].addEventListener('focus', this.listen, false);
                         inputs[i].parentElement.classList.add('_access-mic');
                     }

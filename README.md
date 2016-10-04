@@ -1,4 +1,4 @@
-# Accessibility
+## Accessibility
 >Add **accessibility toolbar** to your website with one line of code!
 
 ![Alt text](https://raw.githubusercontent.com/ranbuch/accessibility/master/accessibility.png "accessibility icon")
@@ -33,11 +33,12 @@ initialize component:
     new Accessibility();
 }, false);`
 
-### LIMITATIONS:
+### LIMITATIONS & KNOWN ISSUES:
 * Works with html5 brousers only (no IE8 and below)
-* Text to speech works in supported brousers and languages only
+* Text to speech & speech to text works in supported brousers and languages only
+* Gray hues is disabled in firefox due to a bug in firefox browser and will be enabled when it will be fixed
 
-### multi language example:
+### MULTI LANGUAGE EXAMPLE:
 
 `var labels = {`  
     `menuTitle: 'title (in my language)',
@@ -52,9 +53,10 @@ initialize component:
 
 `var options = { labels: labels };`  
 `options.textToSpeechLang = 'en-US'; // or any other language`  
+`options.speechToTextLang = 'en-US'; // or any other language`  
 `new Accessibility(options);`
 
-### disable features example:  
+### DISABLE FEATURES EXAMPLE:  
 `options.modules = {`  
     `increaseText: [true/false],`  
     `decreaseText: [true/false],`  
@@ -67,10 +69,14 @@ initialize component:
 
 >When the default is **true**
 
-### text size manipulation approaches
+### TEXT SIZE MANIPULATION APPROACHES:
 If text increase / decrease isn't working for your size your probablly not using responsive font size units (sutch as em, rem etc.).  
 In that case you can initialize the accessibility tool like this:  
 `new Accessibility({textPixelMode: true})`
 
-### LICENSE
+### ANIMATIONS:
+cancel menu buttons animations:  
+`new Accessibility({animations: {buttons: false}})`
+
+### LICENSE:
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://spdx.org/licenses/MIT)
