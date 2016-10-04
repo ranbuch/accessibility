@@ -1,9 +1,9 @@
-## Accessibility
+## ACCESSIBILITY
 >Add **accessibility toolbar** to your website with one line of code!
 
 ![Alt text](https://raw.githubusercontent.com/ranbuch/accessibility/master/accessibility.png "accessibility icon")
 
-### beta version!
+### BETA VERSION!
   * first copy and past /dist/accessibility.min.js to your site (via dev tools)
   * then enter `new Accessibility();`
   * works for your site? use it! not working? open an issue or request a feature

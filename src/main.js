@@ -815,7 +815,7 @@ class Accessibility {
                         body:after {
                             content: 'mic';
                             font-family: 'Material Icons';
-                            position: absolute;
+                            position: fixed;
                             z-index: 1100;
                             top: 1vw;
                             right: 1vw; 
