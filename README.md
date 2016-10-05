@@ -21,6 +21,8 @@
 
 >Does not depend any other directory (**jQuery is not required**).  
 Easy to use!
+  
+more documentation [here](https://ranbuch.github.io/accessibility/)
 
 ### USAGE:
 
