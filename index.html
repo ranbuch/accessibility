@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Accessibility Menu (toolbar)</title>
+    <meta name="description" content="Add accessibility to your website with on line of javascript code">
+    <meta name="keywords" content="Accessibility,menu,toolbar">
+    <meta name="author" content="ranbuch@gmail.com">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="site/css/main.css">
+</head>
+
+<body>
+    <div class="wrapper center-me">
+        <div class="ui inverted blue tertiary segment">
+            <h1 class="ui header">
+                <i class="material-icons blue icon">accessible</i> Adaptive Accessibility Menu
+            </h1>
+            <h2 class="ui header">
+                add accessibility toolbar to every website with one line of code
+            </h2>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">
+                    features
+                </h3>
+                <div class="ui relaxed divided list">
+                    <div class="item">
+                        <i class="large text width middle aligned icon"></i>
+                        <div class="content">
+                            <a class="header">manipulate text size</a>
+                            <div class="description">increase or decrease text size. works with <b>em</b> <b>/</b> <b>rem</b> / <b>px</b> or any type
+                                of font-size units</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="large material-icons middle aligned icon">invert_colors</i>
+                        <div class="content">
+                            <a class="header">invert colors</a>
+                            <div class="description">toggles the document's body background color from black to white and the default text color from
+                                white to black and vice versa</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="large material-icons middle aligned icon">format_color_reset</i>
+                        <div class="content">
+                            <a class="header">gray hues</a>
+                            <div class="description">turns the site to gray huws only - images including</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="large underline middle aligned icon"></i>
+                        <div class="content">
+                            <a class="header">underline links</a>
+                            <div class="description">mark links with underline</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="large material-icons middle aligned icon">record_voice_over</i>
+                        <div class="content">
+                            <a class="header">text to speech</a>
+                            <div class="description">let's the uset select any text on site and enabling the brouser's automatic reading feature (works
+                                in suppordet brousers only)</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="large material-icons middle aligned icon">mic</i>
+                        <div class="content">
+                            <a class="header">speech to text </a>
+                            <div class="description">by enabling that feature the user will be able to speak and the brouser will interpret his words
+                                to text (works in suppordet brousers only)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    Need more? <a href="#disqus_thread">request</a> on the comments down below
+                </p>
+
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">easy to use!</h3>
+                <div class="ui ordered list">
+                    <a class="item">
+                        <p>
+                            install package:
+                        </p>
+                        <code>npm install accessibility</code>
+                    </a>
+                    <a class="item">
+                        <p>
+                            include script:
+                        </p>
+                        <code>
+                            &lt;script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"&gt;&lt;/script&gt;
+                        </code>
+                    </a>
+                    <a class="item">
+                        <p>
+                            initialize component
+                        </p>
+                        <code>
+                            window.addEventListener('load', function() {
+                            <br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;new Accessibility();
+                            <br>
+                            }, false);
+                        </code>
+                    </a>
+                </div>
+                <ol class="ui list">
+                    <li value="*">Does not depend any other directory (jQuery is not required)</li>
+                </ol>
+
+            </div>
+
+
+            <div class="ui raised segment">
+                <h3 class="ui header">Limitations and Known Issues</h3>
+                <p>
+                    Works with html5 brousers only (no IE8 and below)
+                </p>
+                <p>
+                    Text to speech & speech to text works in supported brousers and languages only
+                </p>
+                <p>
+                    Gray hues is disabled in firefox due to a bug in firefox browser and will be enabled when it will be fixed
+                </p>
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">multi language example</h3>
+
+                <p>
+                    <code>
+                    var labels = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;menuTitle: 'title (in my language)',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;increaseText: 'increase text size (in my language)',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;decreaseText: 'decrease text size (in my language)',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;invertColors: 'invert colors (in my language)',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;grayHues: 'gray hues (in my language)',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;underlineLinks: 'underline links (in my language)',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;textToSpeech: 'text to speech (in my language)',<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;speechToText: 'speech to text (in my language)'<br>
+                    };<br>
+                    var options = { labels: labels };<br>  
+                    options.textToSpeechLang = 'en-US'; // or any other language<br>  
+                    options.speechToTextLang = 'en-US'; // or any other language<br>  
+                    new Accessibility(options);
+                    </code>
+                </p>
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">disable features example</h3>
+
+                <p>
+                    <code>
+                    options.modules = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;increaseText: [true/false],<br>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;decreaseText: [true/false],<br>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;invertColors: [true/false],<br>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;grayHues: [true/false],<br>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;underlineLinks: [true/false],<br>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;textToSpeech: [true/false],<br>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;speechToText: [true/false]<br>  
+                    };
+                    </code>
+
+                    <p>
+                        When the default is <b>true</b>
+                    </p>
+                </p>
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">text size manipulation approaches</h3>
+
+                <p>
+                    If text increase / decrease isn't working for your size your probablly not using responsive font size units (sutch as em,
+                    rem etc.).
+                </p>
+                <p>
+                    In that case you can initialize the accessibility tool like this:
+                </p>
+                <code>
+                    new Accessibility({textPixelMode: true})
+                </code>
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">animations</h3>
+
+                <p>
+                    Cancel menu buttons animations:
+                </p>
+                <code>
+                    new Accessibility({animations: {buttons: false}})
+                </code>
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">free</h3>
+
+                <div class="ui list">
+                    <div class="item">
+                        <i class="large material-icons middle aligned icon">code</i>
+                        <div class="content">
+                            <a class="header">open source</a>
+                            <div class="description">This project is an open source one.</div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="large github middle aligned icon"></i>
+                        <div class="content">
+                            <a class="header" href="https://github.com/ranbuch/accessibility" target="_blank">GitHub Repo</a>
+                            <div class="description">
+                                <p>
+                                    Fell free to star <i class="icon material-icons">star</i> this repository if it helped
+                                    you.
+                                </p>
+                                <p>
+                                    you can also <a href="https://github.com/ranbuch/accessibility/issues" target="_blank">open an issue</a> if necessary.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="large material-icons middle aligned icon">code</i>
+                        <div class="content">
+                            <a class="header" href="https://www.npmjs.com/package/accessibility" target="_blank">npm package</a>
+                            <div class="description">Fell free to star <i class="icon material-icons">star</i> this package if it helped you.</div>
+                        </div>
+                    </div>
+                </div>
+                <p>
+
+                </p>
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">license</h3>
+                <p>
+                    <a href="https://spdx.org/licenses/MIT" target="_blank">
+                        <img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat" alt="MIT License">
+                    </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="ui segment">
+            <div id="disqus_thread"></div>
+            <script>
+
+/**
+ *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+ *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables */
+/*
+var disqus_config = function () {
+    this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+    this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+};
+*/
+(function() { // DON'T EDIT BELOW THIS LINE
+    var d = document, s = d.createElement('script');
+    s.src = '//ranbuch.disqus.com/embed.js';
+    s.setAttribute('data-timestamp', +new Date());
+    (d.head || d.body).appendChild(s);
+})();
+</script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+    <script src="site/script/main.js"></script>
+    <script src="dist/accessibility.min.js"></script>
+    <script id="dsq-count-scr" src="//ranbuch.disqus.com/count.js" async></script>
+</body>
+
+</html>

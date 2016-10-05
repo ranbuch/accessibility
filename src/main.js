@@ -70,7 +70,7 @@ class Accessibility {
             common.warn('text to speech isn\'t supported in this brouser');
             this.options.modules.textToSpeech = false;
         }
-        if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
+        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
             common.warn('grayHues isn\'t supported in firefox');
             this.options.modules.grayHues = false;
         }
@@ -175,6 +175,9 @@ class Accessibility {
             text-indent: 5px;
             background: #E0E1E2;
             color: rgba(0,0,0,.6);
+        }
+        ._access-menu ul.before-collapse li {
+            opacity: 0.05;
         }
         ._access-menu ul.before-collapse li:nth-child(1) {
             transform: translate3d(0px, -45px, 0px);
@@ -459,7 +462,7 @@ class Accessibility {
 
         for (let i = 0; i < lis.length; i++) {
             lis[i].addEventListener('click', (e) => {
-                let evt = e || window.event  
+                let evt = e || window.event
                 this.invoke(evt.target.getAttribute('data-access-action'));
             }, false);
         }
@@ -555,7 +558,7 @@ class Accessibility {
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
                     if (event.results[i].isFinal) {
                         finalTranscript += event.results[i][0].transcript;
-                    } 
+                    }
                     // else {
                     //     interim_transcript += event.results[i][0].transcript;
                     // }
@@ -605,7 +608,7 @@ class Accessibility {
         // window.event.stopPropagation();
         if (typeof self.recognition === 'object' && typeof self.recognition.stop === 'function')
             self.recognition.stop();
-            
+
         self.speechToTextTarget = window.event.target;
         self.speechToText(window.event.target.innerText);
     }
@@ -621,9 +624,20 @@ class Accessibility {
     }
 
     toggleMenu() {
-        if (this.options.animations && this.options.animations.buttons)
-            this.menu.querySelector('ul').classList.toggle('before-collapse');
-        setTimeout(() => {this.menu.classList.toggle('close');}, 10);
+        if (this.menu.classList.contains('close')) {
+            if (this.options.animations && this.options.animations.buttons)
+                setTimeout(() => { this.menu.querySelector('ul').classList.toggle('before-collapse'); }, 500);
+            setTimeout(() => { this.menu.classList.toggle('close'); }, 10);
+        }
+        else {
+            if (this.options.animations && this.options.animations.buttons) {
+                setTimeout(() => {this.menu.classList.toggle('close');}, 500);
+                setTimeout(() => {this.menu.querySelector('ul').classList.toggle('before-collapse');}, 10);
+            }
+            else {
+                this.menu.classList.toggle('close');
+            }
+        }
     }
 
     invoke(action) {
@@ -841,7 +855,7 @@ class Accessibility {
                     let inputs = document.querySelectorAll('input[type="text"], input[type="search"], textarea, [contenteditable]');
                     for (let i = 0; i < inputs.length; i++) {
                         inputs[i].addEventListener('blur', () => {
-                            if (typeof this.recognition === 'object' && typeof this.recognition.stop === 'function') 
+                            if (typeof this.recognition === 'object' && typeof this.recognition.stop === 'function')
                                 this.recognition.stop();
                         }, false);
                         inputs[i].addEventListener('focus', this.listen, false);

@@ -1,0 +1,24 @@
+.wrapper {
+    max-width: 1280px;
+}
+
+.center-me {
+    margin: auto;
+    display: block;
+}
+
+.material-icons, .icon.material-icons {
+    font-family: 'Material Icons';
+}
+
+h1.ui.header {
+    padding-top: 20px; 
+}
+
+h3.ui.header {
+    text-transform: uppercase;
+}
+
+.ui.list .list>.item .description, .ui.list>.item .description {
+    text-transform: capitalize;
+}
