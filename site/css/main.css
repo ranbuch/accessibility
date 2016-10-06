@@ -22,3 +22,7 @@ h3.ui.header {
 .ui.list .list>.item .description, .ui.list>.item .description {
     text-transform: capitalize;
 }
+
+.ui.ordered.list .list>.item, .ui.ordered.list>.item, ol.ui.list li {
+    overflow: auto;
+}
