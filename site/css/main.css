@@ -26,3 +26,28 @@ h3.ui.header {
 .ui.ordered.list .list>.item, .ui.ordered.list>.item, ol.ui.list li {
     overflow: auto;
 }
+
+.b-space-1 {
+    text-indent: 25px;
+}
+
+.b-space-2 {
+    text-indent: 50px;
+}
+
+.b-space-3 {
+    text-indent: 75px;
+}
+
+.b-space-4 {
+    text-indent: 100px;
+}
+
+.i-color {
+    background-color: rgb(64, 84, 178);
+    color: #fff;
+}
+
+.i-circular {
+    border-radius: 50%;
+}

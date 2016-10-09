@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="site/css/main.css">
-    <link rel="shortcut icon" href="favicon.ico"/>
+    <link rel="shortcut icon" href="favicon.ico" />
 </head>
 
 <body>
@@ -48,7 +48,7 @@
                         <i class="large material-icons middle aligned icon">format_color_reset</i>
                         <div class="content">
                             <a class="header">gray hues</a>
-                            <div class="description">turns the site to gray huws only - images including</div>
+                            <div class="description">turns the site to gray hues only - images including</div>
                         </div>
                     </div>
                     <div class="item">
@@ -76,9 +76,9 @@
                     </div>
                 </div>
 
-                <p>
-                    Need more? <a href="#disqus_thread">request</a> on the comments down below
-                </p>
+                <!--<p>
+                    Need more? request on the <a href="#disqus_thread">comments</a> down below
+                </p>-->
 
             </div>
 
@@ -224,7 +224,7 @@
                                     you.
                                 </p>
                                 <p>
-                                    you can also <a href="https://github.com/ranbuch/accessibility/issues" target="_blank">open an issue</a> if necessary.
+                                    you can also <a href="https://github.com/ranbuch/accessibility/issues" target="_blank">open an issue</a>                                    if necessary.
                                 </p>
                             </div>
                         </div>
@@ -241,6 +241,118 @@
 
                 </p>
             </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">positioning</h3>
+
+                <p>
+                    You can position the accessibility icon in any place on the screen. The default position is bottom right:
+                </p>
+                <code>
+                    var options = {
+                    <p class="b-space-1">
+                        icon: {
+                    </p>
+                    <p class="b-space-2">
+                        position: {
+                    </p>
+                    <p class="b-space-3">
+                        bottom: { size: 50, units: 'px' },
+                    </p>
+                    <p class="b-space-3">
+                        right: { size: 0, units: 'px' },
+                    </p>
+                    <p class="b-space-3">
+                        type: 'fixed'
+                    </p>
+                    <p class="b-space-2">
+                        }
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    <p>
+                        }
+                    </p>
+                    <p>
+                        new Accessibility(options);
+                    </p>
+                </code>
+                <br>
+                <p>
+                    But you can also position the icon in the upper left corner of the screen and cancel the fixed positioning:
+                </p>
+                <code>
+                    var options = {
+                    <p class="b-space-1">
+                        icon: {
+                    </p>
+                    <p class="b-space-2">
+                        position: {
+                    </p>
+                    <p class="b-space-3">
+                        top: { size: 2, units: 'vh' },
+                    </p>
+                    <p class="b-space-3">
+                        left: { size: 2, units: '%' },
+                    </p>
+                    <p class="b-space-3">
+                        type: 'absolute'
+                    </p>
+                    <p class="b-space-2">
+                        }
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    <p>
+                        }
+                    </p>
+                    <p>
+                        new Accessibility(options);
+                    </p>
+                </code>
+            </div>
+
+            <div class="ui raised segment" id="icon-image">
+                <h3 class="ui header">icon image</h3>
+
+                <p>
+                    You can change the default icon from this ('accessible'): <i class="large material-icons middle aligned icon i-color">accessible</i>
+                </p>
+                
+                <p>
+                    To this this ('accessibility'): <i class="large material-icons middle aligned icon i-color">accessibility</i>
+                </p>
+
+                <p>
+                    Or change the shape of the icon to a circular one: <i class="large material-icons middle aligned icon i-circular i-color">accessibility</i>
+                </p>
+
+                <code>
+                    var options = {
+                    <p class="b-space-1">
+                        icon: {
+                    </p>
+                    <p class="b-space-2">
+                        circular: [true/false],
+                    </p>
+                    <p class="b-space-2">
+                        img: ['accessibility'/'accessible'],
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    <p>
+                        }
+                    </p>
+                    <p>
+                        new Accessibility(options);
+                    </p>
+                </code>
+                
+            </div>
+
 
             <div class="ui raised segment">
                 <h3 class="ui header">license</h3>
@@ -279,7 +391,7 @@ var disqus_config = function () {
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
     <script src="site/script/main.js"></script>
     <script src="dist/accessibility.min.js"></script>
-    <script id="dsq-count-scr" src="//ranbuch.disqus.com/count.js" async></script>
+    <!--<script id="dsq-count-scr" src="//ranbuch.disqus.com/count.js" async></script>-->
 </body>
 
 </html>

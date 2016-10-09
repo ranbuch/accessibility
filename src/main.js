@@ -7,7 +7,8 @@ let _options = {
     icon: {
         position: {
             bottom: { size: 50, units: 'px' },
-            right: { size: 0, units: 'px' }
+            right: { size: 0, units: 'px' },
+            type: 'fixed'
         },
         dimensions: {
             width: { size: 50, units: 'px' },
@@ -15,7 +16,9 @@ let _options = {
         },
         zIndex: '9999',
         backgroundColor: '#4054b2',
-        color: '#fff'
+        color: '#fff',
+        img: 'accessible',
+        circular: false
     },
     menu: {
         dimensions: {
@@ -56,9 +59,24 @@ let self = null;
 class Accessibility {
     constructor(options) {
         self = this;
+        options = this.deleteOppositesIfDefined(options);
         this.options = common.extend(_options, options);
         this.disabledUnsupportedFeatures();
         this.build();
+    }
+
+    deleteOppositesIfDefined(options) {
+        if (options.icon && options.icon.position) {
+            if (options.icon.position.left) {
+                delete _options.icon.position.right;
+                _options.icon.position.left = options.icon.position.left;
+            }
+            if (options.icon.position.top) {
+                delete _options.icon.position.bottom;
+                _options.icon.position.top = options.icon.position.top;
+            }
+        }
+        return options;
     }
 
     disabledUnsupportedFeatures() {
@@ -79,12 +97,15 @@ class Accessibility {
     injectCss() {
         let css = `
         ._access-icon {
-            position: fixed;
+            position: `+ this.options.icon.position.type + `;
             background-repeat: no-repeat;
             background-size: contain;
             cursor: pointer;
             opacity: 0;
             transition-duration: .5s;
+        }
+        .circular._access-icon {
+            border-radius: 50%;
         }
         ._access-menu {
             position: fixed;
@@ -135,6 +156,7 @@ class Accessibility {
             margin-top: 20px;
             margin-bottom: 20px;
             padding: 0;
+            color: rgba(0,0,0,.87);
         }
         ._access-menu ._menu-close-btn {
             left: 5px;
@@ -272,16 +294,18 @@ class Accessibility {
             iStyle += ';' + i + ':' + this.options.icon.position[i].size + this.options.icon.position[i].units;
         }
         iStyle += ';z-index: ' + this.options.icon.zIndex;
+        let className = '_access-icon material-icons _access' + (this.options.icon.circular ? ' circular' : '');
+        debugger;
         let iconElem = common.jsonToHtml({
             type: 'i',
             attrs: {
-                'class': '_access-icon material-icons _access',
+                'class': className,
                 'style': iStyle
             },
             children: [
                 {
                     type: '#text',
-                    text: 'accessible'
+                    text: this.options.icon.img
                 }
             ]
         });
@@ -631,8 +655,8 @@ class Accessibility {
         }
         else {
             if (this.options.animations && this.options.animations.buttons) {
-                setTimeout(() => {this.menu.classList.toggle('close');}, 500);
-                setTimeout(() => {this.menu.querySelector('ul').classList.toggle('before-collapse');}, 10);
+                setTimeout(() => { this.menu.classList.toggle('close'); }, 500);
+                setTimeout(() => { this.menu.querySelector('ul').classList.toggle('before-collapse'); }, 10);
             }
             else {
                 this.menu.classList.toggle('close');

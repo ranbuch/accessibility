@@ -77,8 +77,35 @@ In that case you can initialize the accessibility tool like this:
 `new Accessibility({textPixelMode: true})`
 
 ### ANIMATIONS:
-cancel menu buttons animations:  
+Cancel menu buttons animations:  
 `new Accessibility({animations: {buttons: false}})`
+
+### POSITIONING:
+You can position the accessibility icon in any place on the screen. The default position is bottom right:  
+`var options = {`  
+    `icon: {`  
+        `position: {`  
+            `bottom: { size: 50, units: 'px' },`  
+            `right: { size: 0, units: 'px' },`  
+            `type: 'fixed'`  
+        `}`  
+    `}`  
+`}`  
+`new Accessibility(options);`  
+But you can also position the icon in the upper left corner of the screen and cancel the fixed positioning:  
+`var options = {`  
+    `icon: {`  
+        `position: {`  
+            `top: { size: 2, units: 'vh' },`  
+            `left: { size: 2, units: '%' },`  
+            `type: 'absolute'`  
+        `}`  
+    `}`  
+`}`  
+`new Accessibility(options);`
+
+### ICON IMAGE:
+You can change the default icon as described [here](https://ranbuch.github.io/accessibility#icon-image)
 
 ### LICENSE:
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://spdx.org/licenses/MIT)
