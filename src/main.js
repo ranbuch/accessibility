@@ -57,7 +57,7 @@ let _options = {
 let self = null;
 
 class Accessibility {
-    constructor(options) {
+    constructor(options = {}) {
         self = this;
         options = this.deleteOppositesIfDefined(options);
         this.options = common.extend(_options, options);
@@ -103,11 +103,19 @@ class Accessibility {
             cursor: pointer;
             opacity: 0;
             transition-duration: .5s;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
         .circular._access-icon {
             border-radius: 50%;
         }
         ._access-menu {
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
             position: fixed;
             width: ` + this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units + `;
             height: ` + this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units + `;
@@ -295,7 +303,6 @@ class Accessibility {
         }
         iStyle += ';z-index: ' + this.options.icon.zIndex;
         let className = '_access-icon material-icons _access' + (this.options.icon.circular ? ' circular' : '');
-        debugger;
         let iconElem = common.jsonToHtml({
             type: 'i',
             attrs: {

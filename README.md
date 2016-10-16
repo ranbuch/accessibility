@@ -30,6 +30,7 @@ more documentation [here](https://ranbuch.github.io/accessibility/)
 
 include script:  
 `<script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"></script>`  
+
 initialize component:  
 `window.addEventListener('load', function() {
     new Accessibility();
