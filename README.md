@@ -3,11 +3,17 @@
 
 ![Alt text](https://raw.githubusercontent.com/ranbuch/accessibility/master/accessibility.png "accessibility icon")
 
-### BETA VERSION!
-  * first copy and past /dist/accessibility.min.js to your site (via dev tools)
-  * then enter `new Accessibility();`
-  * works for your site? use it! not working? open an issue or request a feature
-  * [open an issue if necessary](https://github.com/ranbuch/accessibility/issues)
+### USAGE:
+
+`npm install accessibility`
+
+include script:  
+`<script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"></script>`  
+
+initialize component:  
+`window.addEventListener('load', function() {
+    new Accessibility();
+}, false);`
 
 ### DESCRIPTION:
 **Features:**
@@ -23,18 +29,6 @@
 Easy to use!
   
 more documentation [here](https://ranbuch.github.io/accessibility/)
-
-### USAGE:
-
-`npm install accessibility`
-
-include script:  
-`<script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"></script>`  
-
-initialize component:  
-`window.addEventListener('load', function() {
-    new Accessibility();
-}, false);`
 
 ### LIMITATIONS & KNOWN ISSUES:
 * Works with html5 brousers only (no IE8 and below)
