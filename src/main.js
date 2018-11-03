@@ -229,8 +229,8 @@ class Accessibility {
             text-transform: none;
             line-height: 1;
             font-size: 24px !important;
-            width: 24px;
-            height: 24px;
+            width: 30px;
+            height: 30px;
             display: inline-block;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
