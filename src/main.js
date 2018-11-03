@@ -125,10 +125,10 @@ class Accessibility {
             background-color: #fff;
             color: #000;
             border-radius: 3px;
-            border: solid 2px gray;
+            border: solid 1px #f1f0f1;
             font-family: ` + this.options.menu.fontFamily + `;
             min-width: 300px;
-            box-shadow: -2px -2px 3px #aaa;
+            box-shadow: 0px 0px 1px #aaa;
             max-height: 100vh;
             ` + (getComputedStyle(this.body).direction == 'rtl' ? 'text-indent: -5px' : '') + `
         }
@@ -194,7 +194,7 @@ class Accessibility {
             -moz-user-select: none;
             -webkit-user-select: none;
             user-select: none;
-            border: solid 1px black;
+            border: solid 1px #f1f0f1;
             padding: 10px 0 10px 30px;
             margin: 5px;
             border-radius: 4px;
@@ -203,32 +203,11 @@ class Accessibility {
             font-size: 18px !important;
             line-height: 18px !important;
             text-indent: 5px;
-            background: #E0E1E2;
+            background: #f9f9f9;
             color: rgba(0,0,0,.6);
         }
         ._access-menu ul.before-collapse li {
             opacity: 0.05;
-        }
-        ._access-menu ul.before-collapse li:nth-child(1) {
-            transform: translate3d(0px, -45px, 0px);
-        }
-        ._access-menu ul.before-collapse li:nth-child(2) {
-            transform: translate3d(0px, -90px, 0px);
-        }
-        ._access-menu ul.before-collapse li:nth-child(3) {
-            transform: translate3d(0px, -135px, 0px);
-        }
-        ._access-menu ul.before-collapse li:nth-child(4) {
-            transform: translate3d(0px, -180px, 0px);
-        }
-        ._access-menu ul.before-collapse li:nth-child(5) {
-            transform: translate3d(0px, -225px, 0px);
-        }
-        ._access-menu ul.before-collapse li:nth-child(6) {
-            transform: translate3d(0px, -270px, 0px);
-        }
-        ._access-menu ul.before-collapse li:nth-child(7) {
-            transform: translate3d(0px, -315px, 0px);
         }
         ._access-menu ul li.active, ._access-menu ul li.active:hover {
             color: #fff;
@@ -236,7 +215,7 @@ class Accessibility {
         }
         ._access-menu ul li:hover {
             color: rgba(0,0,0,.8);
-            background-color: #CACBCD;
+            background-color: #eaeaea;
         }
         ._access-menu ul li.not-supported {
             display: none;

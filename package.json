@@ -5,7 +5,7 @@
   "main": "accessibility.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel src -d dist"
+    "build": "webpack --config webpack.config.js"
   },
   "keywords": [
     "accessibility",
@@ -21,6 +21,7 @@
     "babel-cli": "^6.14.0",
     "babel-core": "^6.14.0",
     "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.24.1",
     "webpack": "^1.13.2"
   },
   "repository": {
