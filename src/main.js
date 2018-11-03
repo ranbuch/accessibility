@@ -160,7 +160,7 @@ class Accessibility {
             text-align: center;
         }
         ._access-menu h3 {
-            font-size: 24px !important; 
+            font-size: 24px !important;
             margin-top: 20px;
             margin-bottom: 20px;
             padding: 0;
@@ -680,9 +680,11 @@ class Accessibility {
         this.initialValues = {
             underlineLinks: false,
             textToSpeech: false,
-            body: {}
+            body: {},
+            html: {}
         };
         this.body = document.body || document.getElementsByTagName('body')[0];
+        this.html = document.documentElement || document.getElementsByTagName('html')[0];
         this.injectCss();
         this.icon = this.injectIcon();
         this.menu = this.injectMenu();
@@ -709,14 +711,14 @@ class Accessibility {
                 this.alterTextSize(false);
             },
             invertColors: (destroy) => {
-                if (typeof this.initialValues.body.backgroundColor === 'undefined')
-                    this.initialValues.body.backgroundColor = getComputedStyle(this.body).backgroundColor;
-                if (typeof this.initialValues.body.color === 'undefined')
-                    this.initialValues.body.color = getComputedStyle(this.body).color;
+                if (typeof this.initialValues.html.backgroundColor === 'undefined')
+                    this.initialValues.html.backgroundColor = getComputedStyle(this.html).backgroundColor;
+                if (typeof this.initialValues.html.color === 'undefined')
+                    this.initialValues.html.color = getComputedStyle(this.html).color;
 
                 if (destroy) {
-                    this.resetIfDefined(this.initialValues.body.backgroundColor, this.body.style, 'backgroundColor');
-                    this.resetIfDefined(this.initialValues.body.color, this.body.style, 'color');
+                    this.resetIfDefined(this.initialValues.html.backgroundColor, this.html.style, 'backgroundColor');
+                    this.resetIfDefined(this.initialValues.html.color, this.html.style, 'color');
                     document.querySelector('._access-menu [data-access-action="invertColors"]').classList.remove('active');
                     this.initialValues.invertColors = false;
                     return;
@@ -726,41 +728,48 @@ class Accessibility {
                 document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
                 this.initialValues.invertColors = !this.initialValues.invertColors;
                 if (this.initialValues.invertColors) {
-                    this.body.style.backgroundColor = 'rgba(0, 0, 0, 1)';
-                    this.body.style.color = 'rgb(255, 255, 255)';
+                    if (this.initialValues.grayHues)
+                        this.menuInterface.grayHues(true);
+                    this.html.style.filter = 'invert(1)';
                 }
                 else {
-                    this.body.style.backgroundColor = 'rgba(255, 255, 255, 1)';
-                    this.body.style.color = 'rgb(0, 0, 0)';
+                    this.html.style.filter = '';
                 }
             },
             grayHues: (destroy) => {
-                if (typeof this.initialValues.body.filter === 'undefined')
-                    this.initialValues.body.filter = getComputedStyle(this.body).filter;
-                if (typeof this.initialValues.body.webkitFilter === 'undefined')
-                    this.initialValues.body.webkitFilter = getComputedStyle(this.body).webkitFilter;
-                if (typeof this.initialValues.body.mozFilter === 'undefined')
-                    this.initialValues.body.mozFilter = getComputedStyle(this.body).mozFilter;
-                if (typeof this.initialValues.body.msFilter === 'undefined')
-                    this.initialValues.body.msFilter = getComputedStyle(this.body).msFilter;
+                if (typeof this.initialValues.html.filter === 'undefined')
+                    this.initialValues.html.filter = getComputedStyle(this.html).filter;
+                if (typeof this.initialValues.html.webkitFilter === 'undefined')
+                    this.initialValues.html.webkitFilter = getComputedStyle(this.html).webkitFilter;
+                if (typeof this.initialValues.html.mozFilter === 'undefined')
+                    this.initialValues.html.mozFilter = getComputedStyle(this.html).mozFilter;
+                if (typeof this.initialValues.html.msFilter === 'undefined')
+                    this.initialValues.html.msFilter = getComputedStyle(this.html).msFilter;
 
                 if (destroy) {
                     document.querySelector('._access-menu [data-access-action="grayHues"]').classList.remove('active');
                     this.initialValues.grayHues = false;
-                    this.resetIfDefined(this.initialValues.body.filter, this.body.style, 'filter');
-                    this.resetIfDefined(this.initialValues.body.webkitFilter, this.body.style, 'webkitFilter');
-                    this.resetIfDefined(this.initialValues.body.mozFilter, this.body.style, 'mozFilter');
-                    this.resetIfDefined(this.initialValues.body.msFilter, this.body.style, 'msFilter');
+                    this.resetIfDefined(this.initialValues.html.filter, this.html.style, 'filter');
+                    this.resetIfDefined(this.initialValues.html.webkitFilter, this.html.style, 'webkitFilter');
+                    this.resetIfDefined(this.initialValues.html.mozFilter, this.html.style, 'mozFilter');
+                    this.resetIfDefined(this.initialValues.html.msFilter, this.html.style, 'msFilter');
                     return;
                 }
 
                 document.querySelector('._access-menu [data-access-action="grayHues"]').classList.toggle('active');
                 this.initialValues.grayHues = !this.initialValues.grayHues;
-                let val = this.initialValues.grayHues ? 'grayscale(1)' : 'grayscale(0)';
-                this.body.style.webkitFilter = val;
-                this.body.style.mozFilter = val;
-                this.body.style.msFilter = val;
-                this.body.style.filter = val;
+                let val
+                if (this.initialValues.grayHues) {
+                    val = 'grayscale(1)'
+                    if (this.initialValues.invertColors)
+                        this.menuInterface.invertColors(true)
+                } else {
+                    val = ''
+                }
+                this.html.style.webkitFilter = val;
+                this.html.style.mozFilter = val;
+                this.html.style.msFilter = val;
+                this.html.style.filter = val;
             },
             underlineLinks: (destroy) => {
                 let className = '_access-underline';
@@ -863,22 +872,25 @@ class Accessibility {
                             position: fixed;
                             z-index: 1100;
                             top: 1vw;
-                            right: 1vw; 
+                            right: 1vw;
                             width: 36px;
                             height: 36px;
-                            font-size: 36px;
+                            font-size: 30px;
                             line-height: 36px;
                             border-radius: 50%;
                             background: rgba(255,255,255,0.7);
+                            display: flex;
+                            justify-content: center;
+                            aling-items: center;
                         }
 
                         body._access-listening:after {
-                            animation: _access-listening-animation 2s infinite;
+                            animation: _access-listening-animation 2s infinite ease;
                         }
 
                         @keyframes _access-listening-animation {
                             0%  {background-color: transparent;}
-                            50%  {background-color: red;}
+                            50%  {background-color: #EF9A9A;}
                         }
                     `;
                     common.injectStyle(css, { className: className });

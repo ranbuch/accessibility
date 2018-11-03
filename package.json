@@ -24,7 +24,7 @@
     "webpack": "^1.13.2"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/ranbuch/accessibility"
+    "type": "git",
+    "url": "https://github.com/ranbuch/accessibility"
   }
 }
