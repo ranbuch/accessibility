@@ -237,6 +237,7 @@ class Accessibility {
             left: 8px;
             position: absolute;
             color: rgba(0,0,0,.6);
+            direction: ltr;
         }
         ._access-menu ul li:hover:before {
             color: rgba(0,0,0,.8);
