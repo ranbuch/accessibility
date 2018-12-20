@@ -18,7 +18,8 @@ let _options = {
         backgroundColor: '#4054b2',
         color: '#fff',
         img: 'accessible',
-        circular: false
+        circular: false,
+        element: false
     },
     menu: {
         dimensions: {
@@ -666,7 +667,7 @@ class Accessibility {
         this.body = document.body || document.getElementsByTagName('body')[0];
         this.html = document.documentElement || document.getElementsByTagName('html')[0];
         this.injectCss();
-        this.icon = this.injectIcon();
+        this.icon = (!this.options.icon.element) ? this.injectIcon() : this.options.icon.element;
         this.menu = this.injectMenu();
         this.addListeners();
         this.disableUnsupportedModules();
