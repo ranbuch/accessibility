@@ -31,8 +31,8 @@ Easy to use!
 more documentation [here](https://ranbuch.github.io/accessibility/)
 
 ### LIMITATIONS & KNOWN ISSUES:
-* Works with html5 brousers only (no IE8 and below)
-* Text to speech & speech to text works in supported brousers and languages only
+* Works with html5 browsers only (no IE8 and below)
+* Text to speech & speech to text works in supported browsers and languages only
 * Gray hues is disabled in firefox due to a bug in firefox browser and will be enabled when it will be fixed
 
 ### MULTI LANGUAGE EXAMPLE:
