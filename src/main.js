@@ -81,11 +81,11 @@ class Accessibility {
 
     disabledUnsupportedFeatures() {
         if (!('webkitSpeechRecognition' in window) || location.protocol != 'https:') {
-            common.warn('speech to text isn\'t supported in this brouser or in http protocol (https required)');
+            common.warn('speech to text isn\'t supported in this browser or in http protocol (https required)');
             this.options.modules.speechToText = false;
         }
         if (!window.SpeechSynthesisUtterance || !window.speechSynthesis) {
-            common.warn('text to speech isn\'t supported in this brouser');
+            common.warn('text to speech isn\'t supported in this browser');
             this.options.modules.textToSpeech = false;
         }
         if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
