@@ -112,13 +112,13 @@ You can change the default icon as described [here](https://ranbuch.github.io/ac
         <img width="150" height="150"
         src="https://avatars0.githubusercontent.com/u/3777546?s=460&v=4">
         <br />
-        <a href="https://github.com/ranbuch">Tobias Koppers</a>
+        <a href="https://github.com/ranbuch">Ran Buchnik</a>
       </td>
       <td align="center">
         <img width="150" height="150"
         src="https://avatars0.githubusercontent.com/u/24736893?s=460&v=4">
         <br />
-        <a href="https://github.com/omarmfs98">PatrickJS</a>
+        <a href="https://github.com/omarmfs98">Omar Flórez</a>
       </td>      
     </tr>
   </tbody>
