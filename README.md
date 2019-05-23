@@ -15,6 +15,8 @@ initialize component:
     new Accessibility();
 }, false);`
 
+### Full Documentation [here](https://ranbuch.github.io/accessibility/)
+
 ### DESCRIPTION:
 **Features:**
 - [x]  increase text size
@@ -27,8 +29,6 @@ initialize component:
 
 >Does not depend any other directory (**jQuery is not required**).  
 Easy to use!
-  
-more documentation [here](https://ranbuch.github.io/accessibility/)
 
 ### LIMITATIONS & KNOWN ISSUES:
 * Works with html5 brousers only (no IE8 and below)
