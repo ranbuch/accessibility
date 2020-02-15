@@ -1038,7 +1038,6 @@ class Accessibility {
         //     let voices = window.speechSynthesis.getVoices();
         // }
         this.updateReadGuide = function (e) {
-            console.log(e);
             let newPos = 0;
             if(e.type=='touchmove'){
                 newPos = e.changedTouches[0].clientY
