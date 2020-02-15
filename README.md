@@ -63,9 +63,9 @@ Easy to use!
 `options.modules = {`  
     `increaseText: [true/false],`  
     `decreaseText: [true/false],`  
-    `invertColors: [true/false],`
-    `increaseTextSpacing: [true/false],`
-    `decreaseTextSpacing: [true/false],`
+    `invertColors: [true/false],`  
+    `increaseTextSpacing: [true/false],`  
+    `decreaseTextSpacing: [true/false],`  
     `grayHues: [true/false],`  
     `underlineLinks: [true/false],`  
     `bigCursor: [true/false],` 
