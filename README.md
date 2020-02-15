@@ -68,8 +68,8 @@ Easy to use!
     `decreaseTextSpacing: [true/false],`  
     `grayHues: [true/false],`  
     `underlineLinks: [true/false],`  
-    `bigCursor: [true/false],` 
-    `readingGuide: [true/false],` 
+    `bigCursor: [true/false],`  
+    `readingGuide: [true/false],`  
     `textToSpeech: [true/false],`  
     `speechToText: [true/false]`  
 `};`
