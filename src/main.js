@@ -703,7 +703,7 @@ class Accessibility {
     }
 
     alterTextSpace(isIncrease) {
-        let factor = 2;
+        let factor = 1;
         if (!isIncrease)
             factor *= -1;
         if (this.options.textPixelMode) {
@@ -723,7 +723,7 @@ class Accessibility {
                     all[i].style.wordSpacing = fSpacing + 'px';
                 }else{
                     all[i].setAttribute('data-init-word-spacing', fSpacing);
-                    all[i].style.wordSpacing = '1px';
+                    all[i].style.wordSpacing = factor+'px';
                 }
 
                 // letterSpacing
@@ -736,7 +736,7 @@ class Accessibility {
                     all[i].style.letterSpacing = fSpacing2 + 'px';
                 }else{
                     all[i].setAttribute('data-init-letter-spacing', fSpacing2);
-                    all[i].style.letterSpacing = '1px';
+                    all[i].style.letterSpacing = factor+'px';
                 }
             }
         }
