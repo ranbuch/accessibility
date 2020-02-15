@@ -40,7 +40,7 @@
                         <i class="large material-icons middle aligned icon" style="transform: rotate(90deg) translate(4px, 2px);">unfold_more</i>
                         <div class="content">
                             <a class="header">manipulate text spacing</a>
-                            <div class="description">increase or decrease text size. works with <b>em</b> <b>/</b> <b>rem</b> / <b>px</b> or any type
+                            <div class="description">increase or decrease text space. works with <b>em</b> <b>/</b> <b>rem</b> / <b>px</b> or any type
                                 of font-size units</div>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <i class="large material-icons middle aligned icon">border_horizontal</i>
                         <div class="content">
                             <a class="header">reading guide</a>
-                            <div class="description">add a horizontal line that bind to the mouse position</div>
+                            <div class="description">add a horizontal line that bind to the mouse or touch position</div>
                         </div>
                     </div>
                     <div class="item">
@@ -177,7 +177,6 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;invertColors: 'invert colors (in my language)',<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;grayHues: 'gray hues (in my language)',<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;underlineLinks: 'underline links (in my language)',<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;hotkeys: 'hotkeys (in my language)',<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;bigCursor: 'big cursor (in my language)',<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;readingGuide: 'reading guide (in my language)',<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;textToSpeech: 'text to speech (in my language)',<br>
@@ -204,7 +203,6 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;decreaseTextSpacing: [true/false],<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;grayHues: [true/false],<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;underlineLinks: [true/false],<br>
-                        &nbsp;&nbsp;&nbsp;&nbsp;hotkeys: [true/false],<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;bigCursor: [true/false],<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;readingGuide: [true/false],<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;textToSpeech: [true/false],<br>  
@@ -215,6 +213,67 @@
                     <p>
                         When the default is <b>true</b>
                     </p>
+                </p>
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">hotkeys module</h3>
+
+                <p>
+                    <p>
+                        This module is <b>disabled</b> by default
+                    </p>
+                    <code>
+                        var options = {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;hotkeys: {<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled: [true/false]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+                        };<br>
+                        new Accessibility(options);
+                    </code><br><br>
+
+                    <p>
+                        Help text is active by default in the buttons title, you can disable or enable setting in &nbsp;&nbsp;<code>options.hotkeys.helpTitles = [true/false];</code>
+                    </p>
+                    <p><b>Hotkeys Defaults</b></p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td>Module or Function</td>
+                                <td>Hotkey</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Toggle Menu</td>
+                                <td>CTRL + ALT + A</td>
+                            </tr>
+                            <tr>
+                                <td>Gray Hues</td>
+                                <td>CTRL + ALT + G</td>
+                            </tr>
+                            <tr>
+                                <td>Underline Links</td>
+                                <td>CTRL + ALT + U</td>
+                            </tr>
+                            <tr>
+                                <td>Big Cursor</td>
+                                <td>CTRL + ALT + C</td>
+                            </tr>
+                            <tr>
+                                <td>Reading Guide</td>
+                                <td>CTRL + ALT + R</td>
+                            </tr>
+                            <tr>
+                                <td>Text To Speech</td>
+                                <td>CTRL + ALT + T</td>
+                            </tr>
+                            <tr>
+                                <td>Speech To Text</td>
+                                <td>CTRL + ALT + S</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </p>
             </div>
 
@@ -237,7 +296,7 @@
                 <h3 class="ui header">animations</h3>
 
                 <p>
-                    Cancel menu buttons animations:
+                    Cancel all buttons animations:
                 </p>
                 <code>
                     new Accessibility({animations: {buttons: false}})

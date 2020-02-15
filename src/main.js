@@ -206,8 +206,10 @@ class Accessibility {
             transform: scale(1);
         }
         ._access-icon:hover {
+            ` + this.options.animations.buttons ? `
             box-shadow: 1px 1px 10px rgba(0,0,0,.9);
             transform: scale(1.1);
+            ` : '' + `
         }
         .circular._access-icon {
             border-radius: 50%;
@@ -299,7 +301,7 @@ class Accessibility {
             transform: rotate(0deg);
         }
         ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {
-            transform: rotate(180deg);
+            ` + this.options.animations.buttons ? 'transform: rotate(180deg);' : '' + `
         }
         ._access-menu ._menu-reset-btn {
             right: 5px;

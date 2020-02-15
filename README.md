@@ -24,6 +24,8 @@ initialize component:
 - [x]  invert colors
 - [x]  gray hues
 - [x]  underline links
+- [x]  big cursor
+- [x]  reading guide
 - [x]  text to speech 
 - [x]  speech to text
 
@@ -46,6 +48,8 @@ Easy to use!
     invertColors: 'invert colors (in my language)',
     grayHues: 'gray hues (in my language)',
     underlineLinks: 'underline links (in my language)',
+    bigCursor: 'big cursor (in my language)',
+    readingGuide: 'reading guide (in my language)',
     textToSpeech: 'text to speech (in my language)',
     speechToText: 'speech to text (in my language)'`  
 `};`  
@@ -64,6 +68,8 @@ Easy to use!
     `decreaseTextSpacing: [true/false]`
     `grayHues: [true/false],`  
     `underlineLinks: [true/false],`  
+    `bigCursor: [true/false],` 
+    `readingGuide: [true/false],` 
     `textToSpeech: [true/false],`  
     `speechToText: [true/false]`  
 `};`
@@ -76,7 +82,7 @@ In that case you can initialize the accessibility tool like this:
 `new Accessibility({textPixelMode: true})`
 
 ### ANIMATIONS:
-Cancel menu buttons animations:  
+Cancel all buttons animations:  
 `new Accessibility({animations: {buttons: false}})`
 
 ### POSITIONING:
