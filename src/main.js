@@ -66,6 +66,7 @@ let _options = {
                 83
             ]
         }
+    },
     buttons: {
         font: { size: 18, units: 'px' }
     },
@@ -480,7 +481,6 @@ class Accessibility {
     parseKeys(arr){
        return (this.options.hotkeys.enabled? (this.options.hotkeys.helpTitles? 'Hotkey: '+arr.map(function(val) { return Number.isInteger(val)?String.fromCharCode(val).toLowerCase():val.replace('Key','') }).join('+') :'') :'')
     }
-
 
     injectMenu() {
         let menuElem = common.jsonToHtml({
@@ -1037,7 +1037,16 @@ class Accessibility {
         // if (window.SpeechSynthesisUtterance || window.speechSynthesis) {
         //     let voices = window.speechSynthesis.getVoices();
         // }
-
+        this.updateReadGuide = function (e) {
+            console.log(e);
+            let newPos = 0;
+            if(e.type=='touchmove'){
+                newPos = e.changedTouches[0].clientY
+            }else{
+                newPos = e.y;
+            }
+            document.getElementById('access_read_guide_bar').style.top = (newPos - (parseInt(self.options.guide.height.replace('px')) + 5)) + 'px';
+        }
         this.menuInterface = {
             increaseText: () => {
                 this.alterTextSize(true);
@@ -1178,7 +1187,7 @@ class Accessibility {
                     document.body.onmousemove = null;
                     return;
                 }
-
+ 
 
                 document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
                 this.initialValues.readingGuide = !this.initialValues.readingGuide;
@@ -1187,14 +1196,14 @@ class Accessibility {
                     read.id = 'access_read_guide_bar';
                     read.classList.add('access_read_guide_bar');
                     document.body.append(read);
-                    document.body.onmousemove = function(e) {
-                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(self.options.guide.height.replace('px'))+5) ) +'px';
-                    };
+                    document.body.addEventListener('touchmove', this.updateReadGuide, false);
+                    document.body.addEventListener('mousemove', this.updateReadGuide, false);
                 }else{
                     if(document.getElementById('access_read_guide_bar')!=undefined){
                         document.getElementById('access_read_guide_bar').remove();
                     }
-                    document.body.onmousemove = null;
+                    document.body.removeEventListener('touchmove', this.updateReadGuide, false);
+                    document.body.removeEventListener('mousemove', this.updateReadGuide, false);
                 }
             },
             textToSpeech: (destroy) => {
