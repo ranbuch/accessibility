@@ -4,8 +4,8 @@ var options = {
 		enabled: true
 	},
 	icon: {
-		circular: [true],
-		img: ['accessibility'],
+		circular: true,
+		img: ['accessible'],
 	}
 }
 

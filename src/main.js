@@ -7,7 +7,7 @@ let _options = {
     icon: {
         position: {
             bottom: { size: 50, units: 'px' },
-            right: { size: 10, units: 'px' },
+            right: { size: 0, units: 'px' },
             type: 'fixed'
         },
         dimensions: {
@@ -79,7 +79,7 @@ let _options = {
         fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
     },
     labels: {
-        refreshTitle: 'Refresh',
+        resetTitle: 'Reset',
         closeTitle: 'Close',
         menuTitle: 'Accessibility Options',
         increaseText: 'increase text size',
@@ -120,6 +120,9 @@ let self = null;
 class Accessibility {
     constructor(options = {}) {
         self = this;
+        if(common.extend(_options, options).icon.circular){
+            _options.icon.position.right.size = 10;
+        }
         options = this.deleteOppositesIfDefined(options);
         this.options = common.extend(_options, options);
         this.disabledUnsupportedFeatures();
@@ -267,10 +270,17 @@ class Accessibility {
         ._access-menu ._menu-close-btn {
             left: 5px;
             color: #d63c3c;
+            transition: .3s ease;
+            transform: rotate(0deg);
+        }
+        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {
+            transform: rotate(180deg);
         }
         ._access-menu ._menu-reset-btn {
             right: 5px;
             color: #4054b2;
+            transition: .3s ease;
+            transform: rotate(0deg);
         }
         ._access-menu ._menu-btn {
             position: absolute;
@@ -480,7 +490,7 @@ class Accessibility {
                             type: 'i',
                             attrs: {
                                 'class': '_menu-reset-btn _menu-btn material-icons',
-                                'title': this.options.labels.refreshTitle
+                                'title': this.options.labels.resetTitle
                             },
                             children: [
                                 {
@@ -958,9 +968,8 @@ class Accessibility {
         this.addListeners();
         this.disableUnsupportedModules();
         if(this.options.hotkeys.enabled){
-            let vm = this;
             document.onkeydown = function(e) {
-                let act = Object.entries(vm.options.hotkeys.keys).find(function(val) {
+                let act = Object.entries(self.options.hotkeys.keys).find(function(val) {
                     let pass = true;
                     for (var i = 0; i < val[1].length; i++) {
                         if( Number.isInteger((val[1])[i]) ){
@@ -976,7 +985,7 @@ class Accessibility {
                     return pass;
                 });
                 if(act!=undefined){
-                    vm.runHotkey(act[0]);
+                    self.runHotkey(act[0]);
                 }
             }
         }
@@ -1130,9 +1139,8 @@ class Accessibility {
                     read.id = 'access_read_guide_bar';
                     read.classList.add('access_read_guide_bar');
                     document.body.append(read);
-                    let vm = this
                     document.body.onmousemove = function(e) {
-                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(vm.options.guide.height.replace('px'))+5) ) +'px';
+                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(self.options.guide.height.replace('px'))+5) ) +'px';
                     };
                 }else{
                     if(document.getElementById('access_read_guide_bar')!=undefined){
