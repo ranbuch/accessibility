@@ -21,10 +21,10 @@ let _options = {
         img: 'accessible',
         circular: false
     },
-    hotkeys:{
+    hotkeys: {
         enabled: false,
         helpTitles: true,
-        keys:{
+        keys: {
             toggleMenu: [
                 'ctrlKey',
                 'altKey',
@@ -70,7 +70,7 @@ let _options = {
     buttons: {
         font: { size: 18, units: 'px' }
     },
-    guide:{
+    guide: {
         cBorder: '#20ff69',
         cBackground: '#000000',
         height: '12px'
@@ -127,7 +127,7 @@ let self = null;
 class Accessibility {
     constructor(options = {}) {
         self = this;
-        if(common.extend(_options, options).icon.circular){
+        if (common.extend(_options, options).icon.circular) {
             _options.icon.position.right.size = 10;
         }
         options = this.deleteOppositesIfDefined(options);
@@ -478,8 +478,8 @@ class Accessibility {
     //     head.appendChild(link);
     // }
 
-    parseKeys(arr){
-       return (this.options.hotkeys.enabled? (this.options.hotkeys.helpTitles? 'Hotkey: '+arr.map(function(val) { return Number.isInteger(val)?String.fromCharCode(val).toLowerCase():val.replace('Key','') }).join('+') :'') :'')
+    parseKeys(arr) {
+        return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? 'Hotkey: ' + arr.map(function (val) { return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', '') }).join('+') : '') : '')
     }
 
 
@@ -630,7 +630,7 @@ class Accessibility {
                             children: [
                                 {
                                     type: 'div',
-                                    attrs:{
+                                    attrs: {
                                         'id': 'iconBigCursor',
                                     }
                                 },
@@ -687,11 +687,11 @@ class Accessibility {
         }
 
         this.body.appendChild(menuElem);
-        setTimeout(function() {
+        setTimeout(function () {
             let ic = document.getElementById('iconBigCursor');
             ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
             document.getElementById('iconBigCursor').remove();
-        },1);
+        }, 1);
         common.deployedObjects.set('._access-menu', false);
         let closeBtn = document.querySelector('._access-menu ._menu-close-btn');
         closeBtn.addEventListener('click', () => {
@@ -813,7 +813,7 @@ class Accessibility {
             let all = document.querySelectorAll('*:not(._access)');
             let exclude = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
             for (let i = 0; i < all.length; i++) {
-                if(exclude.includes(all[i])){
+                if (exclude.includes(all[i])) {
                     continue;
                 }
                 // wordSpacing
@@ -824,9 +824,9 @@ class Accessibility {
                         all[i].setAttribute('data-init-word-spacing', fSpacing);
                     fSpacing = (fSpacing.replace('px', '') * 1) + factor;
                     all[i].style.wordSpacing = fSpacing + 'px';
-                }else{
+                } else {
                     all[i].setAttribute('data-init-word-spacing', fSpacing);
-                    all[i].style.wordSpacing = factor+'px';
+                    all[i].style.wordSpacing = factor + 'px';
                 }
 
                 // letterSpacing
@@ -837,9 +837,9 @@ class Accessibility {
                         all[i].setAttribute('data-init-letter-spacing', fSpacing2);
                     fSpacing2 = (fSpacing2.replace('px', '') * 1) + factor;
                     all[i].style.letterSpacing = fSpacing2 + 'px';
-                }else{
+                } else {
                     all[i].setAttribute('data-init-letter-spacing', fSpacing2);
-                    all[i].style.letterSpacing = factor+'px';
+                    all[i].style.letterSpacing = factor + 'px';
                 }
             }
         }
@@ -952,14 +952,14 @@ class Accessibility {
         self.textToSpeech(window.event.target.innerText);
         // }
     }
-    runHotkey(name){
-        switch(name){
+    runHotkey(name) {
+        switch (name) {
             case 'toggleMenu':
                 this.toggleMenu();
                 break;
             default:
-                if(this.menuInterface.hasOwnProperty(name)){
-                    if( this.options.modules[name] ){
+                if (this.menuInterface.hasOwnProperty(name)) {
+                    if (this.options.modules[name]) {
                         this.menuInterface[name](false);
                     }
                 }
@@ -1004,24 +1004,24 @@ class Accessibility {
         this.menu = this.injectMenu();
         this.addListeners();
         this.disableUnsupportedModules();
-        if(this.options.hotkeys.enabled){
-            document.onkeydown = function(e) {
-                let act = Object.entries(self.options.hotkeys.keys).find(function(val) {
+        if (this.options.hotkeys.enabled) {
+            document.onkeydown = function (e) {
+                let act = Object.entries(self.options.hotkeys.keys).find(function (val) {
                     let pass = true;
                     for (var i = 0; i < val[1].length; i++) {
-                        if( Number.isInteger((val[1])[i]) ){
-                            if(e.keyCode != (val[1])[i]){
+                        if (Number.isInteger((val[1])[i])) {
+                            if (e.keyCode != (val[1])[i]) {
                                 pass = false;
                             }
-                        }else{
-                            if( e[(val[1])[i]] == undefined || e[(val[1])[i]] == false){
+                        } else {
+                            if (e[(val[1])[i]] == undefined || e[(val[1])[i]] == false) {
                                 pass = false;
                             }
                         }
                     }
                     return pass;
                 });
-                if(act!=undefined){
+                if (act != undefined) {
                     self.runHotkey(act[0]);
                 }
             }
@@ -1171,7 +1171,7 @@ class Accessibility {
                 this.sessionState.readingGuide = typeof destroy === 'undefined' ? true : false;
                 this.onChange(true);
                 if (destroy) {
-                    if(document.getElementById('access_read_guide_bar')!=undefined){
+                    if (document.getElementById('access_read_guide_bar') != undefined) {
                         document.getElementById('access_read_guide_bar').remove();
                     }
                     document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.remove('active');
@@ -1183,16 +1183,16 @@ class Accessibility {
 
                 document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
                 this.initialValues.readingGuide = !this.initialValues.readingGuide;
-                if(this.initialValues.readingGuide){
+                if (this.initialValues.readingGuide) {
                     let read = document.createElement("div");
                     read.id = 'access_read_guide_bar';
                     read.classList.add('access_read_guide_bar');
                     document.body.append(read);
-                    document.body.onmousemove = function(e) {
-                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(self.options.guide.height.replace('px'))+5) ) +'px';
+                    document.body.onmousemove = function (e) {
+                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(self.options.guide.height.replace('px')) + 5)) + 'px';
                     };
-                }else{
-                    if(document.getElementById('access_read_guide_bar')!=undefined){
+                } else {
+                    if (document.getElementById('access_read_guide_bar') != undefined) {
                         document.getElementById('access_read_guide_bar').remove();
                     }
                     document.body.onmousemove = null;
@@ -1364,7 +1364,7 @@ class Accessibility {
             if (sessionState.bigCursor)
                 this.menuInterface.bigCursor();
             if (sessionState.readingGuide)
-                this.menuInterface.readingGuide();    
+                this.menuInterface.readingGuide();
             this.sessionState = sessionState;
         }
     }

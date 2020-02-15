@@ -55,3 +55,7 @@ h3.ui.header {
 code, code * {
     background-color: rgba(200,200,200,0.2);
 }
+
+.svg-wrap {
+    position: relative;
+}
