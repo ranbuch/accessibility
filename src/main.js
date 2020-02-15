@@ -1,5 +1,6 @@
 'use strict';
 import common from './common';
+import storage from './storage';
 
 common.injectIconsCss();
 
@@ -19,6 +20,9 @@ let _options = {
         color: '#fff',
         img: 'accessible',
         circular: false
+    },
+    buttons: {
+        font: { size: 18, units: 'px' }
     },
     menu: {
         dimensions: {
@@ -51,6 +55,9 @@ let _options = {
         underlineLinks: true,
         textToSpeech: true,
         speechToText: true
+    },
+    session: {
+        persistent: true
     }
 };
 
@@ -62,7 +69,17 @@ class Accessibility {
         options = this.deleteOppositesIfDefined(options);
         this.options = common.extend(_options, options);
         this.disabledUnsupportedFeatures();
+        this.sessionState = {
+            textSize: 0,
+            invertColors: false,
+            grayHues: false,
+            underlineLinks: false
+            // textToSpeech: false,
+            // speechToText: false
+        };
         this.build();
+        if (this.options.session.persistent)
+            this.setSessionFromCache();
     }
 
     deleteOppositesIfDefined(options) {
@@ -200,8 +217,8 @@ class Accessibility {
             border-radius: 4px;
             transition-duration: .5s;
             transition-timing-function: ease-in-out;
-            font-size: 18px !important;
-            line-height: 18px !important;
+            font-size: ` + this.options.buttons.font.size + this.options.buttons.font.units + ` !important;
+            line-height: ` + this.options.buttons.font.size + this.options.buttons.font.units + ` !important;
             text-indent: 5px;
             background: #f9f9f9;
             color: rgba(0,0,0,.6);
@@ -513,9 +530,14 @@ class Accessibility {
             all[i].style.fontSize = all[i].getAttribute('data-init-font-size');
             all[i].removeAttribute('data-init-font-size');
         }
+
+        this.sessionState.textSize = 0;
+        this.onChange(true);
     }
 
     alterTextSize(isIncrease) {
+        this.sessionState.textSize += isIncrease ? 1 : -1;
+        this.onChange(true);
         let factor = 2;
         if (!isIncrease)
             factor *= -1;
@@ -679,9 +701,9 @@ class Accessibility {
             this.icon.style.opacity = '1';
         }, 10);
 
-        if (window.SpeechSynthesisUtterance || window.speechSynthesis) {
-            let voices = window.speechSynthesis.getVoices();
-        }
+        // if (window.SpeechSynthesisUtterance || window.speechSynthesis) {
+        //     let voices = window.speechSynthesis.getVoices();
+        // }
 
         this.menuInterface = {
             increaseText: () => {
@@ -691,6 +713,9 @@ class Accessibility {
                 this.alterTextSize(false);
             },
             invertColors: (destroy) => {
+                console.log(destroy);
+                this.sessionState.invertColors = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
                 if (typeof this.initialValues.html.backgroundColor === 'undefined')
                     this.initialValues.html.backgroundColor = getComputedStyle(this.html).backgroundColor;
                 if (typeof this.initialValues.html.color === 'undefined')
@@ -701,6 +726,7 @@ class Accessibility {
                     this.resetIfDefined(this.initialValues.html.color, this.html.style, 'color');
                     document.querySelector('._access-menu [data-access-action="invertColors"]').classList.remove('active');
                     this.initialValues.invertColors = false;
+                    this.html.style.filter = '';
                     return;
                 }
 
@@ -717,6 +743,8 @@ class Accessibility {
                 }
             },
             grayHues: (destroy) => {
+                this.sessionState.grayHues = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
                 if (typeof this.initialValues.html.filter === 'undefined')
                     this.initialValues.html.filter = getComputedStyle(this.html).filter;
                 if (typeof this.initialValues.html.webkitFilter === 'undefined')
@@ -752,6 +780,8 @@ class Accessibility {
                 this.html.style.filter = val;
             },
             underlineLinks: (destroy) => {
+                this.sessionState.underlineLinks = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
                 let className = '_access-underline';
                 let remove = () => {
                     let style = document.querySelector('.' + className);
@@ -783,6 +813,8 @@ class Accessibility {
                 }
             },
             textToSpeech: (destroy) => {
+                // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
+                this.onChange(false);
                 let className = '_access-text-to-speech';
                 let remove = () => {
                     let style = document.querySelector('.' + className);
@@ -817,6 +849,8 @@ class Accessibility {
                 }
             },
             speechToText: (destroy) => {
+                // this.sessionState.speechToText = typeof destroy === 'undefined' ? true : false;
+                this.onChange(false);
                 let className = '_access-speech-to-text';
                 let remove = () => {
                     if (this.recognition) {
@@ -895,6 +929,45 @@ class Accessibility {
     resetIfDefined(src, dest, prop) {
         if (typeof src !== 'undefined')
             dest[prop] = src;
+    }
+
+    onChange(updateSession) {
+        if (updateSession && this.options.session.persistent)
+            this.saveSession();
+    }
+
+    saveSession() {
+        storage.set('_accessState', this.sessionState);
+    }
+
+    setSessionFromCache() {
+        let sessionState = storage.get('_accessState');
+        if (sessionState) {
+            if (sessionState.textSize) {
+                let textSize = sessionState.textSize;
+                if (textSize > 0) {
+                    while (textSize--) {
+                        this.alterTextSize(true);
+                    }
+                }
+                else {
+                    while (textSize++) {
+                        this.alterTextSize(false);
+                    }
+                }
+            }
+            if (sessionState.invertColors)
+                this.menuInterface.invertColors();
+            if (sessionState.grayHues)
+                this.menuInterface.grayHues();
+            if (sessionState.underlineLinks)
+                this.menuInterface.underlineLinks();
+            // if (sessionState.textToSpeech)
+            //     this.menuInterface.textToSpeech();
+            // if (sessionState.speechToText)
+            //     this.menuInterface.speechToText();
+            this.sessionState = sessionState;
+        }
     }
 
     destroy() {
