@@ -1,11 +1,11 @@
 var options = {
-	textPixelMode: true,
+	textPixelMode: false,
 	hotkeys:{
 		enabled: true
 	},
 	icon: {
-		circular: true,
-		img: ['accessible'],
+		circular: false,
+		img: 'accessible',
 	}
 }
 
