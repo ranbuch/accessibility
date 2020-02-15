@@ -66,6 +66,7 @@ let _options = {
                 83
             ]
         }
+    },
     buttons: {
         font: { size: 18, units: 'px' }
     },
