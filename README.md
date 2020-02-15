@@ -88,13 +88,13 @@ Cancel all buttons animations:
 ### POSITIONING:
 You can position the accessibility icon in any place on the screen. The default position is bottom right:  
 `var options = {`  
-    `icon: {`  
-        `position: {`  
-            `bottom: { size: 50, units: 'px' },`  
-            `right: { size: 0, units: 'px' },`  
-            `type: 'fixed'`  
-        `}`  
-    `}`  
+&nbsp;&nbsp;&nbsp;&nbsp;`icon: {`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`position: {`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`bottom: { size: 50, units: 'px' },`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`right: { size: 0, units: 'px' },`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`type: 'fixed'`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`}`  
+&nbsp;&nbsp;&nbsp;&nbsp;`}`  
 `}`  
 `new Accessibility(options);`  
 But you can also position the icon in the upper left corner of the screen and cancel the fixed positioning:  
