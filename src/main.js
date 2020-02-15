@@ -8,7 +8,7 @@ let _options = {
     icon: {
         position: {
             bottom: { size: 50, units: 'px' },
-            right: { size: 0, units: 'px' },
+            right: { size: 10, units: 'px' },
             type: 'fixed'
         },
         dimensions: {
@@ -24,6 +24,11 @@ let _options = {
     buttons: {
         font: { size: 18, units: 'px' }
     },
+    guide:{
+        cBorder: '#20ff69',
+        cBackground: '#000000',
+        height: '12px'
+    },
     menu: {
         dimensions: {
             width: { size: 25, units: 'vw' },
@@ -32,11 +37,17 @@ let _options = {
         fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
     },
     labels: {
+        refreshTitle: 'Refresh',
+        closeTitle: 'Close',
         menuTitle: 'Accessibility Options',
         increaseText: 'increase text size',
         decreaseText: 'decrease text size',
+        increaseTextSpacing: 'increase text spacing',
+        decreaseTextSpacing: 'decrease text spacing',
         invertColors: 'invert colors',
         grayHues: 'gray hues',
+        bigCursor: 'big cursor',
+        readingGuide: 'reading guide',
         underlineLinks: 'underline links',
         textToSpeech: 'text to speech',
         speechToText: 'speech to text'
@@ -50,8 +61,12 @@ let _options = {
     modules: {
         increaseText: true,
         decreaseText: true,
+        increaseTextSpacing: true,
+        decreaseTextSpacing: true,
         invertColors: true,
         grayHues: true,
+        bigCursor: true,
+        readingGuide: true,
         underlineLinks: true,
         textToSpeech: true,
         speechToText: true
@@ -71,11 +86,12 @@ class Accessibility {
         this.disabledUnsupportedFeatures();
         this.sessionState = {
             textSize: 0,
+            textSpace: 0,
             invertColors: false,
             grayHues: false,
-            underlineLinks: false
-            // textToSpeech: false,
-            // speechToText: false
+            underlineLinks: false,
+            bigCursor: false,
+            readingGuide: false
         };
         this.build();
         if (this.options.session.persistent)
@@ -113,6 +129,19 @@ class Accessibility {
 
     injectCss() {
         let css = `
+        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+        
+        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {
+            width: 6px;
+            background-color: #F5F5F5;
+        }
+        
+        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {
+            background-color: #999999;
+        }
         ._access-icon {
             position: `+ this.options.icon.position.type + `;
             background-repeat: no-repeat;
@@ -124,9 +153,38 @@ class Accessibility {
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            box-shadow: 1px 1px 5px rgba(0,0,0,.5);
+            transform: scale(1);
+        }
+        ._access-icon:hover {
+            box-shadow: 1px 1px 10px rgba(0,0,0,.9);
+            transform: scale(1.1);
         }
         .circular._access-icon {
             border-radius: 50%;
+            border: .5px solid white;
+        }
+        .access_read_guide_bar{
+            box-sizing: border-box;
+            background: `+ this.options.guide.cBackground + `;
+            width: 100%!important;
+            min-width: 100%!important;
+            position: fixed!important;
+            height: `+ this.options.guide.height + `!important;
+            border: solid 3px `+ this.options.guide.cBorder + `;
+            border-radius: 5px;
+            top: 15px;
+            z-index: 2147483647;
+        }
+        .access-high-contrast *{
+            background-color: #000 !important;
+            background-image: none !important;
+            border-color: #fff !important;
+            -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+            color: #fff !important;
+            text-indent: 0 !important;
+            text-shadow: none !important;
         }
         ._access-menu {
             -moz-user-select: none;
@@ -182,6 +240,8 @@ class Accessibility {
             margin-bottom: 20px;
             padding: 0;
             color: rgba(0,0,0,.87);
+            letter-spacing: initial!important;
+            word-spacing: initial!important;
         }
         ._access-menu ._menu-close-btn {
             left: 5px;
@@ -203,6 +263,11 @@ class Accessibility {
             position: relative;
             font-size: 18px !important;
             margin: 0;
+            overflow: auto;
+            max-height: calc(100vh - 77px);
+        }
+        html._access_cursor * {
+            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;
         }
         ._access-menu ul li {
             list-style-type: none;
@@ -222,6 +287,8 @@ class Accessibility {
             text-indent: 5px;
             background: #f9f9f9;
             color: rgba(0,0,0,.6);
+            letter-spacing: initial!important;
+            word-spacing: initial!important;
         }
         ._access-menu ul.before-collapse li {
             opacity: 0.05;
@@ -256,6 +323,15 @@ class Accessibility {
             color: rgba(0,0,0,.6);
             direction: ltr;
         }
+        ._access-menu ul li svg path {
+            fill: rgba(0,0,0,.6);
+        }
+        ._access-menu ul li:hover svg path {
+            fill: rgba(0,0,0,.8);
+        }
+        ._access-menu ul li.active svg path {
+            fill: #fff;
+        }
         ._access-menu ul li:hover:before {
             color: rgba(0,0,0,.8);
         }
@@ -268,6 +344,14 @@ class Accessibility {
         ._access-menu ul li[data-access-action="decreaseText"]:before {
             content: 'zoom_out';
         }
+        ._access-menu ul li[data-access-action="increaseTextSpacing"]:before {
+            content: 'unfold_more';
+            transform: rotate(90deg) translate(-7px, 2px);
+        }
+        ._access-menu ul li[data-access-action="decreaseTextSpacing"]:before {
+            content: 'unfold_less';
+            transform: rotate(90deg) translate(-7px, 2px);
+        }
         ._access-menu ul li[data-access-action="invertColors"]:before {
             content: 'invert_colors';
         }
@@ -276,6 +360,12 @@ class Accessibility {
         }
         ._access-menu ul li[data-access-action="underlineLinks"]:before {
             content: 'format_underlined';
+        }
+        ._access-menu ul li[data-access-action="bigCursor"]:before {
+            /*content: 'touch_app';*/
+        }
+        ._access-menu ul li[data-access-action="readingGuide"]:before {
+            content: 'border_horizontal';
         }
         ._access-menu ul li[data-access-action="textToSpeech"]:before {
             content: 'record_voice_over';
@@ -304,7 +394,8 @@ class Accessibility {
             type: 'i',
             attrs: {
                 'class': className,
-                'style': iStyle
+                'style': iStyle,
+                'title': this.options.labels.menuTitle
             },
             children: [
                 {
@@ -347,7 +438,8 @@ class Accessibility {
                         {
                             type: 'i',
                             attrs: {
-                                'class': '_menu-close-btn _menu-btn material-icons'
+                                'class': '_menu-close-btn _menu-btn material-icons',
+                                'title': this.options.labels.closeTitle
                             },
                             children: [
                                 {
@@ -363,7 +455,8 @@ class Accessibility {
                         {
                             type: 'i',
                             attrs: {
-                                'class': '_menu-reset-btn _menu-btn material-icons'
+                                'class': '_menu-reset-btn _menu-btn material-icons',
+                                'title': this.options.labels.refreshTitle
                             },
                             children: [
                                 {
@@ -377,7 +470,7 @@ class Accessibility {
                 {
                     type: 'ul',
                     attrs: {
-                        'class': (this.options.animations.buttons ? 'before-collapse' : '')
+                        'class': (this.options.animations.buttons ? 'before-collapse _access-scrollbar' : '_access-scrollbar')
                     },
                     children: [
                         {
@@ -401,6 +494,30 @@ class Accessibility {
                                 {
                                     type: '#text',
                                     text: this.options.labels.decreaseText
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            attrs: {
+                                'data-access-action': 'increaseTextSpacing'
+                            },
+                            children: [
+                                {
+                                    type: '#text',
+                                    text: this.options.labels.increaseTextSpacing
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            attrs: {
+                                'data-access-action': 'decreaseTextSpacing'
+                            },
+                            children: [
+                                {
+                                    type: '#text',
+                                    text: this.options.labels.decreaseTextSpacing
                                 }
                             ]
                         },
@@ -443,6 +560,36 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
+                                'data-access-action': 'bigCursor'
+                            },
+                            children: [
+                                {
+                                    type: 'div',
+                                    attrs:{
+                                        'id': 'iconBigCursor',
+                                    }
+                                },
+                                {
+                                    type: '#text',
+                                    text: this.options.labels.bigCursor
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            attrs: {
+                                'data-access-action': 'readingGuide'
+                            },
+                            children: [
+                                {
+                                    type: '#text',
+                                    text: this.options.labels.readingGuide
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            attrs: {
                                 'data-access-action': 'textToSpeech'
                             },
                             children: [
@@ -474,6 +621,11 @@ class Accessibility {
         }
 
         this.body.appendChild(menuElem);
+        setTimeout(function() {
+            let ic = document.getElementById('iconBigCursor');
+            ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
+            document.getElementById('iconBigCursor').remove();
+        },1);
         common.deployedObjects.set('._access-menu', false);
         let closeBtn = document.querySelector('._access-menu ._menu-close-btn');
         closeBtn.addEventListener('click', () => {
@@ -514,8 +666,10 @@ class Accessibility {
         this.menuInterface.underlineLinks(true);
         this.menuInterface.grayHues(true);
         this.menuInterface.invertColors(true);
+        this.menuInterface.bigCursor(true);
+        this.menuInterface.readingGuide(true);
         this.resetTextSize();
-
+        this.resetTextSpace();
         // for (let i of document.querySelectorAll('._access-menu ul li.active')) {
         //     i.classList.remove('active');
         // }
@@ -532,6 +686,25 @@ class Accessibility {
         }
 
         this.sessionState.textSize = 0;
+        this.onChange(true);
+    }
+
+    resetTextSpace() {
+        this.resetIfDefined(this.initialValues.body.wordSpacing, this.body.style, 'wordSpacing');
+        this.resetIfDefined(this.initialValues.body.letterSpacing, this.body.style, 'letterSpacing');
+        let all = document.querySelectorAll('[data-init-word-spacing]');
+        let all2 = document.querySelectorAll('[data-init-letter-spacing]');
+
+        for (let i = 0; i < all.length; i++) {
+            all[i].style.wordSpacing = all[i].getAttribute('data-init-word-spacing');
+            all[i].removeAttribute('data-init-word-spacing');
+        }
+        for (let i = 0; i < all2.length; i++) {
+            all[i].style.letterSpacing = all[i].getAttribute('data-init-letter-spacing');
+            all[i].removeAttribute('data-init-letter-spacing');
+        }
+
+        this.sessionState.textSpace = 0;
         this.onChange(true);
     }
 
@@ -560,6 +733,64 @@ class Accessibility {
                 this.initialValues.body.fontSize = fSize.size + fSize.sufix;
             if (fSize && fSize.sufix && !isNaN(fSize.size * 1)) {
                 this.body.style.fontSize = ((fSize.size * 1) + factor) + fSize.sufix;
+            }
+        }
+    }
+
+    alterTextSpace(isIncrease) {
+        this.sessionState.textSpace += isIncrease ? 1 : -1;
+        this.onChange(true);
+        let factor = 1;
+        if (!isIncrease)
+            factor *= -1;
+        if (this.options.textPixelMode) {
+            let all = document.querySelectorAll('*:not(._access)');
+            let exclude = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
+            for (let i = 0; i < all.length; i++) {
+                if(exclude.includes(all[i])){
+                    continue;
+                }
+                // wordSpacing
+                //let fSpacing = getComputedStyle(all[i]).wordSpacing;
+                let fSpacing = all[i].style.wordSpacing;
+                if (fSpacing && (fSpacing.indexOf('px') > -1)) {
+                    if (!all[i].getAttribute('data-init-word-spacing'))
+                        all[i].setAttribute('data-init-word-spacing', fSpacing);
+                    fSpacing = (fSpacing.replace('px', '') * 1) + factor;
+                    all[i].style.wordSpacing = fSpacing + 'px';
+                }else{
+                    all[i].setAttribute('data-init-word-spacing', fSpacing);
+                    all[i].style.wordSpacing = factor+'px';
+                }
+
+                // letterSpacing
+                //let fSpacing2 = getComputedStyle(all[i]).letterSpacing;
+                let fSpacing2 = all[i].style.letterSpacing;
+                if (fSpacing2 && (fSpacing2.indexOf('px') > -1)) {
+                    if (!all[i].getAttribute('data-init-letter-spacing'))
+                        all[i].setAttribute('data-init-letter-spacing', fSpacing2);
+                    fSpacing2 = (fSpacing2.replace('px', '') * 1) + factor;
+                    all[i].style.letterSpacing = fSpacing2 + 'px';
+                }else{
+                    all[i].setAttribute('data-init-letter-spacing', fSpacing2);
+                    all[i].style.letterSpacing = factor+'px';
+                }
+            }
+        }
+        else {
+            // wordSpacing
+            let fSpacing = common.getFormattedDim(getComputedStyle(this.body).wordSpacing);
+            if (typeof this.initialValues.body.wordSpacing === 'undefined')
+                this.initialValues.body.wordSpacing = '';
+            if (fSpacing && fSpacing.sufix && !isNaN(fSpacing.size * 1)) {
+                this.body.style.wordSpacing = ((fSpacing.size * 1) + factor) + fSpacing.sufix;
+            }
+            // letterSpacing
+            let fSpacing2 = common.getFormattedDim(getComputedStyle(this.body).letterSpacing);
+            if (typeof this.initialValues.body.letterSpacing === 'undefined')
+                this.initialValues.body.letterSpacing = '';
+            if (fSpacing2 && fSpacing2.sufix && !isNaN(fSpacing2.size * 1)) {
+                this.body.style.letterSpacing = ((fSpacing2.size * 1) + factor) + fSpacing2.sufix;
             }
         }
     }
@@ -682,6 +913,8 @@ class Accessibility {
         this.initialValues = {
             underlineLinks: false,
             textToSpeech: false,
+            bigCursor: false,
+            readingGuide: false,
             body: {},
             html: {}
         };
@@ -711,6 +944,12 @@ class Accessibility {
             },
             decreaseText: () => {
                 this.alterTextSize(false);
+            },
+            increaseTextSpacing: () => {
+                this.alterTextSpace(true);
+            },
+            decreaseTextSpacing: () => {
+                this.alterTextSpace(false);
             },
             invertColors: (destroy) => {
                 console.log(destroy);
@@ -810,6 +1049,53 @@ class Accessibility {
                 }
                 else {
                     remove();
+                }
+            },
+            bigCursor: (destroy) => {
+                this.sessionState.bigCursor = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
+                if (destroy) {
+                    this.html.classList.remove('_access_cursor');
+                    document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.remove('active');
+                    this.initialValues.bigCursor = false;
+                    return;
+                }
+
+
+                document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.toggle('active');
+                this.initialValues.bigCursor = !this.initialValues.bigCursor;
+                this.html.classList.toggle('_access_cursor');
+            },
+            readingGuide: (destroy) => {
+                this.sessionState.readingGuide = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
+                if (destroy) {
+                    if(document.getElementById('access_read_guide_bar')!=undefined){
+                        document.getElementById('access_read_guide_bar').remove();
+                    }
+                    document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.remove('active');
+                    this.initialValues.readingGuide = false;
+                    document.body.onmousemove = null;
+                    return;
+                }
+
+
+                document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
+                this.initialValues.readingGuide = !this.initialValues.readingGuide;
+                if(this.initialValues.readingGuide){
+                    let read = document.createElement("div");
+                    read.id = 'access_read_guide_bar';
+                    read.classList.add('access_read_guide_bar');
+                    document.body.append(read);
+                    let vm = this
+                    document.body.onmousemove = function(e) {
+                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(vm.options.guide.height.replace('px'))+5) ) +'px';
+                    };
+                }else{
+                    if(document.getElementById('access_read_guide_bar')!=undefined){
+                        document.getElementById('access_read_guide_bar').remove();
+                    }
+                    document.body.onmousemove = null;
                 }
             },
             textToSpeech: (destroy) => {
@@ -956,16 +1242,29 @@ class Accessibility {
                     }
                 }
             }
+            if (sessionState.textSpace) {
+                let textSpace = sessionState.textSpace;
+                if (textSpace > 0) {
+                    while (textSpace--) {
+                        this.alterTextSpace(true);
+                    }
+                }
+                else {
+                    while (textSpace++) {
+                        this.alterTextSpace(false);
+                    }
+                }
+            }
             if (sessionState.invertColors)
                 this.menuInterface.invertColors();
             if (sessionState.grayHues)
                 this.menuInterface.grayHues();
             if (sessionState.underlineLinks)
                 this.menuInterface.underlineLinks();
-            // if (sessionState.textToSpeech)
-            //     this.menuInterface.textToSpeech();
-            // if (sessionState.speechToText)
-            //     this.menuInterface.speechToText();
+            if (sessionState.bigCursor)
+                this.menuInterface.bigCursor();
+            if (sessionState.readingGuide)
+                this.menuInterface.readingGuide();    
             this.sessionState = sessionState;
         }
     }

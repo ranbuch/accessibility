@@ -1,11 +1,12 @@
 {
   "name": "accessibility",
-  "version": "3.0.0",
+  "version": "2.1.0",
   "description": "add accessibility to your website",
   "main": "accessibility.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.js"
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch --config webpack.config.js"
   },
   "keywords": [
     "accessibility",
