@@ -216,7 +216,7 @@ class Accessibility {
             border-radius: 50%;
             border: .5px solid white;
         }
-        ` + (this.options.icon.circularBorder ? `
+        ` + (this.options.animations.buttons&&this.options.icon.circularBorder ? `
         .circular._access-icon:hover {
             border: 5px solid white;
             border-style: double;
