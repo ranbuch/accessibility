@@ -8,7 +8,7 @@ let _options = {
     icon: {
         position: {
             bottom: { size: 50, units: 'px' },
-            right: { size: 10, units: 'px' },
+            right: { size: 0, units: 'px' },
             type: 'fixed'
         },
         dimensions: {
@@ -21,6 +21,51 @@ let _options = {
         img: 'accessible',
         circular: false
     },
+    hotkeys:{
+        enabled: false,
+        helpTitles: true,
+        keys:{
+            toggleMenu: [
+                'ctrlKey',
+                'altKey',
+                65
+            ],
+            invertColors: [
+                'ctrlKey',
+                'altKey',
+                73
+            ],
+            grayHues: [
+                'ctrlKey',
+                'altKey',
+                71
+            ],
+            underlineLinks: [
+                'ctrlKey',
+                'altKey',
+                85
+            ],
+            bigCursor: [
+                'ctrlKey',
+                'altKey',
+                67
+            ],
+            readingGuide: [
+                'ctrlKey',
+                'altKey',
+                82
+            ],
+            textToSpeech: [
+                'ctrlKey',
+                'altKey',
+                84
+            ],
+            speechToText: [
+                'ctrlKey',
+                'altKey',
+                83
+            ]
+        }
     buttons: {
         font: { size: 18, units: 'px' }
     },
@@ -37,7 +82,7 @@ let _options = {
         fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
     },
     labels: {
-        refreshTitle: 'Refresh',
+        resetTitle: 'Reset',
         closeTitle: 'Close',
         menuTitle: 'Accessibility Options',
         increaseText: 'increase text size',
@@ -81,6 +126,9 @@ let self = null;
 class Accessibility {
     constructor(options = {}) {
         self = this;
+        if(common.extend(_options, options).icon.circular){
+            _options.icon.position.right.size = 10;
+        }
         options = this.deleteOppositesIfDefined(options);
         this.options = common.extend(_options, options);
         this.disabledUnsupportedFeatures();
@@ -246,10 +294,17 @@ class Accessibility {
         ._access-menu ._menu-close-btn {
             left: 5px;
             color: #d63c3c;
+            transition: .3s ease;
+            transform: rotate(0deg);
+        }
+        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {
+            transform: rotate(180deg);
         }
         ._access-menu ._menu-reset-btn {
             right: 5px;
             color: #4054b2;
+            transition: .3s ease;
+            transform: rotate(0deg);
         }
         ._access-menu ._menu-btn {
             position: absolute;
@@ -422,6 +477,11 @@ class Accessibility {
     //     head.appendChild(link);
     // }
 
+    parseKeys(arr){
+       return (this.options.hotkeys.enabled? (this.options.hotkeys.helpTitles? 'Hotkey: '+arr.map(function(val) { return Number.isInteger(val)?String.fromCharCode(val).toLowerCase():val.replace('Key','') }).join('+') :'') :'')
+    }
+
+
     injectMenu() {
         let menuElem = common.jsonToHtml({
             type: 'div',
@@ -456,7 +516,7 @@ class Accessibility {
                             type: 'i',
                             attrs: {
                                 'class': '_menu-reset-btn _menu-btn material-icons',
-                                'title': this.options.labels.refreshTitle
+                                'title': this.options.labels.resetTitle
                             },
                             children: [
                                 {
@@ -524,7 +584,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'invertColors'
+                                'data-access-action': 'invertColors',
+                                'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
                             },
                             children: [
                                 {
@@ -536,7 +597,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'grayHues'
+                                'data-access-action': 'grayHues',
+                                'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
                             },
                             children: [
                                 {
@@ -548,7 +610,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'underlineLinks'
+                                'data-access-action': 'underlineLinks',
+                                'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
                             },
                             children: [
                                 {
@@ -560,7 +623,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'bigCursor'
+                                'data-access-action': 'bigCursor',
+                                'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
                             },
                             children: [
                                 {
@@ -578,7 +642,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'readingGuide'
+                                'data-access-action': 'readingGuide',
+                                'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
                             },
                             children: [
                                 {
@@ -886,7 +951,20 @@ class Accessibility {
         self.textToSpeech(window.event.target.innerText);
         // }
     }
-
+    runHotkey(name){
+        switch(name){
+            case 'toggleMenu':
+                this.toggleMenu();
+                break;
+            default:
+                if(this.menuInterface.hasOwnProperty(name)){
+                    if( this.options.modules[name] ){
+                        this.menuInterface[name](false);
+                    }
+                }
+                break;
+        }
+    }
     toggleMenu() {
         if (this.menu.classList.contains('close')) {
             if (this.options.animations && this.options.animations.buttons)
@@ -925,6 +1003,28 @@ class Accessibility {
         this.menu = this.injectMenu();
         this.addListeners();
         this.disableUnsupportedModules();
+        if(this.options.hotkeys.enabled){
+            document.onkeydown = function(e) {
+                let act = Object.entries(self.options.hotkeys.keys).find(function(val) {
+                    let pass = true;
+                    for (var i = 0; i < val[1].length; i++) {
+                        if( Number.isInteger((val[1])[i]) ){
+                            if(e.keyCode != (val[1])[i]){
+                                pass = false;
+                            }
+                        }else{
+                            if( e[(val[1])[i]] == undefined || e[(val[1])[i]] == false){
+                                pass = false;
+                            }
+                        }
+                    }
+                    return pass;
+                });
+                if(act!=undefined){
+                    self.runHotkey(act[0]);
+                }
+            }
+        }
         //setMinHeight();
 
         this.icon.addEventListener('click', () => {
@@ -1087,9 +1187,8 @@ class Accessibility {
                     read.id = 'access_read_guide_bar';
                     read.classList.add('access_read_guide_bar');
                     document.body.append(read);
-                    let vm = this
                     document.body.onmousemove = function(e) {
-                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(vm.options.guide.height.replace('px'))+5) ) +'px';
+                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(self.options.guide.height.replace('px'))+5) ) +'px';
                     };
                 }else{
                     if(document.getElementById('access_read_guide_bar')!=undefined){
