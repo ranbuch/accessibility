@@ -99,13 +99,13 @@ You can position the accessibility icon in any place on the screen. The default 
 `new Accessibility(options);`  
 But you can also position the icon in the upper left corner of the screen and cancel the fixed positioning:  
 `var options = {`  
-    `icon: {`  
-        `position: {`  
-            `top: { size: 2, units: 'vh' },`  
-            `left: { size: 2, units: '%' },`  
-            `type: 'absolute'`  
-        `}`  
-    `}`  
+&nbsp;&nbsp;&nbsp;&nbsp;`icon: {`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`position: {`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`top: { size: 2, units: 'vh' },`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`left: { size: 2, units: '%' },`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`type: 'absolute'`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`}`  
+&nbsp;&nbsp;&nbsp;&nbsp;`}`  
 `}`  
 `new Accessibility(options);`
 
