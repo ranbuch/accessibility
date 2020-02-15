@@ -40,18 +40,18 @@ Easy to use!
 ### MULTI LANGUAGE EXAMPLE:
 
 `var labels = {`  
-    `menuTitle: 'title (in my language)',`  
-    `increaseText: 'increase text size (in my language)',`  
-    `decreaseText: 'decrease text size (in my language)',`  
-    `increaseTextSpacing: 'increase text spacing (in my language)',`  
-    `decreaseTextSpacing: 'decrease text spacing (in my language)',`  
-    `invertColors: 'invert colors (in my language)',`  
-    `grayHues: 'gray hues (in my language)',`  
-    `underlineLinks: 'underline links (in my language)',`  
-    `bigCursor: 'big cursor (in my language)',`  
-    `readingGuide: 'reading guide (in my language)',`  
-    `textToSpeech: 'text to speech (in my language)',`  
-    `speechToText: 'speech to text (in my language)'`  
+&nbsp;&nbsp;&nbsp;&nbsp;`menuTitle: 'title (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseText: 'increase text size (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseText: 'decrease text size (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseTextSpacing: 'increase text spacing (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseTextSpacing: 'decrease text spacing (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`invertColors: 'invert colors (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`grayHues: 'gray hues (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`underlineLinks: 'underline links (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`bigCursor: 'big cursor (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`readingGuide: 'reading guide (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`textToSpeech: 'text to speech (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`speechToText: 'speech to text (in my language)'`  
 `};`  
 
 `var options = { labels: labels };`  
@@ -61,17 +61,17 @@ Easy to use!
 
 ### DISABLE FEATURES EXAMPLE:  
 `options.modules = {`  
-    `increaseText: [true/false],`  
-    `decreaseText: [true/false],`  
-    `invertColors: [true/false],`  
-    `increaseTextSpacing: [true/false],`  
-    `decreaseTextSpacing: [true/false],`  
-    `grayHues: [true/false],`  
-    `underlineLinks: [true/false],`  
-    `bigCursor: [true/false],`  
-    `readingGuide: [true/false],`  
-    `textToSpeech: [true/false],`  
-    `speechToText: [true/false]`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseText: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseText: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`invertColors: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseTextSpacing: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseTextSpacing: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`grayHues: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`underlineLinks: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`bigCursor: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`readingGuide: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`textToSpeech: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`speechToText: [true/false]`  
 `};`
 
 >When the default is **true**
