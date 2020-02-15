@@ -41,6 +41,8 @@ Easy to use!
     `menuTitle: 'title (in my language)',
     increaseText: 'increase text size (in my language)',
     decreaseText: 'decrease text size (in my language)',
+    increaseTextSpacing: increase text spacing (in my language),<br>
+    decreaseTextSpacing: decrease text spacing (in my language),<br>
     invertColors: 'invert colors (in my language)',
     grayHues: 'gray hues (in my language)',
     underlineLinks: 'underline links (in my language)',
@@ -57,7 +59,9 @@ Easy to use!
 `options.modules = {`  
     `increaseText: [true/false],`  
     `decreaseText: [true/false],`  
-    `invertColors: [true/false],`  
+    `invertColors: [true/false],`
+    `increaseTextSpacing: [true/false]`
+    `decreaseTextSpacing: [true/false]`
     `grayHues: [true/false],`  
     `underlineLinks: [true/false],`  
     `textToSpeech: [true/false],`  
