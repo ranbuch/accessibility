@@ -1,5 +1,6 @@
 'use strict';
 import common from './common';
+import storage from './storage';
 
 common.injectIconsCss();
 
@@ -65,6 +66,8 @@ let _options = {
                 83
             ]
         }
+    buttons: {
+        font: { size: 18, units: 'px' }
     },
     guide:{
         cBorder: '#20ff69',
@@ -112,6 +115,9 @@ let _options = {
         underlineLinks: true,
         textToSpeech: true,
         speechToText: true
+    },
+    session: {
+        persistent: true
     }
 };
 
@@ -126,7 +132,18 @@ class Accessibility {
         options = this.deleteOppositesIfDefined(options);
         this.options = common.extend(_options, options);
         this.disabledUnsupportedFeatures();
+        this.sessionState = {
+            textSize: 0,
+            textSpace: 0,
+            invertColors: false,
+            grayHues: false,
+            underlineLinks: false,
+            bigCursor: false,
+            readingGuide: false
+        };
         this.build();
+        if (this.options.session.persistent)
+            this.setSessionFromCache();
     }
 
     deleteOppositesIfDefined(options) {
@@ -160,6 +177,19 @@ class Accessibility {
 
     injectCss() {
         let css = `
+        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+            background-color: #F5F5F5;
+        }
+        
+        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {
+            width: 6px;
+            background-color: #F5F5F5;
+        }
+        
+        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {
+            background-color: #999999;
+        }
         ._access-icon {
             position: `+ this.options.icon.position.type + `;
             background-repeat: no-repeat;
@@ -172,17 +202,11 @@ class Accessibility {
             -ms-user-select: none;
             user-select: none;
             box-shadow: 1px 1px 5px rgba(0,0,0,.5);
+            transform: scale(1);
         }
         ._access-icon:hover {
             box-shadow: 1px 1px 10px rgba(0,0,0,.9);
-        }
-        .circular._access-icon:hover {
-            border: 5px solid white;
-            border-style: double;
-            font-size: 35px!important;
-            vertical-align: middle;
-            padding-top: 2px;
-            text-align: center;
+            transform: scale(1.1);
         }
         .circular._access-icon {
             border-radius: 50%;
@@ -294,6 +318,8 @@ class Accessibility {
             position: relative;
             font-size: 18px !important;
             margin: 0;
+            overflow: auto;
+            max-height: calc(100vh - 77px);
         }
         html._access_cursor * {
             cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;
@@ -311,8 +337,8 @@ class Accessibility {
             border-radius: 4px;
             transition-duration: .5s;
             transition-timing-function: ease-in-out;
-            font-size: 18px !important;
-            line-height: 18px !important;
+            font-size: ` + this.options.buttons.font.size + this.options.buttons.font.units + ` !important;
+            line-height: ` + this.options.buttons.font.size + this.options.buttons.font.units + ` !important;
             text-indent: 5px;
             background: #f9f9f9;
             color: rgba(0,0,0,.6);
@@ -504,7 +530,7 @@ class Accessibility {
                 {
                     type: 'ul',
                     attrs: {
-                        'class': (this.options.animations.buttons ? 'before-collapse' : '')
+                        'class': (this.options.animations.buttons ? 'before-collapse _access-scrollbar' : '_access-scrollbar')
                     },
                     children: [
                         {
@@ -723,6 +749,9 @@ class Accessibility {
             all[i].style.fontSize = all[i].getAttribute('data-init-font-size');
             all[i].removeAttribute('data-init-font-size');
         }
+
+        this.sessionState.textSize = 0;
+        this.onChange(true);
     }
 
     resetTextSpace() {
@@ -739,9 +768,14 @@ class Accessibility {
             all[i].style.letterSpacing = all[i].getAttribute('data-init-letter-spacing');
             all[i].removeAttribute('data-init-letter-spacing');
         }
+
+        this.sessionState.textSpace = 0;
+        this.onChange(true);
     }
 
     alterTextSize(isIncrease) {
+        this.sessionState.textSize += isIncrease ? 1 : -1;
+        this.onChange(true);
         let factor = 2;
         if (!isIncrease)
             factor *= -1;
@@ -769,6 +803,8 @@ class Accessibility {
     }
 
     alterTextSpace(isIncrease) {
+        this.sessionState.textSpace += isIncrease ? 1 : -1;
+        this.onChange(true);
         let factor = 1;
         if (!isIncrease)
             factor *= -1;
@@ -998,9 +1034,9 @@ class Accessibility {
             this.icon.style.opacity = '1';
         }, 10);
 
-        if (window.SpeechSynthesisUtterance || window.speechSynthesis) {
-            let voices = window.speechSynthesis.getVoices();
-        }
+        // if (window.SpeechSynthesisUtterance || window.speechSynthesis) {
+        //     let voices = window.speechSynthesis.getVoices();
+        // }
 
         this.menuInterface = {
             increaseText: () => {
@@ -1016,6 +1052,9 @@ class Accessibility {
                 this.alterTextSpace(false);
             },
             invertColors: (destroy) => {
+                console.log(destroy);
+                this.sessionState.invertColors = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
                 if (typeof this.initialValues.html.backgroundColor === 'undefined')
                     this.initialValues.html.backgroundColor = getComputedStyle(this.html).backgroundColor;
                 if (typeof this.initialValues.html.color === 'undefined')
@@ -1026,6 +1065,7 @@ class Accessibility {
                     this.resetIfDefined(this.initialValues.html.color, this.html.style, 'color');
                     document.querySelector('._access-menu [data-access-action="invertColors"]').classList.remove('active');
                     this.initialValues.invertColors = false;
+                    this.html.style.filter = '';
                     return;
                 }
 
@@ -1042,6 +1082,8 @@ class Accessibility {
                 }
             },
             grayHues: (destroy) => {
+                this.sessionState.grayHues = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
                 if (typeof this.initialValues.html.filter === 'undefined')
                     this.initialValues.html.filter = getComputedStyle(this.html).filter;
                 if (typeof this.initialValues.html.webkitFilter === 'undefined')
@@ -1077,6 +1119,8 @@ class Accessibility {
                 this.html.style.filter = val;
             },
             underlineLinks: (destroy) => {
+                this.sessionState.underlineLinks = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
                 let className = '_access-underline';
                 let remove = () => {
                     let style = document.querySelector('.' + className);
@@ -1108,6 +1152,8 @@ class Accessibility {
                 }
             },
             bigCursor: (destroy) => {
+                this.sessionState.bigCursor = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
                 if (destroy) {
                     this.html.classList.remove('_access_cursor');
                     document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.remove('active');
@@ -1121,6 +1167,8 @@ class Accessibility {
                 this.html.classList.toggle('_access_cursor');
             },
             readingGuide: (destroy) => {
+                this.sessionState.readingGuide = typeof destroy === 'undefined' ? true : false;
+                this.onChange(true);
                 if (destroy) {
                     if(document.getElementById('access_read_guide_bar')!=undefined){
                         document.getElementById('access_read_guide_bar').remove();
@@ -1150,6 +1198,8 @@ class Accessibility {
                 }
             },
             textToSpeech: (destroy) => {
+                // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
+                this.onChange(false);
                 let className = '_access-text-to-speech';
                 let remove = () => {
                     let style = document.querySelector('.' + className);
@@ -1184,6 +1234,8 @@ class Accessibility {
                 }
             },
             speechToText: (destroy) => {
+                // this.sessionState.speechToText = typeof destroy === 'undefined' ? true : false;
+                this.onChange(false);
                 let className = '_access-speech-to-text';
                 let remove = () => {
                     if (this.recognition) {
@@ -1262,6 +1314,58 @@ class Accessibility {
     resetIfDefined(src, dest, prop) {
         if (typeof src !== 'undefined')
             dest[prop] = src;
+    }
+
+    onChange(updateSession) {
+        if (updateSession && this.options.session.persistent)
+            this.saveSession();
+    }
+
+    saveSession() {
+        storage.set('_accessState', this.sessionState);
+    }
+
+    setSessionFromCache() {
+        let sessionState = storage.get('_accessState');
+        if (sessionState) {
+            if (sessionState.textSize) {
+                let textSize = sessionState.textSize;
+                if (textSize > 0) {
+                    while (textSize--) {
+                        this.alterTextSize(true);
+                    }
+                }
+                else {
+                    while (textSize++) {
+                        this.alterTextSize(false);
+                    }
+                }
+            }
+            if (sessionState.textSpace) {
+                let textSpace = sessionState.textSpace;
+                if (textSpace > 0) {
+                    while (textSpace--) {
+                        this.alterTextSpace(true);
+                    }
+                }
+                else {
+                    while (textSpace++) {
+                        this.alterTextSpace(false);
+                    }
+                }
+            }
+            if (sessionState.invertColors)
+                this.menuInterface.invertColors();
+            if (sessionState.grayHues)
+                this.menuInterface.grayHues();
+            if (sessionState.underlineLinks)
+                this.menuInterface.underlineLinks();
+            if (sessionState.bigCursor)
+                this.menuInterface.bigCursor();
+            if (sessionState.readingGuide)
+                this.menuInterface.readingGuide();    
+            this.sessionState = sessionState;
+        }
     }
 
     destroy() {
