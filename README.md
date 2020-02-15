@@ -64,8 +64,8 @@ Easy to use!
     `increaseText: [true/false],`  
     `decreaseText: [true/false],`  
     `invertColors: [true/false],`
-    `increaseTextSpacing: [true/false]`
-    `decreaseTextSpacing: [true/false]`
+    `increaseTextSpacing: [true/false],`
+    `decreaseTextSpacing: [true/false],`
     `grayHues: [true/false],`  
     `underlineLinks: [true/false],`  
     `bigCursor: [true/false],` 
