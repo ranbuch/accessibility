@@ -24,7 +24,7 @@ let _options = {
         enabled: false,
         helpTitles: true,
         keys:{
-            openDash: [
+            toggleMenu: [
                 'ctrlKey',
                 'altKey',
                 65
@@ -907,7 +907,7 @@ class Accessibility {
     }
     runHotkey(name){
         switch(name){
-            case 'openDash':
+            case 'toggleMenu':
                 this.toggleMenu();
                 break;
             default:
