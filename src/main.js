@@ -20,6 +20,52 @@ let _options = {
         img: 'accessible',
         circular: false
     },
+    hotkeys:{
+        enabled: false,
+        helpTitles: true,
+        keys:{
+            openDash: [
+                'ctrlKey',
+                'altKey',
+                65
+            ],
+            invertColors: [
+                'ctrlKey',
+                'altKey',
+                73
+            ],
+            grayHues: [
+                'ctrlKey',
+                'altKey',
+                71
+            ],
+            underlineLinks: [
+                'ctrlKey',
+                'altKey',
+                85
+            ],
+            bigCursor: [
+                'ctrlKey',
+                'altKey',
+                67
+            ],
+            readingGuide: [
+                'ctrlKey',
+                'altKey',
+                82
+            ],
+            textToSpeech: [
+                'ctrlKey',
+                'altKey',
+                84
+            ],
+            speechToText: [
+                'ctrlKey',
+                'altKey',
+                83
+            ]
+        }
+    },
     guide:{
         cBorder: '#20ff69',
         cBackground: '#000000',
@@ -395,6 +441,11 @@ class Accessibility {
     //     head.appendChild(link);
     // }
 
+    parseKeys(arr){
+       return (this.options.hotkeys.enabled? (this.options.hotkeys.helpTitles? 'Hotkey: '+arr.map(function(val) { return Number.isInteger(val)?String.fromCharCode(val).toLowerCase():val.replace('Key','') }).join('+') :'') :'')
+    }
+
+
     injectMenu() {
         let menuElem = common.jsonToHtml({
             type: 'div',
@@ -497,7 +548,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'invertColors'
+                                'data-access-action': 'invertColors',
+                                'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
                             },
                             children: [
                                 {
@@ -509,7 +561,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'grayHues'
+                                'data-access-action': 'grayHues',
+                                'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
                             },
                             children: [
                                 {
@@ -521,7 +574,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'underlineLinks'
+                                'data-access-action': 'underlineLinks',
+                                'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
                             },
                             children: [
                                 {
@@ -533,7 +587,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'bigCursor'
+                                'data-access-action': 'bigCursor',
+                                'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
                             },
                             children: [
                                 {
@@ -551,7 +606,8 @@ class Accessibility {
                         {
                             type: 'li',
                             attrs: {
-                                'data-access-action': 'readingGuide'
+                                'data-access-action': 'readingGuide',
+                                'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
                             },
                             children: [
                                 {
@@ -849,7 +905,20 @@ class Accessibility {
         self.textToSpeech(window.event.target.innerText);
         // }
     }
-
+    runHotkey(name){
+        switch(name){
+            case 'openDash':
+                this.toggleMenu();
+                break;
+            default:
+                if(this.menuInterface.hasOwnProperty(name)){
+                    if( this.options.modules[name] ){
+                        this.menuInterface[name](false);
+                    }
+                }
+                break;
+        }
+    }
     toggleMenu() {
         if (this.menu.classList.contains('close')) {
             if (this.options.animations && this.options.animations.buttons)
@@ -888,6 +957,29 @@ class Accessibility {
         this.menu = this.injectMenu();
         this.addListeners();
         this.disableUnsupportedModules();
+        if(this.options.hotkeys.enabled){
+            let vm = this;
+            document.onkeydown = function(e) {
+                let act = Object.entries(vm.options.hotkeys.keys).find(function(val) {
+                    let pass = true;
+                    for (var i = 0; i < val[1].length; i++) {
+                        if( Number.isInteger((val[1])[i]) ){
+                            if(e.keyCode != (val[1])[i]){
+                                pass = false;
+                            }
+                        }else{
+                            if( e[(val[1])[i]] == undefined || e[(val[1])[i]] == false){
+                                pass = false;
+                            }
+                        }
+                    }
+                    return pass;
+                });
+                if(act!=undefined){
+                    vm.runHotkey(act[0]);
+                }
+            }
+        }
         //setMinHeight();
 
         this.icon.addEventListener('click', () => {
