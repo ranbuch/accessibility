@@ -24,6 +24,8 @@ initialize component:
 - [x]  invert colors
 - [x]  gray hues
 - [x]  underline links
+- [x]  big cursor
+- [x]  reading guide
 - [x]  text to speech 
 - [x]  speech to text
 
@@ -38,16 +40,18 @@ Easy to use!
 ### MULTI LANGUAGE EXAMPLE:
 
 `var labels = {`  
-    `menuTitle: 'title (in my language)',
-    increaseText: 'increase text size (in my language)',
-    decreaseText: 'decrease text size (in my language)',
-    increaseTextSpacing: increase text spacing (in my language),<br>
-    decreaseTextSpacing: decrease text spacing (in my language),<br>
-    invertColors: 'invert colors (in my language)',
-    grayHues: 'gray hues (in my language)',
-    underlineLinks: 'underline links (in my language)',
-    textToSpeech: 'text to speech (in my language)',
-    speechToText: 'speech to text (in my language)'`  
+&nbsp;&nbsp;&nbsp;&nbsp;`menuTitle: 'title (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseText: 'increase text size (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseText: 'decrease text size (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseTextSpacing: 'increase text spacing (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseTextSpacing: 'decrease text spacing (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`invertColors: 'invert colors (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`grayHues: 'gray hues (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`underlineLinks: 'underline links (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`bigCursor: 'big cursor (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`readingGuide: 'reading guide (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`textToSpeech: 'text to speech (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`speechToText: 'speech to text (in my language)'`  
 `};`  
 
 `var options = { labels: labels };`  
@@ -57,15 +61,17 @@ Easy to use!
 
 ### DISABLE FEATURES EXAMPLE:  
 `options.modules = {`  
-    `increaseText: [true/false],`  
-    `decreaseText: [true/false],`  
-    `invertColors: [true/false],`
-    `increaseTextSpacing: [true/false]`
-    `decreaseTextSpacing: [true/false]`
-    `grayHues: [true/false],`  
-    `underlineLinks: [true/false],`  
-    `textToSpeech: [true/false],`  
-    `speechToText: [true/false]`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseText: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseText: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`invertColors: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseTextSpacing: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseTextSpacing: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`grayHues: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`underlineLinks: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`bigCursor: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`readingGuide: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`textToSpeech: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`speechToText: [true/false]`  
 `};`
 
 >When the default is **true**
@@ -76,30 +82,30 @@ In that case you can initialize the accessibility tool like this:
 `new Accessibility({textPixelMode: true})`
 
 ### ANIMATIONS:
-Cancel menu buttons animations:  
+Cancel all buttons animations:  
 `new Accessibility({animations: {buttons: false}})`
 
 ### POSITIONING:
 You can position the accessibility icon in any place on the screen. The default position is bottom right:  
 `var options = {`  
-    `icon: {`  
-        `position: {`  
-            `bottom: { size: 50, units: 'px' },`  
-            `right: { size: 0, units: 'px' },`  
-            `type: 'fixed'`  
-        `}`  
-    `}`  
+&nbsp;&nbsp;&nbsp;&nbsp;`icon: {`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`position: {`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`bottom: { size: 50, units: 'px' },`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`right: { size: 0, units: 'px' },`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`type: 'fixed'`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`}`  
+&nbsp;&nbsp;&nbsp;&nbsp;`}`  
 `}`  
 `new Accessibility(options);`  
 But you can also position the icon in the upper left corner of the screen and cancel the fixed positioning:  
 `var options = {`  
-    `icon: {`  
-        `position: {`  
-            `top: { size: 2, units: 'vh' },`  
-            `left: { size: 2, units: '%' },`  
-            `type: 'absolute'`  
-        `}`  
-    `}`  
+&nbsp;&nbsp;&nbsp;&nbsp;`icon: {`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`position: {`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`top: { size: 2, units: 'vh' },`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`left: { size: 2, units: '%' },`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`type: 'absolute'`  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`}`  
+&nbsp;&nbsp;&nbsp;&nbsp;`}`  
 `}`  
 `new Accessibility(options);`
 

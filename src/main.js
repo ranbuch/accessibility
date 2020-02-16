@@ -19,7 +19,8 @@ let _options = {
         backgroundColor: '#4054b2',
         color: '#fff',
         img: 'accessible',
-        circular: false
+        circular: false,
+        circularBorder: false
     },
     hotkeys: {
         enabled: false,
@@ -203,13 +204,25 @@ class Accessibility {
             transform: scale(1);
         }
         ._access-icon:hover {
+            ` + (this.options.animations.buttons ? `
             box-shadow: 1px 1px 10px rgba(0,0,0,.9);
             transform: scale(1.1);
+            ` : '') + `
         }
         .circular._access-icon {
             border-radius: 50%;
             border: .5px solid white;
         }
+        ` + (this.options.animations.buttons&&this.options.icon.circularBorder ? `
+        .circular._access-icon:hover {
+            border: 5px solid white;
+            border-style: double;
+            font-size: 35px!important;
+            vertical-align: middle;
+            padding-top: 2px;
+            text-align: center;
+        }
+        ` : '') + `
         .access_read_guide_bar{
             box-sizing: border-box;
             background: `+ this.options.guide.cBackground + `;
@@ -296,7 +309,7 @@ class Accessibility {
             transform: rotate(0deg);
         }
         ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {
-            transform: rotate(180deg);
+            ` + (this.options.animations.buttons ? 'transform: rotate(180deg);' : '') + `
         }
         ._access-menu ._menu-reset-btn {
             right: 5px;
@@ -483,7 +496,6 @@ class Accessibility {
     parseKeys(arr) {
         return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? 'Hotkey: ' + arr.map(function (val) { return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', '') }).join('+') : '') : '')
     }
-
 
     injectMenu() {
         let menuElem = common.jsonToHtml({
@@ -1040,7 +1052,15 @@ class Accessibility {
         // if (window.SpeechSynthesisUtterance || window.speechSynthesis) {
         //     let voices = window.speechSynthesis.getVoices();
         // }
-
+        this.updateReadGuide = function (e) {
+            let newPos = 0;
+            if(e.type=='touchmove'){
+                newPos = e.changedTouches[0].clientY
+            }else{
+                newPos = e.y;
+            }
+            document.getElementById('access_read_guide_bar').style.top = (newPos - (parseInt(self.options.guide.height.replace('px')) + 5)) + 'px';
+        }
         this.menuInterface = {
             increaseText: () => {
                 this.alterTextSize(true);
@@ -1181,7 +1201,7 @@ class Accessibility {
                     document.body.onmousemove = null;
                     return;
                 }
-
+ 
 
                 document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
                 this.initialValues.readingGuide = !this.initialValues.readingGuide;
@@ -1190,14 +1210,14 @@ class Accessibility {
                     read.id = 'access_read_guide_bar';
                     read.classList.add('access_read_guide_bar');
                     document.body.append(read);
-                    document.body.onmousemove = function (e) {
-                        document.getElementById('access_read_guide_bar').style.top = (e.y - (parseInt(self.options.guide.height.replace('px')) + 5)) + 'px';
-                    };
-                } else {
-                    if (document.getElementById('access_read_guide_bar') != undefined) {
+                    document.body.addEventListener('touchmove', this.updateReadGuide, false);
+                    document.body.addEventListener('mousemove', this.updateReadGuide, false);
+                }else{
+                    if(document.getElementById('access_read_guide_bar')!=undefined){
                         document.getElementById('access_read_guide_bar').remove();
                     }
-                    document.body.onmousemove = null;
+                    document.body.removeEventListener('touchmove', this.updateReadGuide, false);
+                    document.body.removeEventListener('mousemove', this.updateReadGuide, false);
                 }
             },
             textToSpeech: (destroy) => {

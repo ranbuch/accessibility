@@ -51,6 +51,26 @@ h3.ui.header {
 .i-circular {
     border-radius: 50%;
 }
+table thead{
+    font-weight: bold;
+    color: rgba(0,0,0,.6);
+    border-bottom: 1px solid rgba(0,0,0,.1)
+}
+table thead td{
+    padding: 2px 7px;
+}
+table{
+    width: 330px;
+}
+table td:last-child{
+    text-align: center;
+}
+table tbody td{
+    padding: 10px 20px;
+}
+table tbody tr:not(:last-child){
+    border-bottom: 1px solid rgba(0,0,0,.4)
+}
 
 code, code * {
     background-color: rgba(200,200,200,0.2);
