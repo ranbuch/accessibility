@@ -8,7 +8,7 @@ let _options = {
     icon: {
         position: {
             bottom: { size: 50, units: 'px' },
-            right: { size: 0, units: 'px' },
+            right: { size: 10, units: 'px' },
             type: 'fixed'
         },
         dimensions: {
@@ -127,9 +127,6 @@ let self = null;
 class Accessibility {
     constructor(options = {}) {
         self = this;
-        if (common.extend(_options, options).icon.circular) {
-            _options.icon.position.right.size = 10;
-        }
         options = this.deleteOppositesIfDefined(options);
         this.options = common.extend(_options, options);
         this.disabledUnsupportedFeatures();
@@ -437,9 +434,14 @@ class Accessibility {
 
     injectIcon() {
         //let iStyle = `background-image: url("` + options.icon.src + `"); width: ` + options.icon.dimensions.width.size +
+        let fontSize = this.options.icon.dimensions.width.size * 0.8;
+        let lineHeight = this.options.icon.dimensions.width.size * 0.9;
+        let textIndent = this.options.icon.dimensions.width.size * 0.1;
         let iStyle = `width: ` + this.options.icon.dimensions.width.size + this.options.icon.dimensions.width.units +
             `;height: ` + this.options.icon.dimensions.height.size + this.options.icon.dimensions.height.units +
-            `;font-size: ` + this.options.icon.dimensions.width.size + this.options.icon.dimensions.width.units +
+            `;font-size: ` + fontSize + this.options.icon.dimensions.width.units +
+            `;line-height: ` + lineHeight + this.options.icon.dimensions.width.units +
+            `;text-indent: ` + textIndent + this.options.icon.dimensions.width.units +
             `;background-color: ` + this.options.icon.backgroundColor + `;color: ` + this.options.icon.color;
         for (let i in this.options.icon.position) {
             iStyle += ';' + i + ':' + this.options.icon.position[i].size + this.options.icon.position[i].units;
