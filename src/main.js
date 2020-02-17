@@ -1218,9 +1218,10 @@ class Accessibility {
                     }
                     document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.remove('active');
                     this.initialValues.readingGuide = false;
-                    // document.body.onmousemove = null;
                     this.sessionState.readingGuide = this.initialValues.readingGuide;
                     this.onChange(true);
+                    document.body.removeEventListener('touchmove', this.updateReadGuide, false);
+                    document.body.removeEventListener('mousemove', this.updateReadGuide, false);
                     return;
                 }
                 document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
