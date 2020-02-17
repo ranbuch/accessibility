@@ -1,6 +1,6 @@
 {
   "name": "accessibility",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "description": "add accessibility to your website",
   "main": "accessibility.js",
   "scripts": {
@@ -20,7 +20,7 @@
   "license": "MIT",
   "devDependencies": {
     "webpack": "^4.34.0",
-    "webpack-cli": "^3.3.4"
+    "webpack-cli": "3.3.5"
   },
   "repository": {
     "type": "git",

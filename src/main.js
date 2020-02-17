@@ -2,8 +2,7 @@
 import common from './common';
 import storage from './storage';
 
-common.injectIconsCss();
-
+// Default options
 let _options = {
     icon: {
         position: {
@@ -20,7 +19,11 @@ let _options = {
         color: '#fff',
         img: 'accessible',
         circular: false,
-        circularBorder: false
+        circularBorder: false,
+        fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
+        fontFamily: 'Material Icons',
+        fontClass: 'material-icons',
+        useEmojis: false
     },
     hotkeys: {
         enabled: false,
@@ -140,9 +143,30 @@ class Accessibility {
             bigCursor: false,
             readingGuide: false
         };
-        this.build();
-        if (this.options.session.persistent)
-            this.setSessionFromCache();
+        if (this.options.icon.useEmojis) {
+            this.fontFallback();
+            this.build();
+            if (this.options.session.persistent)
+                this.setSessionFromCache();
+        }
+        else {
+            common.injectIconsFont(this.options.icon.fontFaceSrc);
+            common.isFontLoaded(this.options.icon.fontFamily, (isLoaded) => {
+                if (!isLoaded)
+                    this.fontFallback();
+                this.build();
+                if (this.options.session.persistent)
+                    this.setSessionFromCache();
+            });
+        }
+    }
+
+    fontFallback() {
+        common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
+        this.options.icon.useEmojis = true;
+        this.options.icon.fontFamily = null;
+        this.options.icon.img = '♿';
+        this.options.icon.fontClass = '';
     }
 
     deleteOppositesIfDefined(options) {
@@ -161,7 +185,7 @@ class Accessibility {
 
     disabledUnsupportedFeatures() {
         if (!('webkitSpeechRecognition' in window) || location.protocol != 'https:') {
-            common.warn('speech to text isn\'t supported in this #ser or in http protocol (https required)');
+            common.warn('speech to text isn\'t supported in this browser or in http protocol (https required)');
             this.options.modules.speechToText = false;
         }
         if (!window.SpeechSynthesisUtterance || !window.speechSynthesis) {
@@ -190,7 +214,7 @@ class Accessibility {
             background-color: #999999;
         }
         ._access-icon {
-            position: `+ this.options.icon.position.type + `;
+            position: ${this.options.icon.position.type};
             background-repeat: no-repeat;
             background-size: contain;
             cursor: pointer;
@@ -200,11 +224,11 @@ class Accessibility {
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
-            box-shadow: 1px 1px 5px rgba(0,0,0,.5);
-            transform: scale(1);
+            ${!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : ''}
+            transform: ${!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(18deg)'};
         }
         ._access-icon:hover {
-            ` + (this.options.animations.buttons ? `
+            ` + (this.options.animations.buttons && !this.options.icon.useEmojis ? `
             box-shadow: 1px 1px 10px rgba(0,0,0,.9);
             transform: scale(1.1);
             ` : '') + `
@@ -213,7 +237,7 @@ class Accessibility {
             border-radius: 50%;
             border: .5px solid white;
         }
-        ` + (this.options.animations.buttons&&this.options.icon.circularBorder ? `
+        ` + (this.options.animations.buttons && this.options.icon.circularBorder ? `
         .circular._access-icon:hover {
             border: 5px solid white;
             border-style: double;
@@ -225,12 +249,12 @@ class Accessibility {
         ` : '') + `
         .access_read_guide_bar{
             box-sizing: border-box;
-            background: `+ this.options.guide.cBackground + `;
+            background: ${this.options.guide.cBackground};
             width: 100%!important;
             min-width: 100%!important;
             position: fixed!important;
-            height: `+ this.options.guide.height + `!important;
-            border: solid 3px `+ this.options.guide.cBorder + `;
+            height: ${this.options.guide.height} !important;
+            border: solid 3px ${this.options.guide.cBorder};
             border-radius: 5px;
             top: 15px;
             z-index: 2147483647;
@@ -251,20 +275,20 @@ class Accessibility {
             -ms-user-select: none;
             user-select: none;
             position: fixed;
-            width: ` + this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units + `;
-            height: ` + this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units + `;
+            width: ${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
+            height: ${this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units};
             transition-duration: .5s;
-            z-index: ` + this.options.icon.zIndex + 1 + `;
+            z-index: ${this.options.icon.zIndex + 1};
             opacity: 1;
             background-color: #fff;
             color: #000;
             border-radius: 3px;
             border: solid 1px #f1f0f1;
-            font-family: ` + this.options.menu.fontFamily + `;
+            font-family: ${this.options.menu.fontFamily};
             min-width: 300px;
             box-shadow: 0px 0px 1px #aaa;
             max-height: 100vh;
-            ` + (getComputedStyle(this.body).direction == 'rtl' ? 'text-indent: -5px' : '') + `
+            ${(getComputedStyle(this.body).direction == 'rtl' ? 'text-indent: -5px' : '')}
         }
         ._access-menu.close {
             z-index: -1;
@@ -282,13 +306,13 @@ class Accessibility {
             left: 0;
         }
         ._access-menu.close.left {
-            left: -` + this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units + `;
+            left: -${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
         }
         ._access-menu.right {
             right: 0;
         }
         ._access-menu.close.right {
-            right: -` + this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units + `;
+            right: -${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
         }
         ._access-menu ._text-center {
             text-align: center;
@@ -309,7 +333,7 @@ class Accessibility {
             transform: rotate(0deg);
         }
         ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {
-            ` + (this.options.animations.buttons ? 'transform: rotate(180deg);' : '') + `
+            ${(this.options.animations.buttons ? 'transform: rotate(180deg);' : '')}
         }
         ._access-menu ._menu-reset-btn {
             right: 5px;
@@ -348,8 +372,8 @@ class Accessibility {
             border-radius: 4px;
             transition-duration: .5s;
             transition-timing-function: ease-in-out;
-            font-size: ` + this.options.buttons.font.size + this.options.buttons.font.units + ` !important;
-            line-height: ` + this.options.buttons.font.size + this.options.buttons.font.units + ` !important;
+            font-size: ${this.options.buttons.font.size + this.options.buttons.font.units} !important;
+            line-height: ${this.options.buttons.font.size + this.options.buttons.font.units} !important;
             text-indent: 5px;
             background: #f9f9f9;
             color: rgba(0,0,0,.6);
@@ -372,13 +396,13 @@ class Accessibility {
         }
         ._access-menu ul li:before {
             content: ' ';
-            font-family: 'Material Icons';
+            ${!this.options.icon.useEmojis ? 'font-family: ' + this.options.icon.fontFamily + ';' : ''}
             text-rendering: optimizeLegibility;
             font-feature-settings: "liga" 1;
             font-style: normal;
             text-transform: none;
-            line-height: 1;
-            font-size: 24px !important;
+            line-height: ${!this.options.icon.useEmojis ? '1' : '1.1'};
+            font-size: ${!this.options.icon.useEmojis ? '24px' : '20px'} !important;
             width: 30px;
             height: 30px;
             display: inline-block;
@@ -405,41 +429,40 @@ class Accessibility {
             color: #fff;
         }
         ._access-menu ul li[data-access-action="increaseText"]:before {
-            content: 'zoom_in';
+            content: ${!this.options.icon.useEmojis ? 'zoom_in' : '"🔼"'};
         }
         ._access-menu ul li[data-access-action="decreaseText"]:before {
-            content: 'zoom_out';
+            content: ${!this.options.icon.useEmojis ? 'zoom_out' : '"🔽"'};
         }
         ._access-menu ul li[data-access-action="increaseTextSpacing"]:before {
-            content: 'unfold_more';
+            content: ${!this.options.icon.useEmojis ? 'unfold_more' : '"🔼"'};
             transform: rotate(90deg) translate(-7px, 2px);
         }
         ._access-menu ul li[data-access-action="decreaseTextSpacing"]:before {
-            content: 'unfold_less';
+            content: ${!this.options.icon.useEmojis ? 'unfold_less' : '"🔽"'};
             transform: rotate(90deg) translate(-7px, 2px);
         }
         ._access-menu ul li[data-access-action="invertColors"]:before {
-            content: 'invert_colors';
+            content: ${!this.options.icon.useEmojis ? 'invert_colors' : '"🎆"'};
         }
         ._access-menu ul li[data-access-action="grayHues"]:before {
-            content: 'format_color_reset';
+            content: ${!this.options.icon.useEmojis ? 'format_color_reset' : '"🌫️"'};
         }
         ._access-menu ul li[data-access-action="underlineLinks"]:before {
-            content: 'format_underlined';
+            content: ${!this.options.icon.useEmojis ? 'format_underlined' : '"💯"'};
         }
         ._access-menu ul li[data-access-action="bigCursor"]:before {
             /*content: 'touch_app';*/
         }
         ._access-menu ul li[data-access-action="readingGuide"]:before {
-            content: 'border_horizontal';
+            content: ${!this.options.icon.useEmojis ? 'border_horizontal' : '"↔️"'};
         }
         ._access-menu ul li[data-access-action="textToSpeech"]:before {
-            content: 'record_voice_over';
+            content: ${!this.options.icon.useEmojis ? 'record_voice_over' : '"⏺️"'};
         }
         ._access-menu ul li[data-access-action="speechToText"]:before {
-            content: 'mic';
-        }
-        `;
+            content: ${!this.options.icon.useEmojis ? 'mic' : '"🎤"'};
+        }`;
         let className = '_access-main-css';
         common.injectStyle(css, { className: className });
         common.deployedObjects.set('.' + className, false);
@@ -450,17 +473,17 @@ class Accessibility {
         let fontSize = this.options.icon.dimensions.width.size * 0.8;
         let lineHeight = this.options.icon.dimensions.width.size * 0.9;
         let textIndent = this.options.icon.dimensions.width.size * 0.1;
-        let iStyle = `width: ` + this.options.icon.dimensions.width.size + this.options.icon.dimensions.width.units +
-            `;height: ` + this.options.icon.dimensions.height.size + this.options.icon.dimensions.height.units +
-            `;font-size: ` + fontSize + this.options.icon.dimensions.width.units +
-            `;line-height: ` + lineHeight + this.options.icon.dimensions.width.units +
-            `;text-indent: ` + textIndent + this.options.icon.dimensions.width.units +
-            `;background-color: ` + this.options.icon.backgroundColor + `;color: ` + this.options.icon.color;
+        let iStyle = `width: ${this.options.icon.dimensions.width.size + this.options.icon.dimensions.width.units}
+            ;height: ${this.options.icon.dimensions.height.size + this.options.icon.dimensions.height.units}
+            ;font-size: ${fontSize + this.options.icon.dimensions.width.units}
+            ;line-height: ${lineHeight + this.options.icon.dimensions.width.units}
+            ;text-indent: ${textIndent + this.options.icon.dimensions.width.units}
+            ;background-color: ${!this.options.icon.useEmojis ? this.options.icon.backgroundColor : 'transparent'};color: ${this.options.icon.color}`;
         for (let i in this.options.icon.position) {
             iStyle += ';' + i + ':' + this.options.icon.position[i].size + this.options.icon.position[i].units;
         }
-        iStyle += ';z-index: ' + this.options.icon.zIndex;
-        let className = '_access-icon material-icons _access' + (this.options.icon.circular ? ' circular' : '');
+        iStyle += `;z-index: ${this.options.icon.zIndex}`;
+        let className = `_access-icon ${this.options.icon.fontClass} _access` + (this.options.icon.circular ? ' circular' : '');
         let iconElem = common.jsonToHtml({
             type: 'i',
             attrs: {
@@ -480,18 +503,6 @@ class Accessibility {
         common.deployedObjects.set('._access-icon', false);
         return iconElem;
     }
-
-    // injectIconsCss() {
-    //     let url = 'https://fonts.googleapis.com/icon?family=Material+Icons',
-    //         head = document.getElementsByTagName('head')[0],
-    //         link = document.createElement('link');
-    //     link.type = "text/css";
-    //     link.rel = "stylesheet";
-    //     link.href = url;
-    //     link.id = "_access-material-icons";
-    //     //deployedSelectors.push(link.id);
-    //     head.appendChild(link);
-    // }
 
     parseKeys(arr) {
         return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? 'Hotkey: ' + arr.map(function (val) { return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', '') }).join('+') : '') : '')
@@ -513,13 +524,13 @@ class Accessibility {
                         {
                             type: 'i',
                             attrs: {
-                                'class': '_menu-close-btn _menu-btn material-icons',
+                                'class': `_menu-close-btn _menu-btn ${this.options.icon.fontClass}`,
                                 'title': this.options.labels.closeTitle
                             },
                             children: [
                                 {
                                     type: '#text',
-                                    text: 'close'
+                                    text: `${!this.options.icon.useEmojis ? 'close' : 'X'}`
                                 }
                             ]
                         },
@@ -530,13 +541,13 @@ class Accessibility {
                         {
                             type: 'i',
                             attrs: {
-                                'class': '_menu-reset-btn _menu-btn material-icons',
+                                'class': `_menu-reset-btn _menu-btn ${this.options.icon.fontClass}`,
                                 'title': this.options.labels.resetTitle
                             },
                             children: [
                                 {
                                     type: '#text',
-                                    text: 'refresh'
+                                    text: `${!this.options.icon.useEmojis ? 'refresh' : '♲'}`
                                 }
                             ]
                         }
@@ -1054,9 +1065,9 @@ class Accessibility {
         // }
         this.updateReadGuide = function (e) {
             let newPos = 0;
-            if(e.type=='touchmove'){
+            if (e.type == 'touchmove') {
                 newPos = e.changedTouches[0].clientY
-            }else{
+            } else {
                 newPos = e.y;
             }
             document.getElementById('access_read_guide_bar').style.top = (newPos - (parseInt(self.options.guide.height.replace('px')) + 5)) + 'px';
@@ -1201,7 +1212,7 @@ class Accessibility {
                     document.body.onmousemove = null;
                     return;
                 }
- 
+
 
                 document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
                 this.initialValues.readingGuide = !this.initialValues.readingGuide;
@@ -1212,8 +1223,8 @@ class Accessibility {
                     document.body.append(read);
                     document.body.addEventListener('touchmove', this.updateReadGuide, false);
                     document.body.addEventListener('mousemove', this.updateReadGuide, false);
-                }else{
-                    if(document.getElementById('access_read_guide_bar')!=undefined){
+                } else {
+                    if (document.getElementById('access_read_guide_bar') != undefined) {
                         document.getElementById('access_read_guide_bar').remove();
                     }
                     document.body.removeEventListener('touchmove', this.updateReadGuide, false);

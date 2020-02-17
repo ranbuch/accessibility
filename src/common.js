@@ -72,18 +72,36 @@ let common = {
         }
         return src;
     },
-    injectIconsCss() {
-        let url = 'https://fonts.googleapis.com/icon?family=Material+Icons',
-            head = document.getElementsByTagName('head')[0],
-            link = document.createElement('link');
-        link.type = "text/css";
-        link.rel = "stylesheet";
-        link.href = url;
-        link.className = "_access-material-icons";
-        common.deployedObjects.set('.' + link.className, true);
-        //deployedSelectors.push(link.id);
-        head.appendChild(link);
+    injectIconsFont(urls) {
+        if (urls && urls.length) {
+            let head = document.getElementsByTagName('head')[0];
+            let counter = 0;
+            urls.forEach(url => {
+                let link = document.createElement('link');
+                link.type = "text/css";
+                link.rel = "stylesheet";
+                link.href = url;
+                link.className = `_access-font-icon-${counter++}`;
+                common.deployedObjects.set('.' + link.className, true);
+                head.appendChild(link);
+            });
+        }
     },
+    isFontLoaded(fontFamily, callback) {
+		try {
+			const onReady = () => {
+				return callback(document.fonts.check(`1em ${fontFamily}`));
+			}
+			document.fonts.ready.then(() => {
+				onReady();
+			}, () => {
+				onReady();
+			});
+		}
+		catch (e) {
+			return callback(true);
+		}
+	},
     warn(msg) {
         let prefix = 'Accessibility: ';
         if (console.warn)

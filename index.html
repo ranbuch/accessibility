@@ -450,7 +450,35 @@
                         new Accessibility(options);
                     </p>
                 </code>
-                
+                <br>
+                <p>
+                    By default, this module is using <a href="https://material.io/resources/icons/?style=baseline" target="_blank">Material Design Icon</a> witch means that the <code>material-icons</code> <code>font-face</code> will be loaded automatically.
+                </p>
+                <p>
+                    If you want you can chooes to use Emojis instead:
+                </p>
+                <code>
+                    var options = {
+                    <p class="b-space-1">
+                        icon: {
+                    </p>
+                    <p class="b-space-2">
+                        useEmojis: [true/false],
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    <p>
+                        }
+                    </p>
+                    <p>
+                        new Accessibility(options);
+                    </p>
+                </code>
+                <br>
+                <p>
+                    In case the <code>material-icons</code> <code>font-face</code> was not loaded for any reason the module will automatically fallback to Emojis icons.
+                </p>
             </div>
 
             <div class="ui raised segment" id="icon-image">
