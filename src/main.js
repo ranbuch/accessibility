@@ -1090,8 +1090,6 @@ class Accessibility {
                 this.alterTextSpace(false);
             },
             invertColors: (destroy) => {
-                this.sessionState.invertColors = typeof destroy === 'undefined' ? true : false;
-                this.onChange(true);
                 if (typeof this.initialValues.html.backgroundColor === 'undefined')
                     this.initialValues.html.backgroundColor = getComputedStyle(this.html).backgroundColor;
                 if (typeof this.initialValues.html.color === 'undefined')
@@ -1102,6 +1100,8 @@ class Accessibility {
                     this.resetIfDefined(this.initialValues.html.color, this.html.style, 'color');
                     document.querySelector('._access-menu [data-access-action="invertColors"]').classList.remove('active');
                     this.initialValues.invertColors = false;
+                    this.sessionState.invertColors = this.initialValues.invertColors;
+                    this.onChange(true);
                     this.html.style.filter = '';
                     return;
                 }
@@ -1109,6 +1109,8 @@ class Accessibility {
 
                 document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
                 this.initialValues.invertColors = !this.initialValues.invertColors;
+                this.sessionState.invertColors = this.initialValues.invertColors;
+                this.onChange(true);
                 if (this.initialValues.invertColors) {
                     if (this.initialValues.grayHues)
                         this.menuInterface.grayHues(true);
@@ -1119,8 +1121,6 @@ class Accessibility {
                 }
             },
             grayHues: (destroy) => {
-                this.sessionState.grayHues = typeof destroy === 'undefined' ? true : false;
-                this.onChange(true);
                 if (typeof this.initialValues.html.filter === 'undefined')
                     this.initialValues.html.filter = getComputedStyle(this.html).filter;
                 if (typeof this.initialValues.html.webkitFilter === 'undefined')
@@ -1133,6 +1133,8 @@ class Accessibility {
                 if (destroy) {
                     document.querySelector('._access-menu [data-access-action="grayHues"]').classList.remove('active');
                     this.initialValues.grayHues = false;
+                    this.sessionState.grayHues = this.initialValues.grayHues;
+                    this.onChange(true);
                     this.resetIfDefined(this.initialValues.html.filter, this.html.style, 'filter');
                     this.resetIfDefined(this.initialValues.html.webkitFilter, this.html.style, 'webkitFilter');
                     this.resetIfDefined(this.initialValues.html.mozFilter, this.html.style, 'mozFilter');
@@ -1142,7 +1144,9 @@ class Accessibility {
 
                 document.querySelector('._access-menu [data-access-action="grayHues"]').classList.toggle('active');
                 this.initialValues.grayHues = !this.initialValues.grayHues;
-                let val
+                this.sessionState.grayHues = this.initialValues.grayHues;
+                this.onChange(true);
+                let val;
                 if (this.initialValues.grayHues) {
                     val = 'grayscale(1)'
                     if (this.initialValues.invertColors)
@@ -1156,8 +1160,6 @@ class Accessibility {
                 this.html.style.filter = val;
             },
             underlineLinks: (destroy) => {
-                this.sessionState.underlineLinks = typeof destroy === 'undefined' ? true : false;
-                this.onChange(true);
                 let className = '_access-underline';
                 let remove = () => {
                     let style = document.querySelector('.' + className);
@@ -1169,12 +1171,16 @@ class Accessibility {
 
                 if (destroy) {
                     this.initialValues.underlineLinks = false;
+                    this.sessionState.underlineLinks = this.initialValues.underlineLinks;
+                    this.onChange(true);
                     document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.remove('active');
                     return remove();
                 }
 
                 document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.toggle('active')
                 this.initialValues.underlineLinks = !this.initialValues.underlineLinks;
+                this.sessionState.underlineLinks = this.initialValues.underlineLinks;
+                this.onChange(true);
                 if (this.initialValues.underlineLinks) {
                     let css = `
                     body a {
@@ -1189,23 +1195,23 @@ class Accessibility {
                 }
             },
             bigCursor: (destroy) => {
-                this.sessionState.bigCursor = typeof destroy === 'undefined' ? true : false;
-                this.onChange(true);
                 if (destroy) {
                     this.html.classList.remove('_access_cursor');
                     document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.remove('active');
                     this.initialValues.bigCursor = false;
+                    this.sessionState.bigCursor = false;
+                    this.onChange(true);
                     return;
                 }
 
 
                 document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.toggle('active');
                 this.initialValues.bigCursor = !this.initialValues.bigCursor;
+                this.sessionState.bigCursor = this.initialValues.bigCursor;
+                this.onChange(true);
                 this.html.classList.toggle('_access_cursor');
             },
             readingGuide: (destroy) => {
-                this.sessionState.readingGuide = typeof destroy === 'undefined' ? true : false;
-                this.onChange(true);
                 if (destroy) {
                     if (document.getElementById('access_read_guide_bar') != undefined) {
                         document.getElementById('access_read_guide_bar').remove();
@@ -1213,12 +1219,14 @@ class Accessibility {
                     document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.remove('active');
                     this.initialValues.readingGuide = false;
                     document.body.onmousemove = null;
+                    this.sessionState.readingGuide = this.initialValues.readingGuide;
+                    this.onChange(true);
                     return;
                 }
-
-
                 document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
                 this.initialValues.readingGuide = !this.initialValues.readingGuide;
+                this.sessionState.readingGuide = this.initialValues.readingGuide;
+                this.onChange(true);
                 if (this.initialValues.readingGuide) {
                     let read = document.createElement("div");
                     read.id = 'access_read_guide_bar';
@@ -1303,8 +1311,8 @@ class Accessibility {
                 if (this.initialValues.speechToText) {
                     let css = `
                         body:after {
-                            content: 'mic';
-                            font-family: 'Material Icons';
+                            content: ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'};
+                            ${!this.options.icon.useEmojis ? "font-family: '" + this.options.icon.fontFamily + "';" : ''}
                             position: fixed;
                             z-index: 1100;
                             top: 1vw;
