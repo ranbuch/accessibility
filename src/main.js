@@ -1218,7 +1218,7 @@ class Accessibility {
                     }
                     document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.remove('active');
                     this.initialValues.readingGuide = false;
-                    document.body.onmousemove = null;
+                    // document.body.onmousemove = null;
                     this.sessionState.readingGuide = this.initialValues.readingGuide;
                     this.onChange(true);
                     return;
