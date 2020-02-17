@@ -72,16 +72,21 @@ let common = {
         }
         return src;
     },
-    injectIconsFont(urls) {
+    injectIconsFont(urls, callback) {
         if (urls && urls.length) {
             let head = document.getElementsByTagName('head')[0];
             let counter = 0;
+            let onload = () => {
+                if (!--counter)
+                    callback();
+            }
             urls.forEach(url => {
                 let link = document.createElement('link');
                 link.type = "text/css";
                 link.rel = "stylesheet";
                 link.href = url;
                 link.className = `_access-font-icon-${counter++}`;
+                link.onload = onload;
                 common.deployedObjects.set('.' + link.className, true);
                 head.appendChild(link);
             });

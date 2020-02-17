@@ -2,6 +2,8 @@
 import common from './common';
 import storage from './storage';
 
+// const fonts = ['https://fonts.googleapis.com/icon?family=Material+Icons'];
+// common.injectIconsFont(fonts);
 // Default options
 let _options = {
     icon: {
@@ -146,23 +148,23 @@ class Accessibility {
         if (this.options.icon.useEmojis) {
             this.fontFallback();
             this.build();
-            if (this.options.session.persistent)
-                this.setSessionFromCache();
         }
         else {
-            common.injectIconsFont(this.options.icon.fontFaceSrc);
-            common.isFontLoaded(this.options.icon.fontFamily, (isLoaded) => {
-                if (!isLoaded)
-                    this.fontFallback();
+            common.injectIconsFont(this.options.icon.fontFaceSrc, () => {
                 this.build();
-                if (this.options.session.persistent)
-                    this.setSessionFromCache();
+                common.isFontLoaded(this.options.icon.fontFamily, (isLoaded) => {
+                    if (!isLoaded) {
+                        common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
+                        this.fontFallback();
+                        this.destroy();
+                        this.build();
+                    }
+                });
             });
         }
     }
 
     fontFallback() {
-        common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
         this.options.icon.useEmojis = true;
         this.options.icon.fontFamily = null;
         this.options.icon.img = '♿';
@@ -429,39 +431,39 @@ class Accessibility {
             color: #fff;
         }
         ._access-menu ul li[data-access-action="increaseText"]:before {
-            content: ${!this.options.icon.useEmojis ? 'zoom_in' : '"🔼"'};
+            content: ${!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"'};
         }
         ._access-menu ul li[data-access-action="decreaseText"]:before {
-            content: ${!this.options.icon.useEmojis ? 'zoom_out' : '"🔽"'};
+            content: ${!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"'};
         }
         ._access-menu ul li[data-access-action="increaseTextSpacing"]:before {
-            content: ${!this.options.icon.useEmojis ? 'unfold_more' : '"🔼"'};
+            content: ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'};
             transform: rotate(90deg) translate(-7px, 2px);
         }
         ._access-menu ul li[data-access-action="decreaseTextSpacing"]:before {
-            content: ${!this.options.icon.useEmojis ? 'unfold_less' : '"🔽"'};
+            content: ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'};
             transform: rotate(90deg) translate(-7px, 2px);
         }
         ._access-menu ul li[data-access-action="invertColors"]:before {
-            content: ${!this.options.icon.useEmojis ? 'invert_colors' : '"🎆"'};
+            content: ${!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"'};
         }
         ._access-menu ul li[data-access-action="grayHues"]:before {
-            content: ${!this.options.icon.useEmojis ? 'format_color_reset' : '"🌫️"'};
+            content: ${!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"'};
         }
         ._access-menu ul li[data-access-action="underlineLinks"]:before {
-            content: ${!this.options.icon.useEmojis ? 'format_underlined' : '"💯"'};
+            content: ${!this.options.icon.useEmojis ? '"format_underlined"' : '"💯"'};
         }
         ._access-menu ul li[data-access-action="bigCursor"]:before {
             /*content: 'touch_app';*/
         }
         ._access-menu ul li[data-access-action="readingGuide"]:before {
-            content: ${!this.options.icon.useEmojis ? 'border_horizontal' : '"↔️"'};
+            content: ${!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"'};
         }
         ._access-menu ul li[data-access-action="textToSpeech"]:before {
-            content: ${!this.options.icon.useEmojis ? 'record_voice_over' : '"⏺️"'};
+            content: ${!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"'};
         }
         ._access-menu ul li[data-access-action="speechToText"]:before {
-            content: ${!this.options.icon.useEmojis ? 'mic' : '"🎤"'};
+            content: ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'};
         }`;
         let className = '_access-main-css';
         common.injectStyle(css, { className: className });
@@ -714,8 +716,10 @@ class Accessibility {
         this.body.appendChild(menuElem);
         setTimeout(function () {
             let ic = document.getElementById('iconBigCursor');
-            ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
-            document.getElementById('iconBigCursor').remove();
+            if (ic) {
+                ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
+                document.getElementById('iconBigCursor').remove();
+            }
         }, 1);
         common.deployedObjects.set('._access-menu', false);
         let closeBtn = document.querySelector('._access-menu ._menu-close-btn');
@@ -1342,6 +1346,8 @@ class Accessibility {
                 }
             }
         }
+        if (this.options.session.persistent)
+            this.setSessionFromCache();
     }
 
     resetIfDefined(src, dest, prop) {
