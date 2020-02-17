@@ -1086,7 +1086,6 @@ class Accessibility {
                 this.alterTextSpace(false);
             },
             invertColors: (destroy) => {
-                console.log(destroy);
                 this.sessionState.invertColors = typeof destroy === 'undefined' ? true : false;
                 this.onChange(true);
                 if (typeof this.initialValues.html.backgroundColor === 'undefined')
