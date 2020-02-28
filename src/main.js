@@ -107,6 +107,7 @@ let _options = {
     textToSpeechLang: 'en-US',
     speechToTextLang: 'en-US',
     textPixelMode: false,
+    textEmlMode: true,
     animations: {
         buttons: true
     },
@@ -161,6 +162,17 @@ class Accessibility {
                     }
                 });
             });
+        }
+    }
+
+    initFontSize() {
+        // store this values only once.
+        if (!this.htmlInitFS) {
+            let htmlInitFS = common.getFormattedDim(getComputedStyle(this.html).fontSize);
+            let bodyInitFS = common.getFormattedDim(getComputedStyle(this.body).fontSize);
+            this.html.style.fontSize = (htmlInitFS.size / 16 * 100) + '%';
+            this.htmlOrgFontSize = this.html.style.fontSize;
+            this.body.style.fontSize = (bodyInitFS.size / htmlInitFS.size) + 'em';
         }
     }
 
@@ -773,6 +785,8 @@ class Accessibility {
 
     resetTextSize() {
         this.resetIfDefined(this.initialValues.body.fontSize, this.body.style, 'fontSize');
+        if (typeof this.htmlOrgFontSize !== 'undefined')
+            this.html.style.fontSize = this.htmlOrgFontSize;
         let all = document.querySelectorAll('[data-init-font-size]')
 
         for (let i = 0; i < all.length; i++) {
@@ -820,6 +834,16 @@ class Accessibility {
                     fSize = (fSize.replace('px', '') * 1) + factor;
                     all[i].style.fontSize = fSize + 'px';
                 }
+            }
+        }
+        else if (this.options.textEmlMode) {
+            let fp = this.html.style.fontSize;
+            if (fp.indexOf('%')) {
+                fp = fp.replace('%', '') * 1;
+                this.html.style.fontSize = (fp + factor) + '%';
+            }
+            else {
+                common.warn('Accessibility.textEmlMode, html element is not set in %.');
             }
         }
         else {
@@ -1028,6 +1052,8 @@ class Accessibility {
         };
         this.body = document.body || document.getElementsByTagName('body')[0];
         this.html = document.documentElement || document.getElementsByTagName('html')[0];
+        if (this.options.textEmlMode)
+            this.initFontSize();
         this.injectCss();
         this.icon = this.injectIcon();
         this.menu = this.injectMenu();

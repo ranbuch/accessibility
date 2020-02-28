@@ -1,5 +1,4 @@
 var options = {
-	textPixelMode: true,
 	hotkeys:{
 		enabled: true
 	},

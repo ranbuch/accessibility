@@ -294,7 +294,15 @@
 
             <div class="ui raised segment">
                 <h3 class="ui header">text size manipulation approaches</h3>
-
+                <p>
+                    The default approach is <code>textEmlMode: false</code> meaning we are changing the <code>html</code>'s percentage.
+                </p>
+                <p>
+                    You can also try the legacy approach, witch changes the <code>body</code>'s pixels instead of the <code>html</code>'s percentage.
+                </p>
+                <code>
+                    new Accessibility({textEmlMode: false})
+                </code>
                 <p>
                     If text increase / decrease isn't working for your size you're probably not using responsive font
                     size units (sutch as em,
