@@ -17,6 +17,8 @@ initialize component:
 
 ### Full Documentation [here](https://ranbuch.github.io/accessibility/)
 
+>We are proud to announce that [Joomla!](https://www.joomdev.com/blog/entry/enable-joomla-4-accessibility) is now using this repo as there built-in accessibility tool.
+
 ### DESCRIPTION:
 **Features:**
 - [x]  increase text size
