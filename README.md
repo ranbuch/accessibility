@@ -42,6 +42,8 @@ Easy to use!
 ### MULTI LANGUAGE EXAMPLE:
 
 `var labels = {`  
+&nbsp;&nbsp;&nbsp;&nbsp;`resetTitle: 'reset (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`closeTitle: 'close (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`menuTitle: 'title (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`increaseText: 'increase text size (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`decreaseText: 'decrease text size (in my language)',`  
