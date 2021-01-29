@@ -12,6 +12,7 @@ include script:
 
 or import:  
 `import { Accessibility } from 'accessibility/src/main';`  
+
 initialize component:  
 `window.addEventListener('load', function() {
     new Accessibility();
