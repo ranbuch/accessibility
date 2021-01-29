@@ -153,14 +153,16 @@ export class Accessibility {
         else {
             common.injectIconsFont(this.options.icon.fontFaceSrc, () => {
                 this.build();
-                common.isFontLoaded(this.options.icon.fontFamily, (isLoaded) => {
-                    if (!isLoaded) {
-                        common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
-                        this.fontFallback();
-                        this.destroy();
-                        this.build();
-                    }
-                });
+                if (!this.options.icon.forceFont) {
+                    common.isFontLoaded(this.options.icon.fontFamily, (isLoaded) => {
+                        if (!isLoaded) {
+                            common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
+                            this.fontFallback();
+                            this.destroy();
+                            this.build();
+                        }
+                    });
+                }
             });
         }
     }
