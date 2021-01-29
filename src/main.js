@@ -131,7 +131,7 @@ let _options = {
 
 let self = null;
 
-class Accessibility {
+export class Accessibility {
     constructor(options = {}) {
         self = this;
         options = this.deleteOppositesIfDefined(options);
