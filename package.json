@@ -1,6 +1,6 @@
 {
   "name": "accessibility",
-  "version": "3.0.11",
+  "version": "3.0.12",
   "description": "add accessibility to your website",
   "main": "accessibility.js",
   "scripts": {

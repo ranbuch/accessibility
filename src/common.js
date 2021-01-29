@@ -77,8 +77,13 @@ let common = {
             let head = document.getElementsByTagName('head')[0];
             let counter = 0;
             let onload = () => {
-                if (!--counter)
-                    callback();
+                if (!--counter) {
+                    requestAnimationFrame(() => {
+                        setTimeout(() => {
+                            callback();
+                        });
+                    });
+                }
             }
             urls.forEach(url => {
                 let link = document.createElement('link');
