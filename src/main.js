@@ -136,6 +136,12 @@ export class Accessibility {
         self = this;
         options = this.deleteOppositesIfDefined(options);
         this.options = common.extend(_options, options);
+        // Consider adding this:
+        // if (options) {
+        //     if (!options.textToSpeechLang && document.querySelector('html').getAttribute('lang')) {
+        //         this.options.textToSpeechLang = document.querySelector('html').getAttribute('lang')
+        //     }
+        // }
         this.disabledUnsupportedFeatures();
         this.sessionState = {
             textSize: 0,
@@ -988,7 +994,7 @@ export class Accessibility {
     }
 
     listen() {
-        let className = '_access-speech-to-text';
+        // let className = '_access-speech-to-text';
         // window.event.preventDefault();
         // window.event.stopPropagation();
         if (typeof self.recognition === 'object' && typeof self.recognition.stop === 'function')
@@ -998,14 +1004,16 @@ export class Accessibility {
         self.speechToText(window.event.target.innerText);
     }
 
-    read() {
-        let className = '_access-text-to-speech';
-        // let style = document.querySelector('.' + className);
-        // if (style) {
-        window.event.preventDefault();
-        window.event.stopPropagation();
+    read(e) {
+        try {
+            e = window.event || e || arguments[0];
+            if (e && e.preventDefault) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }
+        catch (ex) { }
         self.textToSpeech(window.event.target.innerText);
-        // }
     }
     runHotkey(name) {
         switch (name) {
