@@ -23,7 +23,7 @@ let _options = {
         circular: false,
         circularBorder: false,
         fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
-        fontFamily: 'Material Icons',
+        fontFamily: 'Material+Icons',
         fontClass: 'material-icons',
         useEmojis: false
     },
