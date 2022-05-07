@@ -23,7 +23,7 @@ let _options = {
         circular: false,
         circularBorder: false,
         fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
-        fontFamily: 'Material+Icons',
+        fontFamily: common.getFixedFont('Material Icons'),
         fontClass: 'material-icons',
         useEmojis: false
     },
@@ -160,13 +160,15 @@ export class Accessibility {
             common.injectIconsFont(this.options.icon.fontFaceSrc, () => {
                 this.build();
                 if (!this.options.icon.forceFont) {
-                    common.isFontLoaded(this.options.icon.fontFamily, (isLoaded) => {
-                        if (!isLoaded) {
-                            common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
-                            this.fontFallback();
-                            this.destroy();
-                            this.build();
-                        }
+                    setTimeout(() => {
+                        common.isFontLoaded(this.options.icon.fontFamily, (isLoaded) => {
+                            if (!isLoaded) {
+                                common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
+                                this.fontFallback();
+                                this.destroy();
+                                this.build();
+                            }
+                        });
                     });
                 }
             });
@@ -418,7 +420,7 @@ export class Accessibility {
         }
         ._access-menu ul li:before {
             content: ' ';
-            ${!this.options.icon.useEmojis ? 'font-family: ' + this.options.icon.fontFamily + ';' : ''}
+            ${!this.options.icon.useEmojis ? 'font-family: ' + common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : ''}
             text-rendering: optimizeLegibility;
             font-feature-settings: "liga" 1;
             font-style: normal;

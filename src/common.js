@@ -4,6 +4,30 @@ let body = document.body || document.getElementsByTagName('body')[0];
 let deployedMap = new Map();
 
 let common = {
+    isIOS: () => {
+        if (typeof common._isIOS === 'boolean')
+            return common._isIOS;
+        const isIOS = () => {
+            var iDevices = [
+                'iPad Simulator',
+                'iPhone Simulator',
+                'iPod Simulator',
+                'iPad',
+                'iPhone',
+                'iPod'
+            ];
+
+            if (!!navigator.platform) {
+                while (iDevices.length) {
+                    if (navigator.platform === iDevices.pop()) { return true; }
+                }
+            }
+
+            return false;
+        };
+        common._isIOS = isIOS();
+        return common._isIOS;
+    },
     jsonToHtml: (obj, reasource) => {
         let elm = document.createElement(obj.type);
         for (let i in obj.attrs) {
@@ -92,21 +116,32 @@ let common = {
             });
         }
     },
+    getFixedFont(name) {
+        if (common.isIOS())
+            return name.replaceAll(' ', '+');
+        return name;
+    },
+    getFixedPseudoFont(name) {
+        if (common.isIOS())
+            return name.replaceAll('+', ' ');
+        return name;
+    },
     isFontLoaded(fontFamily, callback) {
-		try {
-			const onReady = () => {
-				return callback(document.fonts.check(`1em ${fontFamily}`));
-			}
-			document.fonts.ready.then(() => {
-				onReady();
-			}, () => {
-				onReady();
-			});
-		}
-		catch (e) {
-			return callback(true);
-		}
-	},
+        try {
+            const onReady = () => {
+                return callback(document.fonts.check(`1em ${fontFamily.replaceAll('+', ' ')}`));
+                // return callback(document.fonts.check(`1em ${fontFamily}`));
+            }
+            document.fonts.ready.then(() => {
+                onReady();
+            }, () => {
+                onReady();
+            });
+        }
+        catch (e) {
+            return callback(true);
+        }
+    },
     warn(msg) {
         let prefix = 'Accessibility: ';
         if (console.warn)
