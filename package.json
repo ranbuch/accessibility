@@ -1,6 +1,6 @@
 {
   "name": "accessibility",
-  "version": "3.0.16",
+  "version": "3.0.17",
   "description": "add accessibility to your website",
   "main": "accessibility.js",
   "scripts": {
@@ -14,7 +14,13 @@
     "increase text size",
     "underline links",
     "text to speech",
-    "invert colors"
+    "invert colors",
+    "gray hues",
+    "underline links",
+    "big cursor",
+    "reading guide",
+    "text to speech",
+    "speech to text"
   ],
   "author": "Ran Buchnik <ranbuch@gmail.com>",
   "license": "MIT",
