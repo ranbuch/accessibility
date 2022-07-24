@@ -1,141 +1,34 @@
 'use strict';
-import common from './common';
-import storage from './storage';
+import { Common } from './common';
+import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues } from './interfaces/accessibility.interface';
+import { IFormattedDim } from './interfaces/common.interface';
+import { IMenuInterface } from './interfaces/menu.interface';
+import { MenuInterface } from './menu-interface';
+import { Storage } from './storage';
 
-// const fonts = ['https://fonts.googleapis.com/icon?family=Material+Icons'];
-// common.injectIconsFont(fonts);
-// Default options
-let _options = {
-    icon: {
-        position: {
-            bottom: { size: 50, units: 'px' },
-            right: { size: 10, units: 'px' },
-            type: 'fixed'
-        },
-        dimensions: {
-            width: { size: 50, units: 'px' },
-            height: { size: 50, units: 'px' }
-        },
-        zIndex: '9999',
-        backgroundColor: '#4054b2',
-        color: '#fff',
-        img: 'accessible',
-        circular: false,
-        circularBorder: false,
-        fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
-        fontFamily: common.getFixedFont('Material Icons'),
-        fontClass: 'material-icons',
-        useEmojis: false
-    },
-    hotkeys: {
-        enabled: false,
-        helpTitles: true,
-        keys: {
-            toggleMenu: [
-                'ctrlKey',
-                'altKey',
-                65
-            ],
-            invertColors: [
-                'ctrlKey',
-                'altKey',
-                73
-            ],
-            grayHues: [
-                'ctrlKey',
-                'altKey',
-                71
-            ],
-            underlineLinks: [
-                'ctrlKey',
-                'altKey',
-                85
-            ],
-            bigCursor: [
-                'ctrlKey',
-                'altKey',
-                67
-            ],
-            readingGuide: [
-                'ctrlKey',
-                'altKey',
-                82
-            ],
-            textToSpeech: [
-                'ctrlKey',
-                'altKey',
-                84
-            ],
-            speechToText: [
-                'ctrlKey',
-                'altKey',
-                83
-            ]
-        }
-    },
-    buttons: {
-        font: { size: 18, units: 'px' }
-    },
-    guide: {
-        cBorder: '#20ff69',
-        cBackground: '#000000',
-        height: '12px'
-    },
-    menu: {
-        dimensions: {
-            width: { size: 25, units: 'vw' },
-            height: { size: 'auto', units: '' }
-        },
-        fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
-    },
-    labels: {
-        resetTitle: 'Reset',
-        closeTitle: 'Close',
-        menuTitle: 'Accessibility Options',
-        increaseText: 'increase text size',
-        decreaseText: 'decrease text size',
-        increaseTextSpacing: 'increase text spacing',
-        decreaseTextSpacing: 'decrease text spacing',
-        invertColors: 'invert colors',
-        grayHues: 'gray hues',
-        bigCursor: 'big cursor',
-        readingGuide: 'reading guide',
-        underlineLinks: 'underline links',
-        textToSpeech: 'text to speech',
-        speechToText: 'speech to text'
-    },
-    textToSpeechLang: 'en-US',
-    speechToTextLang: 'en-US',
-    textPixelMode: false,
-    textEmlMode: true,
-    animations: {
-        buttons: true
-    },
-    modules: {
-        increaseText: true,
-        decreaseText: true,
-        increaseTextSpacing: true,
-        decreaseTextSpacing: true,
-        invertColors: true,
-        grayHues: true,
-        bigCursor: true,
-        readingGuide: true,
-        underlineLinks: true,
-        textToSpeech: true,
-        speechToText: true
-    },
-    session: {
-        persistent: true
-    }
-};
-
-let self = null;
-
-export class Accessibility {
-    constructor(options = {}) {
-        self = this;
+export class Accessibility implements IAccessibility {
+    private _isReading: boolean;
+    private _common: Common;
+    private _storage: Storage;
+    private _options: IAccessibilityOptions;
+    private _sessionState: ISessionState;
+    private _htmlInitFS: IFormattedDim;
+    private _body: HTMLBodyElement;
+    private _html: HTMLElement;
+    private _icon: HTMLElement;
+    private _menu: HTMLElement;
+    private _htmlOrgFontSize: string;
+    private _stateValues: IStateValues;
+    private _recognition: any; // SpeechRecognition;
+    private _speechToTextTarget: HTMLElement;
+    public menuInterface: IMenuInterface;
+    public options: IAccessibilityOptions;
+    constructor(options = {} as IAccessibilityOptions) {
+        this._common = new Common();
+        this._storage = new Storage();
+        this._options = this.defaultOptions;
         options = this.deleteOppositesIfDefined(options);
-        this.options = common.extend(_options, options);
+        this.options = this._common.extend(this._options, options);
         // Consider adding this:
         // if (options) {
         //     if (!options.textToSpeechLang && document.querySelector('html').getAttribute('lang')) {
@@ -143,7 +36,7 @@ export class Accessibility {
         //     }
         // }
         this.disabledUnsupportedFeatures();
-        this.sessionState = {
+        this._sessionState = {
             textSize: 0,
             textSpace: 0,
             invertColors: false,
@@ -157,13 +50,13 @@ export class Accessibility {
             this.build();
         }
         else {
-            common.injectIconsFont(this.options.icon.fontFaceSrc, () => {
+            this._common.injectIconsFont(this.options.icon.fontFaceSrc, (hasError: boolean) => {
                 this.build();
                 if (!this.options.icon.forceFont) {
                     setTimeout(() => {
-                        common.isFontLoaded(this.options.icon.fontFamily, (isLoaded) => {
-                            if (!isLoaded) {
-                                common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
+                        this._common.isFontLoaded(this.options.icon.fontFamily, (isLoaded: boolean) => {
+                            if (!isLoaded || hasError) {
+                                this._common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
                                 this.fontFallback();
                                 this.destroy();
                                 this.build();
@@ -175,22 +68,189 @@ export class Accessibility {
         }
         if (this.options.modules.speechToText) {
             window.addEventListener('beforeunload', () => {
-                if (this.isReading) {
+                if (this._isReading) {
                     window.speechSynthesis.cancel();
-                    this.isReading = false;
+                    this._isReading = false;
                 }
             });
         }
     }
 
+    get stateValues() {
+        return this._stateValues;
+    }
+
+    set stateValues(value: IStateValues) {
+        this._stateValues = value;
+    }
+
+    get html() {
+        return this._html;
+    }
+
+    get body() {
+        return this._body;
+    }
+
+    get sessionState() {
+        return this._sessionState;
+    }
+
+    set sessionState(value: ISessionState) {
+        this._sessionState = value;
+    }
+
+    get common() {
+        return this._common;
+    }
+
+    get recognition() {
+        return this._recognition;
+    }
+
+    get isReading() {
+        return this._isReading;
+    }
+
+    set isReading(value: boolean) {
+        this._isReading = value;
+    }
+
+    // Default options
+    private get defaultOptions(): IAccessibilityOptions {
+        return {
+            icon: {
+                position: {
+                    bottom: { size: 50, units: 'px' },
+                    right: { size: 10, units: 'px' },
+                    type: 'fixed'
+                },
+                dimensions: {
+                    width: { size: 50, units: 'px' },
+                    height: { size: 50, units: 'px' }
+                },
+                zIndex: '9999',
+                backgroundColor: '#4054b2',
+                color: '#fff',
+                img: 'accessible',
+                circular: false,
+                circularBorder: false,
+                fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
+                fontFamily: this._common.getFixedFont('Material Icons'),
+                fontClass: 'material-icons',
+                useEmojis: false
+            },
+            hotkeys: {
+                enabled: false,
+                helpTitles: true,
+                keys: {
+                    toggleMenu: [
+                        'ctrlKey',
+                        'altKey',
+                        65
+                    ],
+                    invertColors: [
+                        'ctrlKey',
+                        'altKey',
+                        73
+                    ],
+                    grayHues: [
+                        'ctrlKey',
+                        'altKey',
+                        71
+                    ],
+                    underlineLinks: [
+                        'ctrlKey',
+                        'altKey',
+                        85
+                    ],
+                    bigCursor: [
+                        'ctrlKey',
+                        'altKey',
+                        67
+                    ],
+                    readingGuide: [
+                        'ctrlKey',
+                        'altKey',
+                        82
+                    ],
+                    textToSpeech: [
+                        'ctrlKey',
+                        'altKey',
+                        84
+                    ],
+                    speechToText: [
+                        'ctrlKey',
+                        'altKey',
+                        83
+                    ]
+                }
+            },
+            buttons: {
+                font: { size: 18, units: 'px' }
+            },
+            guide: {
+                cBorder: '#20ff69',
+                cBackground: '#000000',
+                height: '12px'
+            },
+            menu: {
+                dimensions: {
+                    width: { size: 25, units: 'vw' },
+                    height: { size: 'auto', units: '' }
+                },
+                fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
+            },
+            labels: {
+                resetTitle: 'Reset',
+                closeTitle: 'Close',
+                menuTitle: 'Accessibility Options',
+                increaseText: 'increase text size',
+                decreaseText: 'decrease text size',
+                increaseTextSpacing: 'increase text spacing',
+                decreaseTextSpacing: 'decrease text spacing',
+                invertColors: 'invert colors',
+                grayHues: 'gray hues',
+                bigCursor: 'big cursor',
+                readingGuide: 'reading guide',
+                underlineLinks: 'underline links',
+                textToSpeech: 'text to speech',
+                speechToText: 'speech to text'
+            },
+            textToSpeechLang: 'en-US',
+            speechToTextLang: 'en-US',
+            textPixelMode: false,
+            textEmlMode: true,
+            animations: {
+                buttons: true
+            },
+            modules: {
+                increaseText: true,
+                decreaseText: true,
+                increaseTextSpacing: true,
+                decreaseTextSpacing: true,
+                invertColors: true,
+                grayHues: true,
+                bigCursor: true,
+                readingGuide: true,
+                underlineLinks: true,
+                textToSpeech: true,
+                speechToText: true
+            },
+            session: {
+                persistent: true
+            }
+        };
+    }
+
     initFontSize() {
         // store this values only once.
-        if (!this.htmlInitFS) {
-            let htmlInitFS = common.getFormattedDim(getComputedStyle(this.html).fontSize);
-            let bodyInitFS = common.getFormattedDim(getComputedStyle(this.body).fontSize);
-            this.html.style.fontSize = (htmlInitFS.size / 16 * 100) + '%';
-            this.htmlOrgFontSize = this.html.style.fontSize;
-            this.body.style.fontSize = (bodyInitFS.size / htmlInitFS.size) + 'em';
+        if (!this._htmlInitFS) {
+            let htmlInitFS = this._common.getFormattedDim(getComputedStyle(this._html).fontSize);
+            let bodyInitFS = this._common.getFormattedDim(getComputedStyle(this._body).fontSize);
+            this._html.style.fontSize = ((htmlInitFS.size as number) / 16 * 100) + '%';
+            this._htmlOrgFontSize = this._html.style.fontSize;
+            this._body.style.fontSize = ((bodyInitFS.size as number) / (htmlInitFS.size as number)) + 'em';
         }
     }
 
@@ -201,32 +261,29 @@ export class Accessibility {
         this.options.icon.fontClass = '';
     }
 
-    deleteOppositesIfDefined(options) {
+    deleteOppositesIfDefined(options: IAccessibilityOptions) {
         if (options.icon && options.icon.position) {
             if (options.icon.position.left) {
-                delete _options.icon.position.right;
-                _options.icon.position.left = options.icon.position.left;
+                delete this._options.icon.position.right;
+                this._options.icon.position.left = options.icon.position.left;
             }
             if (options.icon.position.top) {
-                delete _options.icon.position.bottom;
-                _options.icon.position.top = options.icon.position.top;
+                delete this._options.icon.position.bottom;
+                this._options.icon.position.top = options.icon.position.top;
             }
         }
         return options;
     }
 
     disabledUnsupportedFeatures() {
-        if (!('webkitSpeechRecognition' in window) || location.protocol != 'https:') {
-            common.warn('speech to text isn\'t supported in this browser or in http protocol (https required)');
+        if (!('webkitSpeechRecognition' in window) || location.protocol !== 'https:') {
+            this._common.warn('speech to text isn\'t supported in this browser or in http protocol (https required)');
             this.options.modules.speechToText = false;
         }
-        if (!window.SpeechSynthesisUtterance || !window.speechSynthesis) {
-            common.warn('text to speech isn\'t supported in this browser');
+        const windowAny = window as any;
+        if (!windowAny.SpeechSynthesisUtterance || !windowAny.speechSynthesis) {
+            this._common.warn('text to speech isn\'t supported in this browser');
             this.options.modules.textToSpeech = false;
-        }
-        if (navigator.userAgent.toLowerCase().indexOf('firefox') > -1) {
-            common.warn('grayHues isn\'t supported in firefox');
-            this.options.modules.grayHues = false;
         }
     }
 
@@ -236,12 +293,10 @@ export class Accessibility {
             -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
             background-color: #F5F5F5;
         }
-        
         ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {
             width: 6px;
             background-color: #F5F5F5;
         }
-        
         ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {
             background-color: #999999;
         }
@@ -320,7 +375,7 @@ export class Accessibility {
             min-width: 300px;
             box-shadow: 0px 0px 1px #aaa;
             max-height: 100vh;
-            ${(getComputedStyle(this.body).direction == 'rtl' ? 'text-indent: -5px' : '')}
+            ${(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '')}
         }
         ._access-menu.close {
             z-index: -1;
@@ -428,7 +483,7 @@ export class Accessibility {
         }
         ._access-menu ul li:before {
             content: ' ';
-            ${!this.options.icon.useEmojis ? 'font-family: ' + common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : ''}
+            ${!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : ''}
             text-rendering: optimizeLegibility;
             font-feature-settings: "liga" 1;
             font-style: normal;
@@ -496,15 +551,14 @@ export class Accessibility {
             content: ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'};
         }`;
         let className = '_access-main-css';
-        common.injectStyle(css, { className: className });
-        common.deployedObjects.set('.' + className, false);
+        this._common.injectStyle(css, { className: className });
+        this._common.deployedObjects.set('.' + className, false);
     }
 
-    injectIcon() {
-        //let iStyle = `background-image: url("` + options.icon.src + `"); width: ` + options.icon.dimensions.width.size +
-        let fontSize = this.options.icon.dimensions.width.size * 0.8;
-        let lineHeight = this.options.icon.dimensions.width.size * 0.9;
-        let textIndent = this.options.icon.dimensions.width.size * 0.1;
+    injectIcon(): HTMLElement {
+        let fontSize = (this.options.icon.dimensions.width.size as number) * 0.8;
+        let lineHeight = (this.options.icon.dimensions.width.size as number) * 0.9;
+        let textIndent = (this.options.icon.dimensions.width.size as number) * 0.1;
         let iStyle = `width: ${this.options.icon.dimensions.width.size + this.options.icon.dimensions.width.units}
             ;height: ${this.options.icon.dimensions.height.size + this.options.icon.dimensions.height.units}
             ;font-size: ${fontSize + this.options.icon.dimensions.width.units}
@@ -512,11 +566,13 @@ export class Accessibility {
             ;text-indent: ${textIndent + this.options.icon.dimensions.width.units}
             ;background-color: ${!this.options.icon.useEmojis ? this.options.icon.backgroundColor : 'transparent'};color: ${this.options.icon.color}`;
         for (let i in this.options.icon.position) {
-            iStyle += ';' + i + ':' + this.options.icon.position[i].size + this.options.icon.position[i].units;
+            let pos = this.options.icon.position as any;
+            pos = pos[i];
+            iStyle += ';' + i + ':' + pos.size + pos.units;
         }
         iStyle += `;z-index: ${this.options.icon.zIndex}`;
         let className = `_access-icon ${this.options.icon.fontClass} _access` + (this.options.icon.circular ? ' circular' : '');
-        let iconElem = common.jsonToHtml({
+        let iconElem = this._common.jsonToHtml({
             type: 'i',
             attrs: {
                 'class': className,
@@ -531,17 +587,17 @@ export class Accessibility {
             ]
         });
 
-        this.body.appendChild(iconElem);
-        common.deployedObjects.set('._access-icon', false);
+        this._body.appendChild(iconElem);
+        this._common.deployedObjects.set('._access-icon', false);
         return iconElem;
     }
 
-    parseKeys(arr) {
-        return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? 'Hotkey: ' + arr.map(function (val) { return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', '') }).join('+') : '') : '')
+    parseKeys(arr: Array<any>) {
+        return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? 'Hotkey: ' + arr.map(function (val) { return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', ''); }).join('+') : '') : '');
     }
 
-    injectMenu() {
-        let menuElem = common.jsonToHtml({
+    injectMenu(): HTMLElement {
+        let menuElem = this._common.jsonToHtml({
             type: 'div',
             attrs: {
                 'class': '_access-menu close _access'
@@ -743,7 +799,7 @@ export class Accessibility {
             menuElem.classList.add(i);
         }
 
-        this.body.appendChild(menuElem);
+        this._body.appendChild(menuElem);
         setTimeout(function () {
             let ic = document.getElementById('iconBigCursor');
             if (ic) {
@@ -751,7 +807,7 @@ export class Accessibility {
                 document.getElementById('iconBigCursor').remove();
             }
         }, 1);
-        common.deployedObjects.set('._access-menu', false);
+        this._common.deployedObjects.set('._access-menu', false);
         let closeBtn = document.querySelector('._access-menu ._menu-close-btn');
         closeBtn.addEventListener('click', () => {
             this.toggleMenu();
@@ -767,15 +823,17 @@ export class Accessibility {
 
         for (let i = 0; i < lis.length; i++) {
             lis[i].addEventListener('click', (e) => {
-                let evt = e || window.event
-                this.invoke(evt.target.getAttribute('data-access-action'));
+                let evt = e || window.event;
+                this.invoke((evt.target as HTMLElement).getAttribute('data-access-action'));
             }, false);
         }
     }
 
     disableUnsupportedModules() {
         for (let i in this.options.modules) {
-            if (!this.options.modules[i]) {
+            let m = this.options.modules as any;
+            m = m[i];
+            if (!m) {
                 let moduleLi = document.querySelector('li[data-access-action="' + i + '"]');
                 if (moduleLi) {
                     moduleLi.classList.add('not-supported');
@@ -785,7 +843,6 @@ export class Accessibility {
     }
 
     resetAll() {
-        //window.location.reload();
         this.menuInterface.textToSpeech(true);
         this.menuInterface.speechToText(true);
         this.menuInterface.underlineLinks(true);
@@ -795,48 +852,44 @@ export class Accessibility {
         this.menuInterface.readingGuide(true);
         this.resetTextSize();
         this.resetTextSpace();
-        // for (let i of document.querySelectorAll('._access-menu ul li.active')) {
-        //     i.classList.remove('active');
-        // }
-        //this.destroy();
-    };
+    }
 
     resetTextSize() {
-        this.resetIfDefined(this.initialValues.body.fontSize, this.body.style, 'fontSize');
-        if (typeof this.htmlOrgFontSize !== 'undefined')
-            this.html.style.fontSize = this.htmlOrgFontSize;
-        let all = document.querySelectorAll('[data-init-font-size]')
+        this.resetIfDefined(this._stateValues.body.fontSize, this._body.style, 'fontSize');
+        if (typeof this._htmlOrgFontSize !== 'undefined')
+            this._html.style.fontSize = this._htmlOrgFontSize;
+        let all = document.querySelectorAll('[data-init-font-size]');
 
         for (let i = 0; i < all.length; i++) {
-            all[i].style.fontSize = all[i].getAttribute('data-init-font-size');
+            (all[i] as HTMLElement).style.fontSize = all[i].getAttribute('data-init-font-size');
             all[i].removeAttribute('data-init-font-size');
         }
 
-        this.sessionState.textSize = 0;
+        this._sessionState.textSize = 0;
         this.onChange(true);
     }
 
     resetTextSpace() {
-        this.resetIfDefined(this.initialValues.body.wordSpacing, this.body.style, 'wordSpacing');
-        this.resetIfDefined(this.initialValues.body.letterSpacing, this.body.style, 'letterSpacing');
+        this.resetIfDefined(this._stateValues.body.wordSpacing, this._body.style, 'wordSpacing');
+        this.resetIfDefined(this._stateValues.body.letterSpacing, this._body.style, 'letterSpacing');
         let all = document.querySelectorAll('[data-init-word-spacing]');
         let all2 = document.querySelectorAll('[data-init-letter-spacing]');
 
         for (let i = 0; i < all.length; i++) {
-            all[i].style.wordSpacing = all[i].getAttribute('data-init-word-spacing');
+            (all[i] as HTMLElement).style.wordSpacing = all[i].getAttribute('data-init-word-spacing');
             all[i].removeAttribute('data-init-word-spacing');
         }
         for (let i = 0; i < all2.length; i++) {
-            all[i].style.letterSpacing = all[i].getAttribute('data-init-letter-spacing');
+            (all[i] as HTMLElement).style.letterSpacing = all[i].getAttribute('data-init-letter-spacing');
             all[i].removeAttribute('data-init-letter-spacing');
         }
 
-        this.sessionState.textSpace = 0;
+        this._sessionState.textSpace = 0;
         this.onChange(true);
     }
 
-    alterTextSize(isIncrease) {
-        this.sessionState.textSize += isIncrease ? 1 : -1;
+    alterTextSize(isIncrease: boolean) {
+        this._sessionState.textSize += isIncrease ? 1 : -1;
         this.onChange(true);
         let factor = 2;
         if (!isIncrease)
@@ -849,33 +902,33 @@ export class Accessibility {
                 if (fSize && (fSize.indexOf('px') > -1)) {
                     if (!all[i].getAttribute('data-init-font-size'))
                         all[i].setAttribute('data-init-font-size', fSize);
-                    fSize = (fSize.replace('px', '') * 1) + factor;
-                    all[i].style.fontSize = fSize + 'px';
+                    fSize = parseInt(fSize.replace('px', '')) + factor as any;
+                    (all[i] as HTMLElement).style.fontSize = fSize + 'px';
                 }
             }
         }
         else if (this.options.textEmlMode) {
-            let fp = this.html.style.fontSize;
+            let fp = this._html.style.fontSize;
             if (fp.indexOf('%')) {
-                fp = fp.replace('%', '') * 1;
-                this.html.style.fontSize = (fp + factor) + '%';
+                fp = parseInt(fp.replace('%', '')) as any;
+                this._html.style.fontSize = (fp + factor) + '%';
             }
             else {
-                common.warn('Accessibility.textEmlMode, html element is not set in %.');
+                this._common.warn('Accessibility.textEmlMode, html element is not set in %.');
             }
         }
         else {
-            let fSize = common.getFormattedDim(getComputedStyle(this.body).fontSize);
-            if (typeof this.initialValues.body.fontSize === 'undefined')
-                this.initialValues.body.fontSize = fSize.size + fSize.sufix;
-            if (fSize && fSize.sufix && !isNaN(fSize.size * 1)) {
-                this.body.style.fontSize = ((fSize.size * 1) + factor) + fSize.sufix;
+            let fSize = this._common.getFormattedDim(getComputedStyle(this._body).fontSize);
+            if (typeof this._stateValues.body.fontSize === 'undefined')
+                this._stateValues.body.fontSize = fSize.size + fSize.suffix;
+            if (fSize && fSize.suffix && !isNaN((fSize.size as number) * 1)) {
+                this._body.style.fontSize = (((fSize.size as number) * 1) + factor) + fSize.suffix;
             }
         }
     }
 
-    alterTextSpace(isIncrease) {
-        this.sessionState.textSpace += isIncrease ? 1 : -1;
+    alterTextSpace(isIncrease: boolean) {
+        this._sessionState.textSpace += isIncrease ? 1 : -1;
         this.onChange(true);
         let factor = 1;
         if (!isIncrease)
@@ -888,105 +941,99 @@ export class Accessibility {
                     continue;
                 }
                 // wordSpacing
-                //let fSpacing = getComputedStyle(all[i]).wordSpacing;
-                let fSpacing = all[i].style.wordSpacing;
+                let fSpacing = (all[i] as HTMLElement).style.wordSpacing as any;
                 if (fSpacing && (fSpacing.indexOf('px') > -1)) {
                     if (!all[i].getAttribute('data-init-word-spacing'))
                         all[i].setAttribute('data-init-word-spacing', fSpacing);
                     fSpacing = (fSpacing.replace('px', '') * 1) + factor;
-                    all[i].style.wordSpacing = fSpacing + 'px';
+                    (all[i] as HTMLElement).style.wordSpacing = fSpacing + 'px';
                 } else {
                     all[i].setAttribute('data-init-word-spacing', fSpacing);
-                    all[i].style.wordSpacing = factor + 'px';
+                    (all[i] as HTMLElement).style.wordSpacing = factor + 'px';
                 }
 
                 // letterSpacing
-                //let fSpacing2 = getComputedStyle(all[i]).letterSpacing;
-                let fSpacing2 = all[i].style.letterSpacing;
+                let fSpacing2 = (all[i] as HTMLElement).style.letterSpacing as any;
                 if (fSpacing2 && (fSpacing2.indexOf('px') > -1)) {
                     if (!all[i].getAttribute('data-init-letter-spacing'))
                         all[i].setAttribute('data-init-letter-spacing', fSpacing2);
                     fSpacing2 = (fSpacing2.replace('px', '') * 1) + factor;
-                    all[i].style.letterSpacing = fSpacing2 + 'px';
+                    (all[i] as HTMLElement).style.letterSpacing = fSpacing2 + 'px';
                 } else {
                     all[i].setAttribute('data-init-letter-spacing', fSpacing2);
-                    all[i].style.letterSpacing = factor + 'px';
+                    (all[i] as HTMLElement).style.letterSpacing = factor + 'px';
                 }
             }
         }
         else {
             // wordSpacing
-            let fSpacing = common.getFormattedDim(getComputedStyle(this.body).wordSpacing);
-            if (typeof this.initialValues.body.wordSpacing === 'undefined')
-                this.initialValues.body.wordSpacing = '';
-            if (fSpacing && fSpacing.sufix && !isNaN(fSpacing.size * 1)) {
-                this.body.style.wordSpacing = ((fSpacing.size * 1) + factor) + fSpacing.sufix;
+            let fSpacing = this._common.getFormattedDim(getComputedStyle(this._body).wordSpacing) as any;
+            if (typeof this._stateValues.body.wordSpacing === 'undefined')
+                this._stateValues.body.wordSpacing = '';
+            if (fSpacing && fSpacing.suffix && !isNaN(fSpacing.size * 1)) {
+                this._body.style.wordSpacing = ((fSpacing.size * 1) + factor) + fSpacing.suffix;
             }
             // letterSpacing
-            let fSpacing2 = common.getFormattedDim(getComputedStyle(this.body).letterSpacing);
-            if (typeof this.initialValues.body.letterSpacing === 'undefined')
-                this.initialValues.body.letterSpacing = '';
+            let fSpacing2 = this._common.getFormattedDim(getComputedStyle(this._body).letterSpacing) as any;
+            if (typeof this._stateValues.body.letterSpacing === 'undefined')
+                this._stateValues.body.letterSpacing = '';
             if (fSpacing2 && fSpacing2.sufix && !isNaN(fSpacing2.size * 1)) {
-                this.body.style.letterSpacing = ((fSpacing2.size * 1) + factor) + fSpacing2.sufix;
+                this._body.style.letterSpacing = ((fSpacing2.size * 1) + factor) + fSpacing2.sufix;
             }
         }
     }
 
     speechToText() {
-        if ('webkitSpeechRecognition' in window) {
-            this.recognition = new webkitSpeechRecognition();
-            this.recognition.continuous = true;
-            this.recognition.interimResults = true;
-            this.recognition.onstart = () => {
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            this._recognition = new ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)();
+            this._recognition.continuous = true;
+            this._recognition.interimResults = true;
+            this._recognition.onstart = () => {
                 // TODO red color on mic icon
-                //console.log('listening . . .');
+                // console.log('listening . . .');
                 // if (this.speechToTextTarget)
                 //     this.speechToTextTarget.parentElement.classList.add('_access-listening');
-                this.body.classList.add('_access-listening');
+                this._body.classList.add('_access-listening');
             };
 
-            this.recognition.onend = () => {
-                this.body.classList.remove('_access-listening');
-                //console.log('onend listening');
+            this._recognition.onend = () => {
+                this._body.classList.remove('_access-listening');
             };
 
-            this.recognition.onresult = (event) => {
-                ///console.log('onresult listening');
+            this._recognition.onresult = (event: any) => {
                 let finalTranscript = '';
-                if (typeof (event.results) == 'undefined') {
+                if (typeof (event.results) === 'undefined') {
                     return;
                 }
                 for (let i = event.resultIndex; i < event.results.length; ++i) {
                     if (event.results[i].isFinal) {
                         finalTranscript += event.results[i][0].transcript;
                     }
-                    // else {
-                    //     interim_transcript += event.results[i][0].transcript;
-                    // }
                 }
-                if (finalTranscript && this.speechToTextTarget) {
-                    this.speechToTextTarget.parentElement.classList.remove('_access-listening');
-                    if (this.speechToTextTarget.tagName.toLowerCase() == 'input' || this.speechToTextTarget.tagName.toLowerCase() == 'textarea') {
-                        this.speechToTextTarget.value = finalTranscript;
+                if (finalTranscript && this._speechToTextTarget) {
+                    this._speechToTextTarget.parentElement.classList.remove('_access-listening');
+                    if (this._speechToTextTarget.tagName.toLowerCase() === 'input' || this._speechToTextTarget.tagName.toLowerCase() === 'textarea') {
+                        (this._speechToTextTarget as HTMLInputElement).value = finalTranscript;
                     }
-                    else if (this.speechToTextTarget.getAttribute('contenteditable') != null) {
-                        this.speechToTextTarget.innerText = finalTranscript;
+                    else if (this._speechToTextTarget.getAttribute('contenteditable') !== null) {
+                        this._speechToTextTarget.innerText = finalTranscript;
                     }
                 }
             };
-            this.recognition.lang = this.options.speechToTextLang;
-            this.recognition.start();
+            this._recognition.lang = this.options.speechToTextLang;
+            this._recognition.start();
         }
     }
 
-    textToSpeech(text) {
-        if (!window.SpeechSynthesisUtterance || !window.speechSynthesis) return;
-        let msg = new window.SpeechSynthesisUtterance(text);
+    textToSpeech(text: string) {
+        const windowAny = window as any;
+        if (!windowAny.SpeechSynthesisUtterance || !windowAny.speechSynthesis) return;
+        let msg = new windowAny.SpeechSynthesisUtterance(text);
         msg.lang = this.options.textToSpeechLang;
-        msg.onend = (e) => {
-            this.isReading = false;
+        msg.onend = () => {
+            this._isReading = false;
         };
-        let voices = window.speechSynthesis.getVoices();
+        let voices = windowAny.speechSynthesis.getVoices();
         let isLngSupported = false;
         for (let i = 0; i < voices.length; i++) {
             if (voices[i].lang === msg.lang) {
@@ -996,29 +1043,21 @@ export class Accessibility {
             }
         }
         if (!isLngSupported) {
-            common.warn('text to speech language not supported!');
-            // let msg = 'text to speech language not supported!';
-            // if (console.warn)
-            //     console.warn(msg);
-            // else
-            //     console.log(msg);
+            this._common.warn('text to speech language not supported!');
         }
         window.speechSynthesis.speak(msg);
-        this.isReading = true;
+        this._isReading = true;
     }
 
     listen() {
-        // let className = '_access-speech-to-text';
-        // window.event.preventDefault();
-        // window.event.stopPropagation();
-        if (typeof self.recognition === 'object' && typeof self.recognition.stop === 'function')
-            self.recognition.stop();
+        if (typeof this._recognition === 'object' && typeof this._recognition.stop === 'function')
+            this._recognition.stop();
 
-        self.speechToTextTarget = window.event.target;
-        self.speechToText(window.event.target.innerText);
+        this._speechToTextTarget = window.event.target as HTMLElement;
+        this.speechToText();
     }
 
-    read(e) {
+    read(e: Event) {
         try {
             e = window.event || e || arguments[0];
             if (e && e.preventDefault) {
@@ -1027,51 +1066,52 @@ export class Accessibility {
             }
         }
         catch (ex) { }
-        if (self.isReading) {
+        if (this._isReading) {
             window.speechSynthesis.cancel();
-            self.isReading = false;
+            this._isReading = false;
         }
         else
-            self.textToSpeech(window.event.target.innerText);
+            this.textToSpeech((window.event.target as HTMLElement).innerText);
     }
-    runHotkey(name) {
+
+    runHotkey(name: string) {
         switch (name) {
             case 'toggleMenu':
                 this.toggleMenu();
                 break;
             default:
                 if (this.menuInterface.hasOwnProperty(name)) {
-                    if (this.options.modules[name]) {
-                        this.menuInterface[name](false);
+                    if ((this._options.modules as any)[name]) {
+                        (this.menuInterface as any)[name](false);
                     }
                 }
                 break;
         }
     }
     toggleMenu() {
-        if (this.menu.classList.contains('close')) {
+        if (this._menu.classList.contains('close')) {
             if (this.options.animations && this.options.animations.buttons)
-                setTimeout(() => { this.menu.querySelector('ul').classList.toggle('before-collapse'); }, 500);
-            setTimeout(() => { this.menu.classList.toggle('close'); }, 10);
+                setTimeout(() => { this._menu.querySelector('ul').classList.toggle('before-collapse'); }, 500);
+            setTimeout(() => { this._menu.classList.toggle('close'); }, 10);
         }
         else {
             if (this.options.animations && this.options.animations.buttons) {
-                setTimeout(() => { this.menu.classList.toggle('close'); }, 500);
-                setTimeout(() => { this.menu.querySelector('ul').classList.toggle('before-collapse'); }, 10);
+                setTimeout(() => { this._menu.classList.toggle('close'); }, 500);
+                setTimeout(() => { this._menu.querySelector('ul').classList.toggle('before-collapse'); }, 10);
             }
             else {
-                this.menu.classList.toggle('close');
+                this._menu.classList.toggle('close');
             }
         }
     }
 
-    invoke(action) {
-        if (typeof this.menuInterface[action] === 'function')
-            this.menuInterface[action]();
+    invoke(action: string) {
+        if (typeof (this.menuInterface as any)[action] === 'function')
+            (this.menuInterface as any)[action]();
     }
 
     build() {
-        this.initialValues = {
+        this._stateValues = {
             underlineLinks: false,
             textToSpeech: false,
             bigCursor: false,
@@ -1079,357 +1119,85 @@ export class Accessibility {
             body: {},
             html: {}
         };
-        this.body = document.body || document.getElementsByTagName('body')[0];
-        this.html = document.documentElement || document.getElementsByTagName('html')[0];
+        this._body = document.body || document.getElementsByTagName('body')[0] as any;
+        this._html = document.documentElement || document.getElementsByTagName('html')[0];
         if (this.options.textEmlMode)
             this.initFontSize();
         this.injectCss();
-        this.icon = this.injectIcon();
-        this.menu = this.injectMenu();
+        this._icon = this.injectIcon();
+        this._menu = this.injectMenu();
         this.addListeners();
         this.disableUnsupportedModules();
         if (this.options.hotkeys.enabled) {
-            document.onkeydown = function (e) {
-                let act = Object.entries(self.options.hotkeys.keys).find(function (val) {
+            document.onkeydown = (e: KeyboardEvent) => {
+                let act = Object.entries(this.options.hotkeys.keys).find(function (val) {
                     let pass = true;
                     for (var i = 0; i < val[1].length; i++) {
                         if (Number.isInteger((val[1])[i])) {
-                            if (e.keyCode != (val[1])[i]) {
+                            if (e.keyCode !== (val[1])[i]) {
                                 pass = false;
                             }
                         } else {
-                            if (e[(val[1])[i]] == undefined || e[(val[1])[i]] == false) {
+                            if ((e as any)[(val[1])[i]] === undefined || (e as any)[(val[1])[i]] === false) {
                                 pass = false;
                             }
                         }
                     }
                     return pass;
                 });
-                if (act != undefined) {
-                    self.runHotkey(act[0]);
+                if (act !== undefined) {
+                    this.runHotkey(act[0]);
                 }
-            }
+            };
         }
-        //setMinHeight();
 
-        this.icon.addEventListener('click', () => {
+        this._icon.addEventListener('click', () => {
             this.toggleMenu();
         }, false);
         setTimeout(() => {
-            this.icon.style.opacity = '1';
+            this._icon.style.opacity = '1';
         }, 10);
 
-        // if (window.SpeechSynthesisUtterance || window.speechSynthesis) {
-        //     let voices = window.speechSynthesis.getVoices();
-        // }
-        this.updateReadGuide = function (e) {
+        this.updateReadGuide = (e: Event | TouchEvent | any) => {
             let newPos = 0;
-            if (e.type == 'touchmove') {
-                newPos = e.changedTouches[0].clientY
+            if (e.type === 'touchmove') {
+                newPos = e.changedTouches[0].clientY;
             } else {
                 newPos = e.y;
             }
-            document.getElementById('access_read_guide_bar').style.top = (newPos - (parseInt(self.options.guide.height.replace('px')) + 5)) + 'px';
-        }
-        this.menuInterface = {
-            increaseText: () => {
-                this.alterTextSize(true);
-            },
-            decreaseText: () => {
-                this.alterTextSize(false);
-            },
-            increaseTextSpacing: () => {
-                this.alterTextSpace(true);
-            },
-            decreaseTextSpacing: () => {
-                this.alterTextSpace(false);
-            },
-            invertColors: (destroy) => {
-                if (typeof this.initialValues.html.backgroundColor === 'undefined')
-                    this.initialValues.html.backgroundColor = getComputedStyle(this.html).backgroundColor;
-                if (typeof this.initialValues.html.color === 'undefined')
-                    this.initialValues.html.color = getComputedStyle(this.html).color;
-
-                if (destroy) {
-                    this.resetIfDefined(this.initialValues.html.backgroundColor, this.html.style, 'backgroundColor');
-                    this.resetIfDefined(this.initialValues.html.color, this.html.style, 'color');
-                    document.querySelector('._access-menu [data-access-action="invertColors"]').classList.remove('active');
-                    this.initialValues.invertColors = false;
-                    this.sessionState.invertColors = this.initialValues.invertColors;
-                    this.onChange(true);
-                    this.html.style.filter = '';
-                    return;
-                }
-
-
-                document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
-                this.initialValues.invertColors = !this.initialValues.invertColors;
-                this.sessionState.invertColors = this.initialValues.invertColors;
-                this.onChange(true);
-                if (this.initialValues.invertColors) {
-                    if (this.initialValues.grayHues)
-                        this.menuInterface.grayHues(true);
-                    this.html.style.filter = 'invert(1)';
-                }
-                else {
-                    this.html.style.filter = '';
-                }
-            },
-            grayHues: (destroy) => {
-                if (typeof this.initialValues.html.filter === 'undefined')
-                    this.initialValues.html.filter = getComputedStyle(this.html).filter;
-                if (typeof this.initialValues.html.webkitFilter === 'undefined')
-                    this.initialValues.html.webkitFilter = getComputedStyle(this.html).webkitFilter;
-                if (typeof this.initialValues.html.mozFilter === 'undefined')
-                    this.initialValues.html.mozFilter = getComputedStyle(this.html).mozFilter;
-                if (typeof this.initialValues.html.msFilter === 'undefined')
-                    this.initialValues.html.msFilter = getComputedStyle(this.html).msFilter;
-
-                if (destroy) {
-                    document.querySelector('._access-menu [data-access-action="grayHues"]').classList.remove('active');
-                    this.initialValues.grayHues = false;
-                    this.sessionState.grayHues = this.initialValues.grayHues;
-                    this.onChange(true);
-                    this.resetIfDefined(this.initialValues.html.filter, this.html.style, 'filter');
-                    this.resetIfDefined(this.initialValues.html.webkitFilter, this.html.style, 'webkitFilter');
-                    this.resetIfDefined(this.initialValues.html.mozFilter, this.html.style, 'mozFilter');
-                    this.resetIfDefined(this.initialValues.html.msFilter, this.html.style, 'msFilter');
-                    return;
-                }
-
-                document.querySelector('._access-menu [data-access-action="grayHues"]').classList.toggle('active');
-                this.initialValues.grayHues = !this.initialValues.grayHues;
-                this.sessionState.grayHues = this.initialValues.grayHues;
-                this.onChange(true);
-                let val;
-                if (this.initialValues.grayHues) {
-                    val = 'grayscale(1)'
-                    if (this.initialValues.invertColors)
-                        this.menuInterface.invertColors(true)
-                } else {
-                    val = ''
-                }
-                this.html.style.webkitFilter = val;
-                this.html.style.mozFilter = val;
-                this.html.style.msFilter = val;
-                this.html.style.filter = val;
-            },
-            underlineLinks: (destroy) => {
-                let className = '_access-underline';
-                let remove = () => {
-                    let style = document.querySelector('.' + className);
-                    if (style) {
-                        style.parentElement.removeChild(style);
-                        common.deployedObjects.remove('.' + className);
-                    }
-                };
-
-                if (destroy) {
-                    this.initialValues.underlineLinks = false;
-                    this.sessionState.underlineLinks = this.initialValues.underlineLinks;
-                    this.onChange(true);
-                    document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.remove('active');
-                    return remove();
-                }
-
-                document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.toggle('active')
-                this.initialValues.underlineLinks = !this.initialValues.underlineLinks;
-                this.sessionState.underlineLinks = this.initialValues.underlineLinks;
-                this.onChange(true);
-                if (this.initialValues.underlineLinks) {
-                    let css = `
-                    body a {
-                        text-decoration: underline !important;
-                    }
-                `;
-                    common.injectStyle(css, { className: className });
-                    common.deployedObjects.set('.' + className, true);
-                }
-                else {
-                    remove();
-                }
-            },
-            bigCursor: (destroy) => {
-                if (destroy) {
-                    this.html.classList.remove('_access_cursor');
-                    document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.remove('active');
-                    this.initialValues.bigCursor = false;
-                    this.sessionState.bigCursor = false;
-                    this.onChange(true);
-                    return;
-                }
-
-
-                document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.toggle('active');
-                this.initialValues.bigCursor = !this.initialValues.bigCursor;
-                this.sessionState.bigCursor = this.initialValues.bigCursor;
-                this.onChange(true);
-                this.html.classList.toggle('_access_cursor');
-            },
-            readingGuide: (destroy) => {
-                if (destroy) {
-                    if (document.getElementById('access_read_guide_bar') != undefined) {
-                        document.getElementById('access_read_guide_bar').remove();
-                    }
-                    document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.remove('active');
-                    this.initialValues.readingGuide = false;
-                    this.sessionState.readingGuide = this.initialValues.readingGuide;
-                    this.onChange(true);
-                    document.body.removeEventListener('touchmove', this.updateReadGuide, false);
-                    document.body.removeEventListener('mousemove', this.updateReadGuide, false);
-                    return;
-                }
-                document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
-                this.initialValues.readingGuide = !this.initialValues.readingGuide;
-                this.sessionState.readingGuide = this.initialValues.readingGuide;
-                this.onChange(true);
-                if (this.initialValues.readingGuide) {
-                    let read = document.createElement("div");
-                    read.id = 'access_read_guide_bar';
-                    read.classList.add('access_read_guide_bar');
-                    document.body.append(read);
-                    document.body.addEventListener('touchmove', this.updateReadGuide, false);
-                    document.body.addEventListener('mousemove', this.updateReadGuide, false);
-                } else {
-                    if (document.getElementById('access_read_guide_bar') != undefined) {
-                        document.getElementById('access_read_guide_bar').remove();
-                    }
-                    document.body.removeEventListener('touchmove', this.updateReadGuide, false);
-                    document.body.removeEventListener('mousemove', this.updateReadGuide, false);
-                }
-            },
-            textToSpeech: (destroy) => {
-                // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
-                this.onChange(false);
-                let className = '_access-text-to-speech';
-                let remove = () => {
-                    let style = document.querySelector('.' + className);
-                    if (style) {
-                        style.parentElement.removeChild(style);
-                        document.removeEventListener('click', this.read, false);
-                        common.deployedObjects.remove('.' + className);
-                    }
-                };
-
-                if (destroy) {
-                    document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.remove('active');
-                    this.initialValues.textToSpeech = false;
-                    return remove();
-                }
-
-                document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.toggle('active');
-
-                this.initialValues.textToSpeech = !this.initialValues.textToSpeech;
-                if (this.initialValues.textToSpeech) {
-                    let css = `
-                        *:hover {
-                            box-shadow: 2px 2px 2px rgba(180,180,180,0.7);
-                        }
-                    `;
-                    common.injectStyle(css, { className: className });
-                    common.deployedObjects.set('.' + className, true);
-                    document.addEventListener('click', this.read, false);
-                }
-                else {
-                    remove();
-                }
-            },
-            speechToText: (destroy) => {
-                // this.sessionState.speechToText = typeof destroy === 'undefined' ? true : false;
-                this.onChange(false);
-                let className = '_access-speech-to-text';
-                let remove = () => {
-                    if (this.recognition) {
-                        this.recognition.stop();
-                        this.body.classList.remove('_access-listening');
-                    }
-                    let style = document.querySelector('.' + className);
-                    if (style) {
-                        style.parentElement.removeChild(style);
-                        common.deployedObjects.remove('.' + className);
-                    }
-                    let inputs = document.querySelectorAll('._access-mic');
-                    for (let i = 0; i < inputs.length; i++) {
-                        inputs[i].removeEventListener('focus', this.listen, false);
-                        inputs[i].classList.remove('_access-mic');
-                    }
-                };
-
-                if (destroy) {
-                    document.querySelector('._access-menu [data-access-action="speechToText"]').classList.remove('active');
-                    this.initialValues.speechToText = false;
-                    return remove();
-                }
-
-                document.querySelector('._access-menu [data-access-action="speechToText"]').classList.toggle('active');
-
-                this.initialValues.speechToText = !this.initialValues.speechToText;
-                if (this.initialValues.speechToText) {
-                    let css = `
-                        body:after {
-                            content: ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'};
-                            ${!this.options.icon.useEmojis ? "font-family: '" + this.options.icon.fontFamily + "';" : ''}
-                            position: fixed;
-                            z-index: 1100;
-                            top: 1vw;
-                            right: 1vw;
-                            width: 36px;
-                            height: 36px;
-                            font-size: 30px;
-                            line-height: 36px;
-                            border-radius: 50%;
-                            background: rgba(255,255,255,0.7);
-                            display: flex;
-                            justify-content: center;
-                            aling-items: center;
-                        }
-
-                        body._access-listening:after {
-                            animation: _access-listening-animation 2s infinite ease;
-                        }
-
-                        @keyframes _access-listening-animation {
-                            0%  {background-color: transparent;}
-                            50%  {background-color: #EF9A9A;}
-                        }
-                    `;
-                    common.injectStyle(css, { className: className });
-                    common.deployedObjects.set('.' + className, true);
-                    let inputs = document.querySelectorAll('input[type="text"], input[type="search"], textarea, [contenteditable]');
-                    for (let i = 0; i < inputs.length; i++) {
-                        inputs[i].addEventListener('blur', () => {
-                            if (typeof this.recognition === 'object' && typeof this.recognition.stop === 'function')
-                                this.recognition.stop();
-                        }, false);
-                        inputs[i].addEventListener('focus', this.listen, false);
-                        inputs[i].parentElement.classList.add('_access-mic');
-                    }
-                }
-                else {
-                    remove();
-                }
-            }
-        }
+            document.getElementById('access_read_guide_bar').style.top = (newPos - (parseInt(this.options.guide.height.replace('px', '')) + 5)) + 'px';
+        };
+        this.menuInterface = new MenuInterface(this);
         if (this.options.session.persistent)
             this.setSessionFromCache();
     }
 
-    resetIfDefined(src, dest, prop) {
+    updateReadGuide(e: Event | TouchEvent | any) {
+        let newPos = 0;
+        if (e.type === 'touchmove') {
+            newPos = e.changedTouches[0].clientY;
+        } else {
+            newPos = e.y;
+        }
+        document.getElementById('access_read_guide_bar').style.top = (newPos - (parseInt(this.options.guide.height.replace('px', '')) + 5)) + 'px';
+    }
+
+    resetIfDefined(src: string, dest: any, prop: string) {
         if (typeof src !== 'undefined')
             dest[prop] = src;
     }
 
-    onChange(updateSession) {
+    onChange(updateSession: boolean) {
         if (updateSession && this.options.session.persistent)
             this.saveSession();
     }
 
     saveSession() {
-        storage.set('_accessState', this.sessionState);
+        this._storage.set('_accessState', this.sessionState);
     }
 
     setSessionFromCache() {
-        let sessionState = storage.get('_accessState');
+        let sessionState = this._storage.get('_accessState');
         if (sessionState) {
             if (sessionState.textSize) {
                 let textSize = sessionState.textSize;
@@ -1472,9 +1240,9 @@ export class Accessibility {
     }
 
     destroy() {
-        let allSelectors = common.deployedObjects.getAll();
+        let allSelectors = this._common.deployedObjects.getAll();
         for (let i of allSelectors) {
-            let elem = document.querySelector(i);
+            let elem = document.querySelector(i as any);
             if (elem) {
                 elem.parentElement.removeChild(elem);
             }
@@ -1482,8 +1250,8 @@ export class Accessibility {
     }
 }
 
-Accessibility.init = (opt) => {
-    common.warn('"Accessibility.init()" is deprecated! Please use "new Accessibility()" instead');
+(Accessibility as any).init = (opt?: IAccessibilityOptions) => {
+    console.warn('"Accessibility.init()" is deprecated! Please use "new Accessibility()" instead');
     new Accessibility(opt);
 };
 

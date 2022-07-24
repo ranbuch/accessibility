@@ -1,4 +1,4 @@
 'use strict';
 import Accessibility from './main';
 
-window.Accessibility = Accessibility;
+(window as any).Accessibility = Accessibility;
