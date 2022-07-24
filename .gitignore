@@ -3,7 +3,6 @@ node_modules
 src/**/*.js
 src/**/*.js.map
 typings
-dist
 coverage
 ts-out
 npm-debug.log
