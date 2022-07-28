@@ -1003,6 +1003,9 @@ export class Accessibility {
             // else
             //     console.log(msg);
         }
+        if(window.speechSynthesis.pending || window.speechSynthesis.speaking) {
+            window.speechSynthesis.cancel();
+        }
         window.speechSynthesis.speak(msg);
         this.isReading = true;
     }
@@ -1027,12 +1030,8 @@ export class Accessibility {
             }
         }
         catch (ex) { }
-        if (self.isReading) {
-            window.speechSynthesis.cancel();
-            self.isReading = false;
-        }
-        else
-            self.textToSpeech(window.event.target.innerText);
+ 
+        self.textToSpeech(window.event.target.innerText);
     }
     runHotkey(name) {
         switch (name) {
