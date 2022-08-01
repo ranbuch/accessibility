@@ -1,13 +1,19 @@
 'use strict';
 
-let storage = {
-    has(key) {
+export class Storage {
+    constructor() {
+
+    }
+
+    has(key: string) {
         return window.localStorage.hasOwnProperty(key);
-    },
-    set(key, value) {
+    }
+
+    set(key: string, value: any) {
         window.localStorage.setItem(key, JSON.stringify(value));
-    },
-    get(key) {
+    }
+
+    get(key: string) {
         let item = window.localStorage.getItem(key);
         try {
             return JSON.parse(item);
@@ -15,13 +21,16 @@ let storage = {
         catch (e) {
             return item;
         }
-    },
+    }
+
     clear() {
         window.localStorage.clear();
-    },
-    remove(key) {
+    }
+
+    remove(key: string) {
         window.localStorage.removeItem(key);
-    },
+    }
+
     isSupported() {
         let test = '_test';
         try {
@@ -33,5 +42,3 @@ let storage = {
         }
     }
 }
-
-export default storage;

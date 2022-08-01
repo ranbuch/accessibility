@@ -8,10 +8,10 @@
 `npm install accessibility`
 
 include script:  
-`<script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"></script>`  
+`<script type="text/javascript" src="node_modules/accessibility/dist/main.bundle.js"></script>`  
 
 or import:  
-`import { Accessibility } from 'accessibility/src/main';`  
+`import { Accessibility } from 'accessibility/dist/accessibility';`
 
 initialize component:  
 `window.addEventListener('load', function() {
@@ -40,7 +40,6 @@ Easy to use!
 ### LIMITATIONS & KNOWN ISSUES:
 * Works with html5 browsers only (no IE8 and below)
 * Text to speech & speech to text works in supported browsers and languages only
-* Gray hues is disabled in firefox due to a bug in firefox browser and will be enabled when it will be fixed
 
 ### MULTI LANGUAGE EXAMPLE:
 

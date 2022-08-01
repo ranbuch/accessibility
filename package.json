@@ -1,12 +1,17 @@
 {
   "name": "accessibility",
-  "version": "3.0.17",
+  "version": "4.0.0",
   "description": "add accessibility to your website",
   "main": "accessibility.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --config webpack.config.js",
-    "watch": "webpack --watch --config webpack.config.js"
+    "start": "webpack serve --mode development",
+    "build": "webpack --config webpack.config.js --mode production",
+    "build.prod": "webpack --config webpack.config.js",
+    "build.esnext": "npm run build:types && npm run build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir dist --extensions \".ts,.tsx\"",
+    "build.all": "npm run build.prod && npm run build.esnext",
+    "test": "karma start karma.config.js"
   },
   "keywords": [
     "accessibility",
@@ -25,11 +30,26 @@
   "author": "Ran Buchnik <ranbuch@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "webpack": "^4.34.0",
-    "webpack-cli": "3.3.5"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ranbuch/accessibility"
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/plugin-proposal-class-properties": "^7.4.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
+    "@babel/preset-env": "^7.4.1",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jasmine": "2.8.7",
+    "@types/node": "7.0.0",
+    "awesome-typescript-loader": "5.2.0",
+    "jasmine-core": "3.1.0",
+    "karma": "^6.4.0",
+    "karma-jasmine": "1.1.2",
+    "karma-phantomjs-launcher": "1.0.4",
+    "karma-webpack": "3.0.0",
+    "source-map-loader": "0.2.3",
+    "tslint": "5.17.0",
+    "tslint-loader": "3.6.0",
+    "typescript": "3.5.1",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.9.3"
   }
 }

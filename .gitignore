@@ -1,2 +1,9 @@
+.idea
 node_modules
-package-lock.json
+src/**/*.js
+src/**/*.js.map
+typings
+coverage
+ts-out
+npm-debug.log
+debug.log
