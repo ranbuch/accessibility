@@ -8,10 +8,10 @@
 `npm install accessibility`
 
 include script:  
-`<script type="text/javascript" src="node_modules/accessibility/dist/accessibility.min.js"></script>`  
+`<script type="text/javascript" src="node_modules/accessibility/dist/main.bundle.js"></script>`  
 
 or import:  
-`import { Accessibility } from 'accessibility/src/main';`  
+`import { Accessibility } from 'accessibility/dist/accessibility';`
 
 initialize component:  
 `window.addEventListener('load', function() {

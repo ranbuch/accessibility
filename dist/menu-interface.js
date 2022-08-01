@@ -199,7 +199,7 @@ var MenuInterface = /*#__PURE__*/function () {
     key: "readingGuide",
     value: function readingGuide(destroy) {
       if (destroy) {
-        if (document.getElementById('access_read_guide_bar') !== undefined) {
+        if (document.getElementById('access_read_guide_bar')) {
           document.getElementById('access_read_guide_bar').remove();
         }
 

@@ -1240,13 +1240,12 @@ export class Accessibility implements IAccessibility {
     }
 
     destroy() {
-        let allSelectors = this._common.deployedObjects.getAll();
-        for (let i of allSelectors) {
-            let elem = document.querySelector(i as any);
-            if (elem) {
+        const allSelectors = this._common.deployedObjects.getAll();
+        allSelectors.forEach((value: boolean, key: string) => {
+            const elem = document.querySelector(key);
+            if (elem)
                 elem.parentElement.removeChild(elem);
-            }
-        }
+        });
     }
 }
 
