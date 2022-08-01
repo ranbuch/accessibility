@@ -183,6 +183,11 @@ export class Accessibility implements IAccessibility {
                         'ctrlKey',
                         'altKey',
                         83
+                    ],
+                    disableAnimations: [
+                        'ctrlKey',
+                        'altKey',
+                        81
                     ]
                 }
             },
@@ -215,7 +220,8 @@ export class Accessibility implements IAccessibility {
                 readingGuide: 'reading guide',
                 underlineLinks: 'underline links',
                 textToSpeech: 'text to speech',
-                speechToText: 'speech to text'
+                speechToText: 'speech to text',
+                disableAnimations: 'disable animations'
             },
             textToSpeechLang: 'en-US',
             speechToTextLang: 'en-US',
@@ -235,7 +241,8 @@ export class Accessibility implements IAccessibility {
                 readingGuide: true,
                 underlineLinks: true,
                 textToSpeech: true,
-                speechToText: true
+                speechToText: true,
+                disableAnimations: true,
             },
             session: {
                 persistent: true
@@ -549,6 +556,9 @@ export class Accessibility implements IAccessibility {
         }
         ._access-menu ul li[data-access-action="speechToText"]:before {
             content: ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'};
+        }
+        ._access-menu ul li[data-access-action="disableAnimations"]:before {
+            content: ${!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"'};
         }`;
         let className = '_access-main-css';
         this._common.injectStyle(css, { className: className });
@@ -789,6 +799,18 @@ export class Accessibility implements IAccessibility {
                                     text: this.options.labels.speechToText
                                 }
                             ]
+                        },
+                        {
+                            type: 'li',
+                            attrs: {
+                                'data-access-action': 'disableAnimations'
+                            },
+                            children: [
+                                {
+                                    type: '#text',
+                                    text: this.options.labels.disableAnimations
+                                }
+                            ]
                         }
                     ]
                 }
@@ -845,6 +867,7 @@ export class Accessibility implements IAccessibility {
     resetAll() {
         this.menuInterface.textToSpeech(true);
         this.menuInterface.speechToText(true);
+        this.menuInterface.disableAnimations(true);
         this.menuInterface.underlineLinks(true);
         this.menuInterface.grayHues(true);
         this.menuInterface.invertColors(true);

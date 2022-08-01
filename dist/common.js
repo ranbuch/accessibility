@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Common = void 0;
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24,6 +28,8 @@ var Common = /*#__PURE__*/function () {
     _defineProperty(this, "deployedMap", void 0);
 
     _defineProperty(this, "_isIOS", void 0);
+
+    _defineProperty(this, "_canvas", void 0);
 
     this.body = document.body || document.querySelector('body');
     this.deployedMap = new Map();
@@ -203,9 +209,69 @@ var Common = /*#__PURE__*/function () {
         }
       };
     }
+  }, {
+    key: "createScreenshot",
+    value: function createScreenshot(url) {
+      var _this3 = this;
+
+      return new Promise(function (resolve, reject) {
+        if (!_this3._canvas) _this3._canvas = document.createElement('canvas');
+        var img = new Image();
+        _this3._canvas.style.position = 'fixed';
+        _this3._canvas.style.top = '0';
+        _this3._canvas.style.left = '0';
+        _this3._canvas.style.opacity = '0.05';
+        _this3._canvas.style.transform = 'scale(0.05)';
+        img.crossOrigin = 'anonymous';
+        img.onload = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+          var ctx, res;
+          return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  document.body.appendChild(_this3._canvas);
+                  ctx = _this3._canvas.getContext('2d');
+                  _this3._canvas.width = img.naturalWidth;
+                  _this3._canvas.height = img.naturalHeight;
+                  ctx.clearRect(0, 0, _this3._canvas.width, _this3._canvas.height); // await this.setTimeout(1500);
+
+                  ctx.drawImage(img, 0, 0);
+                  res = Common.DEFAULT_PIXEL;
+
+                  try {
+                    res = _this3._canvas.toDataURL('image/png');
+                  } catch (e) {}
+
+                  resolve(res);
+
+                  _this3._canvas.remove();
+
+                case 10:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee);
+        }));
+
+        img.onerror = function () {
+          // Return a 1X1 pixels transparent image as a fallback
+          resolve(Common.DEFAULT_PIXEL);
+        };
+
+        img.src = url;
+      });
+    }
+  }, {
+    key: "getFileExtension",
+    value: function getFileExtension(filename) {
+      return filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
+    }
   }]);
 
   return Common;
 }();
 
 exports.Common = Common;
+
+_defineProperty(Common, "DEFAULT_PIXEL", 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');

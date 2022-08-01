@@ -10,6 +10,8 @@ export interface ICommon {
     getFixedPseudoFont(name: string): void;
     isFontLoaded(fontFamily?: string, callback?: Function): void;
     warn(msg: string): void;
+    createScreenshot(url: string): Promise<string>;
+    getFileExtension(filename: string): string;
 }
 export interface IJsonToHtml {
     type: string;

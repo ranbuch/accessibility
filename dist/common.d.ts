@@ -1,8 +1,10 @@
 import { ICommon, IDeployedObjects, IFormattedDim, IInjectStyleOptions, IJsonToHtml } from './interfaces/common.interface';
 export declare class Common implements ICommon {
+    static DEFAULT_PIXEL: string;
     private body;
     private deployedMap;
     private _isIOS;
+    private _canvas;
     constructor();
     isIOS(): boolean;
     jsonToHtml(obj: IJsonToHtml): HTMLElement;
@@ -15,4 +17,6 @@ export declare class Common implements ICommon {
     isFontLoaded(fontFamily?: string, callback?: Function): any;
     warn(msg: string): void;
     readonly deployedObjects: IDeployedObjects;
+    createScreenshot(url: string): Promise<string>;
+    getFileExtension(filename: string): string;
 }

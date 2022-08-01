@@ -201,6 +201,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;readingGuide: 'reading guide (in my language)',<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;textToSpeech: 'text to speech (in my language)',<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;speechToText: 'speech to text (in my language)'<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;disableAnimations: 'disable animations (in my language)'<br>
                     };<br>
                     var options = { labels: labels };<br>  
                     options.textToSpeechLang = 'en-US'; // or any other language<br>  
@@ -226,7 +227,8 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;bigCursor: [true/false],<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;readingGuide: [true/false],<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;textToSpeech: [true/false],<br>  
-                        &nbsp;&nbsp;&nbsp;&nbsp;speechToText: [true/false]<br>  
+                        &nbsp;&nbsp;&nbsp;&nbsp;speechToText: [true/false]<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;disableAnimations: [true/false]<br>
                     };
                     </code>
 
@@ -599,6 +601,9 @@
                     </p>
                     <p>
                         instance.menuInterface.speechToText();
+                    </p>
+                    <p>
+                        instance.menuInterface.disableAnimations();
                     </p>
                 </code>
                 <br>

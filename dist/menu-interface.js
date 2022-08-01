@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.MenuInterface = void 0;
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -347,6 +351,129 @@ var MenuInterface = /*#__PURE__*/function () {
       } else {
         remove();
       }
+    }
+  }, {
+    key: "disableAnimations",
+    value: function disableAnimations(destroy) {
+      var _this4 = this;
+
+      var className = '_access-disable-animations',
+          autoplayStopped = 'data-autoplay-stopped';
+
+      var remove = function remove() {
+        document.querySelector('._access-menu [data-access-action="disableAnimations"]').classList.remove('active');
+        _this4._acc.stateValues.disableAnimations = false;
+        var style = document.querySelector('.' + className);
+
+        if (style) {
+          style.parentElement.removeChild(style);
+
+          _this4._acc.common.deployedObjects.remove('.' + className);
+        }
+
+        var allImages = document.querySelectorAll('[data-org-src]');
+        allImages.forEach( /*#__PURE__*/function () {
+          var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(i) {
+            var screenshot;
+            return regeneratorRuntime.wrap(function _callee$(_context) {
+              while (1) {
+                switch (_context.prev = _context.next) {
+                  case 0:
+                    screenshot = i.src;
+                    i.setAttribute('src', i.getAttribute('data-org-src'));
+                    i.setAttribute('data-org-src', screenshot);
+
+                  case 3:
+                  case "end":
+                    return _context.stop();
+                }
+              }
+            }, _callee);
+          }));
+
+          return function (_x) {
+            return _ref.apply(this, arguments);
+          };
+        }());
+        var allVideos = document.querySelectorAll("video[".concat(autoplayStopped, "]"));
+        allVideos.forEach(function (v) {
+          v.setAttribute('autoplay', '');
+          v.removeAttribute(autoplayStopped);
+          v.play();
+        });
+      };
+
+      if (destroy) {
+        remove();
+        return;
+      }
+
+      this._acc.stateValues.disableAnimations = !this._acc.stateValues.disableAnimations;
+
+      if (!this._acc.stateValues.disableAnimations) {
+        remove();
+        return;
+      }
+
+      document.querySelector('._access-menu [data-access-action="disableAnimations"]').classList.add('active');
+      var css = "\n                body * {\n                    animation-duration: 0.0ms !important;\n                    transition-duration: 0.0ms !important;\n                }\n        ";
+
+      this._acc.common.injectStyle(css, {
+        className: className
+      });
+
+      this._acc.common.deployedObjects.set('.' + className, true);
+
+      var allImages = document.querySelectorAll('img');
+      allImages.forEach( /*#__PURE__*/function () {
+        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(i) {
+          var ext, screenshot;
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  ext = _this4._acc.common.getFileExtension(i.src);
+
+                  if (!(ext && ext.toLowerCase() === 'gif')) {
+                    _context2.next = 9;
+                    break;
+                  }
+
+                  screenshot = i.getAttribute('data-org-src');
+
+                  if (screenshot) {
+                    _context2.next = 7;
+                    break;
+                  }
+
+                  _context2.next = 6;
+                  return _this4._acc.common.createScreenshot(i.src);
+
+                case 6:
+                  screenshot = _context2.sent;
+
+                case 7:
+                  i.setAttribute('data-org-src', i.src);
+                  i.src = screenshot;
+
+                case 9:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2);
+        }));
+
+        return function (_x2) {
+          return _ref2.apply(this, arguments);
+        };
+      }());
+      var allVideos = document.querySelectorAll('video[autoplay]');
+      allVideos.forEach(function (v) {
+        v.setAttribute(autoplayStopped, '');
+        v.removeAttribute('autoplay');
+        v.pause();
+      });
     }
   }]);
 

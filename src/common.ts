@@ -3,9 +3,11 @@
 import { ICommon, IDeployedObjects, IFormattedDim, IInjectStyleOptions, IJsonToHtml } from './interfaces/common.interface';
 
 export class Common implements ICommon {
+    static DEFAULT_PIXEL = 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
     private body: HTMLBodyElement;
     private deployedMap: Map<string, boolean>;
     private _isIOS: boolean;
+    private _canvas: HTMLCanvasElement;
     constructor() {
         this.body = document.body || (document.querySelector('body') as any);
         this.deployedMap = new Map<string, boolean>();
@@ -181,5 +183,43 @@ export class Common implements ICommon {
                 return this.deployedMap;
             }
         };
+    }
+
+    createScreenshot(url: string): Promise<string> {
+        return new Promise((resolve: Function, reject: Function) => {
+            if (!this._canvas)
+                this._canvas = document.createElement('canvas');
+            const img = new Image();
+            this._canvas.style.position = 'fixed';
+            this._canvas.style.top = '0';
+            this._canvas.style.left = '0';
+            this._canvas.style.opacity = '0.05';
+            this._canvas.style.transform = 'scale(0.05)';
+            img.crossOrigin = 'anonymous';
+            img.onload = async () => {
+                document.body.appendChild(this._canvas);
+                const ctx = this._canvas.getContext('2d');
+                this._canvas.width = img.naturalWidth;
+                this._canvas.height = img.naturalHeight;
+                ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+                // await this.setTimeout(1500);
+                ctx.drawImage(img, 0, 0);
+                let res = Common.DEFAULT_PIXEL;
+                try {
+                    res = this._canvas.toDataURL('image/png');
+                } catch (e) {}
+                resolve(res);
+                this._canvas.remove();
+            };
+            img.onerror = () => {
+                // Return a 1X1 pixels transparent image as a fallback
+                resolve(Common.DEFAULT_PIXEL);
+            };
+            img.src = url;
+        });
+    }
+
+    getFileExtension(filename: string): string {
+        return filename.substring(filename.lastIndexOf('.') + 1, filename.length) || filename;
     }
 }

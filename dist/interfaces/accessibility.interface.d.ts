@@ -79,6 +79,7 @@ export interface IAccessibilityHotkeysKeysOptions {
     readingGuide: Array<any>;
     textToSpeech: Array<any>;
     speechToText: Array<any>;
+    disableAnimations: Array<any>;
 }
 export interface IAccessibilityButtonsOptions {
     font: IUnitsDim;
@@ -111,6 +112,7 @@ export interface IAccessibilityMenuLabelsOptions {
     underlineLinks: string;
     textToSpeech: string;
     speechToText: string;
+    disableAnimations: string;
 }
 export interface IAccessibilityAnimationsOptions {
     buttons: boolean;
@@ -127,6 +129,7 @@ export interface IAccessibilityModulesOptions {
     underlineLinks: boolean;
     textToSpeech: boolean;
     speechToText: boolean;
+    disableAnimations: boolean;
 }
 export interface IAccessibilitySessionOptions {
     persistent: boolean;
@@ -148,6 +151,7 @@ export interface IStateValues {
     invertColors?: boolean;
     grayHues?: boolean;
     speechToText?: boolean;
+    disableAnimations?: boolean;
     body: any;
     html: any;
 }

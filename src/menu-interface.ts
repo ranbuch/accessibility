@@ -299,4 +299,66 @@ export class MenuInterface implements IMenuInterface {
             remove();
         }
     }
+
+    disableAnimations(destroy: boolean) {
+        const className = '_access-disable-animations', autoplayStopped = 'data-autoplay-stopped';
+
+        const remove = () => {
+            document.querySelector('._access-menu [data-access-action="disableAnimations"]').classList.remove('active');
+            this._acc.stateValues.disableAnimations = false;
+            let style = document.querySelector('.' + className);
+            if (style) {
+                style.parentElement.removeChild(style);
+                this._acc.common.deployedObjects.remove('.' + className);
+            }
+            let allImages = document.querySelectorAll('[data-org-src]') as NodeListOf<HTMLImageElement>;
+            allImages.forEach(async i => {
+                const screenshot = i.src;
+                i.setAttribute('src', i.getAttribute('data-org-src'));
+                i.setAttribute('data-org-src', screenshot);
+            });
+            const allVideos = document.querySelectorAll(`video[${autoplayStopped}]`) as NodeListOf<HTMLVideoElement>;
+            allVideos.forEach(v => {
+                v.setAttribute('autoplay', '');
+                v.removeAttribute(autoplayStopped);
+                v.play();
+            });
+        };
+        if (destroy) {
+            remove();
+            return;
+        }
+        this._acc.stateValues.disableAnimations = !this._acc.stateValues.disableAnimations;
+        if (!this._acc.stateValues.disableAnimations) {
+            remove();
+            return;
+        }
+
+        document.querySelector('._access-menu [data-access-action="disableAnimations"]').classList.add('active');
+        let css = `
+                body * {
+                    animation-duration: 0.0ms !important;
+                    transition-duration: 0.0ms !important;
+                }
+        `;
+        this._acc.common.injectStyle(css, { className: className });
+        this._acc.common.deployedObjects.set('.' + className, true);
+        const allImages = document.querySelectorAll('img');
+        allImages.forEach(async i => {
+            let ext = this._acc.common.getFileExtension(i.src);
+            if (ext && ext.toLowerCase() === 'gif') {
+                let screenshot = i.getAttribute('data-org-src');
+                if (!screenshot)
+                    screenshot = await this._acc.common.createScreenshot(i.src);
+                i.setAttribute('data-org-src', i.src);
+                i.src = screenshot;
+            }
+        });
+        const allVideos = document.querySelectorAll('video[autoplay]') as NodeListOf<HTMLVideoElement>;
+        allVideos.forEach(v => {
+            v.setAttribute(autoplayStopped, '');
+            v.removeAttribute('autoplay');
+            v.pause();
+        });
+    }
 }

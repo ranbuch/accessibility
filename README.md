@@ -57,7 +57,8 @@ Easy to use!
 &nbsp;&nbsp;&nbsp;&nbsp;`bigCursor: 'big cursor (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`readingGuide: 'reading guide (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`textToSpeech: 'text to speech (in my language)',`  
-&nbsp;&nbsp;&nbsp;&nbsp;`speechToText: 'speech to text (in my language)'`  
+&nbsp;&nbsp;&nbsp;&nbsp;`speechToText: 'speech to text (in my language)'`
+&nbsp;&nbsp;&nbsp;&nbsp;`disableAnimations: 'disable animations (in my language)'`
 `};`  
 
 `var options = { labels: labels };`  
@@ -77,7 +78,8 @@ Easy to use!
 &nbsp;&nbsp;&nbsp;&nbsp;`bigCursor: [true/false],`  
 &nbsp;&nbsp;&nbsp;&nbsp;`readingGuide: [true/false],`  
 &nbsp;&nbsp;&nbsp;&nbsp;`textToSpeech: [true/false],`  
-&nbsp;&nbsp;&nbsp;&nbsp;`speechToText: [true/false]`  
+&nbsp;&nbsp;&nbsp;&nbsp;`speechToText: [true/false]`
+&nbsp;&nbsp;&nbsp;&nbsp;`disableAnimations: [true/false]`
 `};`
 
 >When the default is **true**

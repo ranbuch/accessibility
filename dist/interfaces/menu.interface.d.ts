@@ -10,4 +10,5 @@ export interface IMenuInterface {
     readingGuide(destroy?: boolean): void;
     textToSpeech(destroy?: boolean): void;
     speechToText(destroy?: boolean): void;
+    disableAnimations(destroy?: boolean): void;
 }
