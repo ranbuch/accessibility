@@ -25,7 +25,8 @@
     "big cursor",
     "reading guide",
     "text to speech",
-    "speech to text"
+    "speech to text",
+    "suppress animations"
   ],
   "author": "Ran Buchnik <ranbuch@gmail.com>",
   "license": "MIT",
