@@ -33,6 +33,7 @@ initialize component:
 - [x]  reading guide
 - [x]  text to speech 
 - [x]  speech to text
+- [x]  suppress animations
 
 >Does not depend any other directory (**jQuery is not required**).  
 Easy to use!
