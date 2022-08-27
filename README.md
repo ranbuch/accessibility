@@ -11,7 +11,7 @@ include script:
 `<script type="text/javascript" src="node_modules/accessibility/dist/main.bundle.js"></script>`  
 
 or import:  
-`import { Accessibility } from 'accessibility/dist/accessibility';`
+`import { Accessibility } from 'accessibility/dist/main';`
 
 initialize component:  
 `window.addEventListener('load', function() {
@@ -120,28 +120,6 @@ But you can also position the icon in the upper left corner of the screen and ca
 
 ### ICON IMAGE:
 You can change the default icon as described [here](https://ranbuch.github.io/accessibility#icon-image)
-
-
-<h2 align="center">Maintainers</h2>
-
-<table>
-  <tbody>
-    <tr>
-      <td align="center">
-        <img width="150" height="150"
-        src="https://avatars0.githubusercontent.com/u/3777546?s=460&v=4">
-        <br />
-        <a href="https://github.com/ranbuch">Ran Buchnik</a>
-      </td>
-      <td align="center">
-        <img width="150" height="150"
-        src="https://avatars0.githubusercontent.com/u/24736893?s=460&v=4">
-        <br />
-        <a href="https://github.com/omarmfs98">Omar Flórez</a>
-      </td>      
-    </tr>
-  </tbody>
-</table>
 
 ### LICENSE:
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://spdx.org/licenses/MIT)

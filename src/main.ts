@@ -132,7 +132,7 @@ export class Accessibility implements IAccessibility {
                 zIndex: '9999',
                 backgroundColor: '#4054b2',
                 color: '#fff',
-                img: 'accessible',
+                img: 'accessibility',
                 circular: false,
                 circularBorder: false,
                 fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
@@ -313,13 +313,13 @@ export class Accessibility implements IAccessibility {
             background-size: contain;
             cursor: pointer;
             opacity: 0;
-            transition-duration: .5s;
+            transition-duration: .35s;
             -moz-user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
             ${!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : ''}
-            transform: ${!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(18deg)'};
+            transform: ${!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(13deg)'};
         }
         ._access-icon:hover {
             ` + (this.options.animations.buttons && !this.options.icon.useEmojis ? `
@@ -371,7 +371,7 @@ export class Accessibility implements IAccessibility {
             position: fixed;
             width: ${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
             height: ${this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units};
-            transition-duration: .5s;
+            transition-duration: .35s;
             z-index: ${this.options.icon.zIndex + 1};
             opacity: 1;
             background-color: #fff;
@@ -412,9 +412,9 @@ export class Accessibility implements IAccessibility {
             text-align: center;
         }
         ._access-menu h3 {
-            font-size: 24px !important;
+            font-size: 22px !important;
             margin-top: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             padding: 0;
             color: rgba(0,0,0,.87);
             letter-spacing: initial!important;
@@ -441,6 +441,8 @@ export class Accessibility implements IAccessibility {
             cursor: pointer;
             font-size: 24px !important;
             font-weight: bold;
+            background: transparent;
+            border: none;
         }
         ._access-menu ul {
             padding: 0;
@@ -455,40 +457,46 @@ export class Accessibility implements IAccessibility {
         }
         ._access-menu ul li {
             list-style-type: none;
-            cursor: pointer;
             -ms-user-select: none;
             -moz-user-select: none;
             -webkit-user-select: none;
             user-select: none;
-            border: solid 1px #f1f0f1;
-            padding: 10px 0 10px 30px;
             margin: 5px;
-            border-radius: 4px;
-            transition-duration: .5s;
-            transition-timing-function: ease-in-out;
             font-size: ${this.options.buttons.font.size + this.options.buttons.font.units} !important;
             line-height: ${this.options.buttons.font.size + this.options.buttons.font.units} !important;
-            text-indent: 5px;
-            background: #f9f9f9;
             color: rgba(0,0,0,.6);
             letter-spacing: initial!important;
             word-spacing: initial!important;
         }
-        ._access-menu ul.before-collapse li {
+        ._access-menu ul li button {
+            background: #f9f9f9;
+            padding: 10px 0;
+            width: 100%;
+            text-indent: 35px;
+            text-align: start;
+            position: relative;
+            transition-duration: .35s;
+            transition-timing-function: ease-in-out;
+            border: solid 1px #f1f0f1;
+            border-radius: 4px;
+        }
+        ._access-menu ul.before-collapse li button {
             opacity: 0.05;
         }
-        ._access-menu ul li.active, ._access-menu ul li.active:hover {
-            color: #fff;
+        ._access-menu ul li button.active, ._access-menu ul li button.active:hover {
             background-color: #000;
         }
-        ._access-menu ul li:hover {
+        ._access-menu ul li button.active, ._access-menu ul li button.active:hover, ._access-menu ul li button.active:before, ._access-menu ul li button.active:hover:before {
+            color: #fff;
+        }
+        ._access-menu ul li button:hover {
             color: rgba(0,0,0,.8);
             background-color: #eaeaea;
         }
         ._access-menu ul li.not-supported {
             display: none;
         }
-        ._access-menu ul li:before {
+        ._access-menu ul li button:before {
             content: ' ';
             ${!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : ''}
             text-rendering: optimizeLegibility;
@@ -502,62 +510,72 @@ export class Accessibility implements IAccessibility {
             display: inline-block;
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
-            left: 8px;
+            top: 7px;
+            left: 5px;
             position: absolute;
             color: rgba(0,0,0,.6);
             direction: ltr;
+            text-indent: 0;
+            transition-duration: .35s;
+            transition-timing-function: ease-in-out;
         }
-        ._access-menu ul li svg path {
+        ._access-menu ul li button svg path {
             fill: rgba(0,0,0,.6);
+            transition-duration: .35s;
+            transition-timing-function: ease-in-out;
         }
-        ._access-menu ul li:hover svg path {
+        ._access-menu ul li button:hover svg path {
             fill: rgba(0,0,0,.8);
         }
-        ._access-menu ul li.active svg path {
+        ._access-menu ul li button.active svg path {
             fill: #fff;
         }
-        ._access-menu ul li:hover:before {
+        ._access-menu ul li:hover button:before {
             color: rgba(0,0,0,.8);
         }
-        ._access-menu ul li.active:before {
+        ._access-menu ul li button.active button:before {
             color: #fff;
         }
-        ._access-menu ul li[data-access-action="increaseText"]:before {
+        ._access-menu ul li button[data-access-action="increaseText"]:before {
             content: ${!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"'};
         }
-        ._access-menu ul li[data-access-action="decreaseText"]:before {
+        ._access-menu ul li button[data-access-action="decreaseText"]:before {
             content: ${!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"'};
         }
-        ._access-menu ul li[data-access-action="increaseTextSpacing"]:before {
+        ._access-menu ul li button[data-access-action="increaseTextSpacing"]:before {
             content: ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'};
             transform: rotate(90deg) translate(-7px, 2px);
+            top: 14px;
+            left: 0;
         }
-        ._access-menu ul li[data-access-action="decreaseTextSpacing"]:before {
+        ._access-menu ul li button[data-access-action="decreaseTextSpacing"]:before {
             content: ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'};
             transform: rotate(90deg) translate(-7px, 2px);
+            top: 14px;
+            left: 0;
         }
-        ._access-menu ul li[data-access-action="invertColors"]:before {
+        ._access-menu ul li button[data-access-action="invertColors"]:before {
             content: ${!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"'};
         }
-        ._access-menu ul li[data-access-action="grayHues"]:before {
+        ._access-menu ul li button[data-access-action="grayHues"]:before {
             content: ${!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"'};
         }
-        ._access-menu ul li[data-access-action="underlineLinks"]:before {
+        ._access-menu ul li button[data-access-action="underlineLinks"]:before {
             content: ${!this.options.icon.useEmojis ? '"format_underlined"' : '"💯"'};
         }
-        ._access-menu ul li[data-access-action="bigCursor"]:before {
+        ._access-menu ul li button[data-access-action="bigCursor"]:before {
             /*content: 'touch_app';*/
         }
-        ._access-menu ul li[data-access-action="readingGuide"]:before {
+        ._access-menu ul li button[data-access-action="readingGuide"]:before {
             content: ${!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"'};
         }
-        ._access-menu ul li[data-access-action="textToSpeech"]:before {
+        ._access-menu ul li button[data-access-action="textToSpeech"]:before {
             content: ${!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"'};
         }
-        ._access-menu ul li[data-access-action="speechToText"]:before {
+        ._access-menu ul li button[data-access-action="speechToText"]:before {
             content: ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'};
         }
-        ._access-menu ul li[data-access-action="disableAnimations"]:before {
+        ._access-menu ul li button[data-access-action="disableAnimations"]:before {
             content: ${!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"'};
         }`;
         let className = '_access-main-css';
@@ -620,7 +638,7 @@ export class Accessibility implements IAccessibility {
                     },
                     children: [
                         {
-                            type: 'i',
+                            type: 'button',
                             attrs: {
                                 'class': `_menu-close-btn _menu-btn ${this.options.icon.fontClass}`,
                                 'title': this.options.labels.closeTitle
@@ -637,7 +655,7 @@ export class Accessibility implements IAccessibility {
                             text: this.options.labels.menuTitle
                         },
                         {
-                            type: 'i',
+                            type: 'button',
                             attrs: {
                                 'class': `_menu-reset-btn _menu-btn ${this.options.icon.fontClass}`,
                                 'title': this.options.labels.resetTitle
@@ -659,156 +677,216 @@ export class Accessibility implements IAccessibility {
                     children: [
                         {
                             type: 'li',
-                            attrs: {
-                                'data-access-action': 'increaseText'
-                            },
                             children: [
                                 {
-                                    type: '#text',
-                                    text: this.options.labels.increaseText
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            attrs: {
-                                'data-access-action': 'decreaseText'
-                            },
-                            children: [
-                                {
-                                    type: '#text',
-                                    text: this.options.labels.decreaseText
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            attrs: {
-                                'data-access-action': 'increaseTextSpacing'
-                            },
-                            children: [
-                                {
-                                    type: '#text',
-                                    text: this.options.labels.increaseTextSpacing
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            attrs: {
-                                'data-access-action': 'decreaseTextSpacing'
-                            },
-                            children: [
-                                {
-                                    type: '#text',
-                                    text: this.options.labels.decreaseTextSpacing
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            attrs: {
-                                'data-access-action': 'invertColors',
-                                'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
-                            },
-                            children: [
-                                {
-                                    type: '#text',
-                                    text: this.options.labels.invertColors
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            attrs: {
-                                'data-access-action': 'grayHues',
-                                'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
-                            },
-                            children: [
-                                {
-                                    type: '#text',
-                                    text: this.options.labels.grayHues
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            attrs: {
-                                'data-access-action': 'underlineLinks',
-                                'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
-                            },
-                            children: [
-                                {
-                                    type: '#text',
-                                    text: this.options.labels.underlineLinks
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            attrs: {
-                                'data-access-action': 'bigCursor',
-                                'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
-                            },
-                            children: [
-                                {
-                                    type: 'div',
+                                    type: 'button',
                                     attrs: {
-                                        'id': 'iconBigCursor',
-                                    }
-                                },
-                                {
-                                    type: '#text',
-                                    text: this.options.labels.bigCursor
+                                        'data-access-action': 'increaseText'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.increaseText
+                                        }
+                                    ]
                                 }
                             ]
                         },
                         {
                             type: 'li',
-                            attrs: {
-                                'data-access-action': 'readingGuide',
-                                'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
-                            },
                             children: [
                                 {
-                                    type: '#text',
-                                    text: this.options.labels.readingGuide
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'decreaseText'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.decreaseText
+                                        }
+                                    ]
                                 }
                             ]
                         },
                         {
                             type: 'li',
-                            attrs: {
-                                'data-access-action': 'textToSpeech'
-                            },
                             children: [
                                 {
-                                    type: '#text',
-                                    text: this.options.labels.textToSpeech
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'increaseTextSpacing'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.increaseTextSpacing
+                                        }
+                                    ]
                                 }
                             ]
                         },
                         {
                             type: 'li',
-                            attrs: {
-                                'data-access-action': 'speechToText'
-                            },
                             children: [
                                 {
-                                    type: '#text',
-                                    text: this.options.labels.speechToText
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'decreaseTextSpacing'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.decreaseTextSpacing
+                                        }
+                                    ]
                                 }
                             ]
                         },
                         {
                             type: 'li',
-                            attrs: {
-                                'data-access-action': 'disableAnimations'
-                            },
                             children: [
                                 {
-                                    type: '#text',
-                                    text: this.options.labels.disableAnimations
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'invertColors',
+                                        'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.invertColors
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'grayHues',
+                                        'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.grayHues
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'underlineLinks',
+                                        'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.underlineLinks
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'bigCursor',
+                                        'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
+                                    },
+                                    children: [
+                                        {
+                                            type: 'div',
+                                            attrs: {
+                                                'id': 'iconBigCursor',
+                                            }
+                                        },
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.bigCursor
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'readingGuide',
+                                        'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.readingGuide
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'textToSpeech'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.textToSpeech
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'speechToText'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.speechToText
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'disableAnimations'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.disableAnimations
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -825,7 +903,7 @@ export class Accessibility implements IAccessibility {
         setTimeout(function () {
             let ic = document.getElementById('iconBigCursor');
             if (ic) {
-                ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
+                ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;top: 9px; left: 9px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
                 document.getElementById('iconBigCursor').remove();
             }
         }, 1);
