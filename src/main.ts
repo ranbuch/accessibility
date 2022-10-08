@@ -1,7 +1,7 @@
 'use strict';
 import { Common } from './common';
 import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues } from './interfaces/accessibility.interface';
-import { IFormattedDim } from './interfaces/common.interface';
+import { IFormattedDim, IJsonToHtml } from './interfaces/common.interface';
 import { IMenuInterface } from './interfaces/menu.interface';
 import { MenuInterface } from './menu-interface';
 import { Storage } from './storage';
@@ -246,7 +246,8 @@ export class Accessibility implements IAccessibility {
             },
             session: {
                 persistent: true
-            }
+            },
+            iframeModals: []
         };
     }
 
@@ -319,7 +320,7 @@ export class Accessibility implements IAccessibility {
             -ms-user-select: none;
             user-select: none;
             ${!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : ''}
-            transform: ${!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(13deg)'};
+            transform: ${!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(14deg)'};
         }
         ._access-icon:hover {
             ` + (this.options.animations.buttons && !this.options.icon.useEmojis ? `
@@ -577,6 +578,9 @@ export class Accessibility implements IAccessibility {
         }
         ._access-menu ul li button[data-access-action="disableAnimations"]:before {
             content: ${!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"'};
+        }
+        ._access-menu ul li button[data-access-action="iframeModals"]:before {
+            content: ${!this.options.icon.useEmojis ? '"policy"' : '"⚖️"'};
         }`;
         let className = '_access-main-css';
         this._common.injectStyle(css, { className: className });
@@ -625,7 +629,7 @@ export class Accessibility implements IAccessibility {
     }
 
     injectMenu(): HTMLElement {
-        let menuElem = this._common.jsonToHtml({
+        const json = {
             type: 'div',
             attrs: {
                 'class': '_access-menu close _access'
@@ -893,7 +897,45 @@ export class Accessibility implements IAccessibility {
                     ]
                 }
             ]
-        });
+        } as IJsonToHtml;
+        if (this.options.iframeModals) {
+            this.options.iframeModals.forEach((im, i) => {
+                const btn = {
+                    type: 'li',
+                    children: [
+                        {
+                            type: 'button',
+                            attrs: {
+                                'data-access-action': 'iframeModals',
+                                'data-access-url': im.iframeUrl
+                            },
+                            children: [
+                                {
+                                    type: '#text',
+                                    text: im.buttonText
+                                }
+                            ]
+                        }
+                    ]
+                } as IJsonToHtml;
+                let icon = null;
+                if (im.icon && !this.options.icon.useEmojis)
+                    icon = im.icon;
+                else if (im.emoji && this.options.icon.useEmojis)
+                    icon = im.emoji;
+                if (icon) {
+                    btn.children[0].attrs['data-access-iframe-index'] = i;
+                    const css = `._access-menu ul li button[data-access-action="iframeModals"][data-access-iframe-index="${i}"]:before {
+                        content: "${icon}";
+                    }`;
+                    let className = '_data-access-iframe-index-' + i;
+                    this._common.injectStyle(css, { className: className });
+                    this._common.deployedObjects.set('.' + className, false);
+                }
+                json.children[1].children.push(btn);
+            });
+        }
+        let menuElem = this._common.jsonToHtml(json);
 
         for (let i in this.options.icon.position) {
             menuElem.classList.add(i);
@@ -924,7 +966,7 @@ export class Accessibility implements IAccessibility {
         for (let i = 0; i < lis.length; i++) {
             lis[i].addEventListener('click', (e) => {
                 let evt = e || window.event;
-                this.invoke((evt.target as HTMLElement).getAttribute('data-access-action'));
+                this.invoke((evt.target as HTMLElement).getAttribute('data-access-action'), evt.target as HTMLElement);
             }, false);
         }
     }
@@ -1206,9 +1248,9 @@ export class Accessibility implements IAccessibility {
         }
     }
 
-    invoke(action: string) {
+    invoke(action: string, button: HTMLElement) {
         if (typeof (this.menuInterface as any)[action] === 'function')
-            (this.menuInterface as any)[action]();
+            (this.menuInterface as any)[action](undefined, button);
     }
 
     build() {

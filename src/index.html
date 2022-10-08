@@ -34,7 +34,8 @@
                             <a class="header">manipulate text size</a>
                             <div class="description">increase or decrease text size. works with <b>em</b> <b>/</b>
                                 <b>rem</b> / <b>px</b> or any type
-                                of font-size units</div>
+                                of font-size units
+                            </div>
                         </div>
                     </div>
                     <div class="item">
@@ -44,7 +45,8 @@
                             <a class="header">manipulate text spacing</a>
                             <div class="description">increase or decrease text space. works with <b>em</b> <b>/</b>
                                 <b>rem</b> / <b>px</b> or any type
-                                of letter-spacing units</div>
+                                of letter-spacing units
+                            </div>
                         </div>
                     </div>
                     <div class="item">
@@ -232,9 +234,9 @@
                     };
                     </code>
 
-                    <p>
-                        When the default is <b>true</b>
-                    </p>
+                <p>
+                    When the default is <b>true</b>
+                </p>
                 </p>
             </div>
 
@@ -242,10 +244,10 @@
                 <h3 class="ui header">hotkeys module</h3>
 
                 <p>
-                    <p>
-                        This module is <b>disabled</b> by default
-                    </p>
-                    <code>
+                <p>
+                    This module is <b>disabled</b> by default
+                </p>
+                <code>
                         var options = {<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;hotkeys: {<br>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled: [true/false]<br>
@@ -254,59 +256,61 @@
                         new Accessibility(options);
                     </code><br><br>
 
-                    <p>
-                        Help text is active by default in the buttons title, you can disable or enable setting in
-                        &nbsp;&nbsp;<code>options.hotkeys.helpTitles = [true/false];</code>
-                    </p>
-                    <p><b>Hotkeys Defaults</b></p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <td>Module or Function</td>
-                                <td>Hotkey</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Toggle Menu</td>
-                                <td>CTRL + ALT + A</td>
-                            </tr>
-                            <tr>
-                                <td>Gray Hues</td>
-                                <td>CTRL + ALT + G</td>
-                            </tr>
-                            <tr>
-                                <td>Underline Links</td>
-                                <td>CTRL + ALT + U</td>
-                            </tr>
-                            <tr>
-                                <td>Big Cursor</td>
-                                <td>CTRL + ALT + C</td>
-                            </tr>
-                            <tr>
-                                <td>Reading Guide</td>
-                                <td>CTRL + ALT + R</td>
-                            </tr>
-                            <tr>
-                                <td>Text To Speech</td>
-                                <td>CTRL + ALT + T</td>
-                            </tr>
-                            <tr>
-                                <td>Speech To Text</td>
-                                <td>CTRL + ALT + S</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <p>
+                    Help text is active by default in the buttons title, you can disable or enable setting in
+                    &nbsp;&nbsp;<code>options.hotkeys.helpTitles = [true/false];</code>
+                </p>
+                <p><b>Hotkeys Defaults</b></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Module or Function</td>
+                            <td>Hotkey</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Toggle Menu</td>
+                            <td>CTRL + ALT + A</td>
+                        </tr>
+                        <tr>
+                            <td>Gray Hues</td>
+                            <td>CTRL + ALT + G</td>
+                        </tr>
+                        <tr>
+                            <td>Underline Links</td>
+                            <td>CTRL + ALT + U</td>
+                        </tr>
+                        <tr>
+                            <td>Big Cursor</td>
+                            <td>CTRL + ALT + C</td>
+                        </tr>
+                        <tr>
+                            <td>Reading Guide</td>
+                            <td>CTRL + ALT + R</td>
+                        </tr>
+                        <tr>
+                            <td>Text To Speech</td>
+                            <td>CTRL + ALT + T</td>
+                        </tr>
+                        <tr>
+                            <td>Speech To Text</td>
+                            <td>CTRL + ALT + S</td>
+                        </tr>
+                    </tbody>
+                </table>
                 </p>
             </div>
 
             <div class="ui raised segment">
                 <h3 class="ui header">text size manipulation approaches</h3>
                 <p>
-                    The default approach is <code>textEmlMode: false</code> meaning we are changing the <code>html</code>'s percentage.
+                    The default approach is <code>textEmlMode: false</code> meaning we are changing the
+                    <code>html</code>'s percentage.
                 </p>
                 <p>
-                    You can also try the legacy approach, witch changes the <code>body</code>'s pixels instead of the <code>html</code>'s percentage.
+                    You can also try the legacy approach, witch changes the <code>body</code>'s pixels instead of the
+                    <code>html</code>'s percentage.
                 </p>
                 <code>
                     new Accessibility({textEmlMode: false})
@@ -623,6 +627,56 @@
                     </p>
                 </code>
 
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">add custom iframe</h3>
+
+                <p>
+                    You can add buttons that will open a model with custom iframes (for accessibility terms for example)
+                    like so:
+                </p>
+                <code>
+                    var options = {
+                    <p class="b-space-1">
+                        iframeModals: [{
+                    </p>
+                    <p class="b-space-2">
+                        iframeUrl: 'https://github.com/ranbuch/accessibility',
+                    </p>
+                    <p class="b-space-2">
+                        buttonText: 'terms',
+                    </p>
+                    <p class="b-space-2">
+                        icon: 'favorite',
+                    </p>
+                    <p class="b-space-2">
+                        emoji: '❤️'
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    <p>
+                        }
+                    </p>
+                    <p>
+                        new Accessibility(options);
+                    </p>
+                </code>
+                <br>
+                <p>
+                    In case you will not provide the "icon" and the "emoji" we will use this setup:
+                </p>
+                <p>
+                    <code>
+                        icon: 'policy',
+                        <br>
+                        emoji: '⚖️'
+                    </code>
+                </p>
+                <p>
+                    You can find icons <a href="https://mui.com/material-ui/material-icons/" target="_blank">here</a>
+                </p>
             </div>
 
 

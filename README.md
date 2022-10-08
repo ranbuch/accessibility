@@ -11,7 +11,7 @@ include script:
 `<script type="text/javascript" src="node_modules/accessibility/dist/main.bundle.js"></script>`  
 
 or import:  
-`import { Accessibility } from 'accessibility/dist/main';`
+`import { Accessibility } from 'accessibility';`
 
 initialize component:  
 `window.addEventListener('load', function() {

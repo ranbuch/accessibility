@@ -48,7 +48,7 @@ export declare class Accessibility implements IAccessibility {
     read(e: Event): void;
     runHotkey(name: string): void;
     toggleMenu(): void;
-    invoke(action: string): void;
+    invoke(action: string, button: HTMLElement): void;
     build(): void;
     updateReadGuide(e: Event | TouchEvent | any): void;
     resetIfDefined(src: string, dest: any, prop: string): void;

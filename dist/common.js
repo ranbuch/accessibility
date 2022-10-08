@@ -113,7 +113,9 @@ var Common = /*#__PURE__*/function () {
     value: function extend(src, dest) {
       for (var i in src) {
         if (_typeof(src[i]) === 'object') {
-          if (dest && dest[i]) src[i] = this.extend(src[i], dest[i]);
+          if (dest && dest[i]) {
+            if (dest[i] instanceof Array) src[i] = dest[i];else src[i] = this.extend(src[i], dest[i]);
+          }
         } else if (_typeof(dest) === 'object' && typeof dest[i] !== 'undefined') {
           src[i] = dest[i];
         }

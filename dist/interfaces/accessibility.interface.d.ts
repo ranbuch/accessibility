@@ -18,26 +18,33 @@ export interface IAccessibility {
     read(e?: Event): void;
     runHotkey(name: string): void;
     toggleMenu(): void;
-    invoke(action: string): void;
+    invoke(action: string, button: HTMLElement): void;
     build(): void;
     updateReadGuide(e: Event | TouchEvent | any): void;
     resetIfDefined(src: string, dest: any, prop: string): void;
     onChange(updateSession: boolean): void;
 }
 export interface IAccessibilityOptions {
-    icon: IAccessibilityIconOptions;
-    hotkeys: IAccessibilityHotkeysOptions;
-    buttons: IAccessibilityButtonsOptions;
-    guide: IAccessibilityGuideOptions;
-    menu: IAccessibilityMenuOptions;
-    labels: IAccessibilityMenuLabelsOptions;
-    textToSpeechLang: string;
-    speechToTextLang: string;
-    textPixelMode: boolean;
-    textEmlMode: boolean;
-    animations: IAccessibilityAnimationsOptions;
-    modules: IAccessibilityModulesOptions;
-    session: IAccessibilitySessionOptions;
+    icon?: IAccessibilityIconOptions;
+    hotkeys?: IAccessibilityHotkeysOptions;
+    buttons?: IAccessibilityButtonsOptions;
+    guide?: IAccessibilityGuideOptions;
+    menu?: IAccessibilityMenuOptions;
+    labels?: IAccessibilityMenuLabelsOptions;
+    textToSpeechLang?: string;
+    speechToTextLang?: string;
+    textPixelMode?: boolean;
+    textEmlMode?: boolean;
+    animations?: IAccessibilityAnimationsOptions;
+    modules?: IAccessibilityModulesOptions;
+    session?: IAccessibilitySessionOptions;
+    iframeModals?: Array<IIframeModal>;
+}
+export interface IIframeModal {
+    iframeUrl: string;
+    buttonText: string;
+    icon?: string;
+    emoji?: string;
 }
 export interface IAccessibilityIconOptions {
     position: IAccessibilityIconPositionOptions;

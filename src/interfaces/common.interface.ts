@@ -1,7 +1,7 @@
 export interface ICommon {
     deployedObjects: IDeployedObjects;
     isIOS(): boolean;
-    jsonToHtml(obj: IJsonToHtml): void;
+    jsonToHtml(obj: IJsonToHtml): HTMLElement;
     injectStyle(css: string, innerOptions?: IInjectStyleOptions): void;
     getFormattedDim(value: string): IFormattedDim;
     extend(src: any, dest: any): void;

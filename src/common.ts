@@ -38,7 +38,7 @@ export class Common implements ICommon {
         return this._isIOS;
     }
 
-    jsonToHtml(obj: IJsonToHtml) {
+    jsonToHtml(obj: IJsonToHtml): HTMLElement {
         let elm = document.createElement(obj.type);
         for (let i in obj.attrs) {
             elm.setAttribute(i, obj.attrs[i]);
@@ -94,8 +94,12 @@ export class Common implements ICommon {
     extend(src: any, dest: any) {
         for (let i in src) {
             if (typeof src[i] === 'object') {
-                if (dest && dest[i])
-                    src[i] = this.extend(src[i], dest[i]);
+                if (dest && dest[i]) {
+                    if (dest[i] instanceof Array)
+                        src[i] = dest[i];
+                    else
+                        src[i] = this.extend(src[i], dest[i]);
+                }
             }
             else if (typeof dest === 'object' && typeof dest[i] !== 'undefined') {
                 src[i] = dest[i];
@@ -207,7 +211,7 @@ export class Common implements ICommon {
                 let res = Common.DEFAULT_PIXEL;
                 try {
                     res = this._canvas.toDataURL('image/png');
-                } catch (e) {}
+                } catch (e) { }
                 resolve(res);
                 this._canvas.remove();
             };

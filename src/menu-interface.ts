@@ -4,6 +4,7 @@ import { IMenuInterface } from './interfaces/menu.interface';
 export class MenuInterface implements IMenuInterface {
     private _acc: IAccessibility;
     private readBind: any;
+    private _dialog: HTMLDialogElement;
     constructor(accessibility: IAccessibility) {
         this._acc = accessibility;
         this.readBind = this._acc.read.bind(this._acc);
@@ -360,5 +361,69 @@ export class MenuInterface implements IMenuInterface {
             v.removeAttribute('autoplay');
             v.pause();
         });
+    }
+
+    iframeModals(destroy?: boolean, button?: HTMLElement) {
+        if (!button)
+            destroy = true;
+        const close = () => {
+            if (this._dialog) {
+                this._dialog.close();
+                this._dialog.remove();
+            }
+            if (button)
+                button.classList.remove('active');
+        };
+        if (destroy) {
+            close();
+        }
+        else {
+            button.classList.add('active');
+            if (!this._dialog)
+                this._dialog = document.createElement('dialog');
+            this._dialog.innerHTML = '';
+            this._dialog.appendChild(this._acc.common.jsonToHtml({
+                type: 'div',
+                children: [
+                    {
+                        type: 'div',
+                        children: [
+                            {
+                                type: 'button',
+                                attrs: {
+                                    role: 'button'
+                                },
+                                children: [
+                                    {
+                                        type: '#text',
+                                        text: 'X'
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        type: 'div',
+                        children: [
+                            {
+                                type: 'iframe',
+                                attrs: {
+                                    src: button.getAttribute('data-access-url'),
+                                    style: 'width: 50vw;height: 50vh;'
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }));
+            this._dialog.querySelector('button').addEventListener('click', () => {
+                close();
+            }, false);
+            this._dialog.addEventListener('close', () => {
+                close();
+            });
+            document.body.appendChild(this._dialog);
+            this._dialog.showModal();
+        }
     }
 }

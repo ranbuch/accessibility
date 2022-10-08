@@ -193,7 +193,7 @@ var Accessibility = /*#__PURE__*/function () {
           zIndex: '9999',
           backgroundColor: '#4054b2',
           color: '#fff',
-          img: 'accessible',
+          img: 'accessibility',
           circular: false,
           circularBorder: false,
           fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
@@ -280,7 +280,8 @@ var Accessibility = /*#__PURE__*/function () {
         },
         session: {
           persistent: true
-        }
+        },
+        iframeModals: []
       };
     }
   }, {
@@ -342,7 +343,7 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "injectCss",
     value: function injectCss() {
-      var css = "\n        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {\n            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {\n            width: 6px;\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {\n            background-color: #999999;\n        }\n        ._access-icon {\n            position: ".concat(this.options.icon.position.type, ";\n            background-repeat: no-repeat;\n            background-size: contain;\n            cursor: pointer;\n            opacity: 0;\n            transition-duration: .5s;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            ").concat(!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : '', "\n            transform: ").concat(!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(18deg)', ";\n        }\n        ._access-icon:hover {\n            ") + (this.options.animations.buttons && !this.options.icon.useEmojis ? "\n            box-shadow: 1px 1px 10px rgba(0,0,0,.9);\n            transform: scale(1.1);\n            " : '') + "\n        }\n        .circular._access-icon {\n            border-radius: 50%;\n            border: .5px solid white;\n        }\n        " + (this.options.animations.buttons && this.options.icon.circularBorder ? "\n        .circular._access-icon:hover {\n            border: 5px solid white;\n            border-style: double;\n            font-size: 35px!important;\n            vertical-align: middle;\n            padding-top: 2px;\n            text-align: center;\n        }\n        " : '') + "\n        .access_read_guide_bar{\n            box-sizing: border-box;\n            background: ".concat(this.options.guide.cBackground, ";\n            width: 100%!important;\n            min-width: 100%!important;\n            position: fixed!important;\n            height: ").concat(this.options.guide.height, " !important;\n            border: solid 3px ").concat(this.options.guide.cBorder, ";\n            border-radius: 5px;\n            top: 15px;\n            z-index: 2147483647;\n        }\n        .access-high-contrast *{\n            background-color: #000 !important;\n            background-image: none !important;\n            border-color: #fff !important;\n            -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n            color: #fff !important;\n            text-indent: 0 !important;\n            text-shadow: none !important;\n        }\n        ._access-menu {\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            position: fixed;\n            width: ").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n            height: ").concat(this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units, ";\n            transition-duration: .5s;\n            z-index: ").concat(this.options.icon.zIndex + 1, ";\n            opacity: 1;\n            background-color: #fff;\n            color: #000;\n            border-radius: 3px;\n            border: solid 1px #f1f0f1;\n            font-family: ").concat(this.options.menu.fontFamily, ";\n            min-width: 300px;\n            box-shadow: 0px 0px 1px #aaa;\n            max-height: 100vh;\n            ").concat(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '', "\n        }\n        ._access-menu.close {\n            z-index: -1;\n            width: 0;\n            opacity: 0;\n            background-color: transparent;\n        }\n        ._access-menu.bottom {\n            bottom: 0;\n        }\n        ._access-menu.top {\n            top: 0;\n        }\n        ._access-menu.left {\n            left: 0;\n        }\n        ._access-menu.close.left {\n            left: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu.right {\n            right: 0;\n        }\n        ._access-menu.close.right {\n            right: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu ._text-center {\n            text-align: center;\n        }\n        ._access-menu h3 {\n            font-size: 24px !important;\n            margin-top: 20px;\n            margin-bottom: 20px;\n            padding: 0;\n            color: rgba(0,0,0,.87);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ._menu-close-btn {\n            left: 5px;\n            color: #d63c3c;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {\n            ").concat(this.options.animations.buttons ? 'transform: rotate(180deg);' : '', "\n        }\n        ._access-menu ._menu-reset-btn {\n            right: 5px;\n            color: #4054b2;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-btn {\n            position: absolute;\n            top: 5px;\n            cursor: pointer;\n            font-size: 24px !important;\n            font-weight: bold;\n        }\n        ._access-menu ul {\n            padding: 0;\n            position: relative;\n            font-size: 18px !important;\n            margin: 0;\n            overflow: auto;\n            max-height: calc(100vh - 77px);\n        }\n        html._access_cursor * {\n            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;\n        }\n        ._access-menu ul li {\n            list-style-type: none;\n            cursor: pointer;\n            -ms-user-select: none;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            user-select: none;\n            border: solid 1px #f1f0f1;\n            padding: 10px 0 10px 30px;\n            margin: 5px;\n            border-radius: 4px;\n            transition-duration: .5s;\n            transition-timing-function: ease-in-out;\n            font-size: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            line-height: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            text-indent: 5px;\n            background: #f9f9f9;\n            color: rgba(0,0,0,.6);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ul.before-collapse li {\n            opacity: 0.05;\n        }\n        ._access-menu ul li.active, ._access-menu ul li.active:hover {\n            color: #fff;\n            background-color: #000;\n        }\n        ._access-menu ul li:hover {\n            color: rgba(0,0,0,.8);\n            background-color: #eaeaea;\n        }\n        ._access-menu ul li.not-supported {\n            display: none;\n        }\n        ._access-menu ul li:before {\n            content: ' ';\n            ").concat(!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : '', "\n            text-rendering: optimizeLegibility;\n            font-feature-settings: \"liga\" 1;\n            font-style: normal;\n            text-transform: none;\n            line-height: ").concat(!this.options.icon.useEmojis ? '1' : '1.1', ";\n            font-size: ").concat(!this.options.icon.useEmojis ? '24px' : '20px', " !important;\n            width: 30px;\n            height: 30px;\n            display: inline-block;\n            overflow: hidden;\n            -webkit-font-smoothing: antialiased;\n            left: 8px;\n            position: absolute;\n            color: rgba(0,0,0,.6);\n            direction: ltr;\n        }\n        ._access-menu ul li svg path {\n            fill: rgba(0,0,0,.6);\n        }\n        ._access-menu ul li:hover svg path {\n            fill: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li.active svg path {\n            fill: #fff;\n        }\n        ._access-menu ul li:hover:before {\n            color: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li.active:before {\n            color: #fff;\n        }\n        ._access-menu ul li[data-access-action=\"increaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"', ";\n        }\n        ._access-menu ul li[data-access-action=\"decreaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"', ";\n        }\n        ._access-menu ul li[data-access-action=\"increaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n        }\n        ._access-menu ul li[data-access-action=\"decreaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n        }\n        ._access-menu ul li[data-access-action=\"invertColors\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"', ";\n        }\n        ._access-menu ul li[data-access-action=\"grayHues\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"', ";\n        }\n        ._access-menu ul li[data-access-action=\"underlineLinks\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_underlined"' : '"💯"', ";\n        }\n        ._access-menu ul li[data-access-action=\"bigCursor\"]:before {\n            /*content: 'touch_app';*/\n        }\n        ._access-menu ul li[data-access-action=\"readingGuide\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"', ";\n        }\n        ._access-menu ul li[data-access-action=\"textToSpeech\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"', ";\n        }\n        ._access-menu ul li[data-access-action=\"speechToText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"mic"' : '"🎤"', ";\n        }\n        ._access-menu ul li[data-access-action=\"disableAnimations\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"', ";\n        }");
+      var css = "\n        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {\n            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {\n            width: 6px;\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {\n            background-color: #999999;\n        }\n        ._access-icon {\n            position: ".concat(this.options.icon.position.type, ";\n            background-repeat: no-repeat;\n            background-size: contain;\n            cursor: pointer;\n            opacity: 0;\n            transition-duration: .35s;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            ").concat(!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : '', "\n            transform: ").concat(!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(14deg)', ";\n        }\n        ._access-icon:hover {\n            ") + (this.options.animations.buttons && !this.options.icon.useEmojis ? "\n            box-shadow: 1px 1px 10px rgba(0,0,0,.9);\n            transform: scale(1.1);\n            " : '') + "\n        }\n        .circular._access-icon {\n            border-radius: 50%;\n            border: .5px solid white;\n        }\n        " + (this.options.animations.buttons && this.options.icon.circularBorder ? "\n        .circular._access-icon:hover {\n            border: 5px solid white;\n            border-style: double;\n            font-size: 35px!important;\n            vertical-align: middle;\n            padding-top: 2px;\n            text-align: center;\n        }\n        " : '') + "\n        .access_read_guide_bar{\n            box-sizing: border-box;\n            background: ".concat(this.options.guide.cBackground, ";\n            width: 100%!important;\n            min-width: 100%!important;\n            position: fixed!important;\n            height: ").concat(this.options.guide.height, " !important;\n            border: solid 3px ").concat(this.options.guide.cBorder, ";\n            border-radius: 5px;\n            top: 15px;\n            z-index: 2147483647;\n        }\n        .access-high-contrast *{\n            background-color: #000 !important;\n            background-image: none !important;\n            border-color: #fff !important;\n            -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n            color: #fff !important;\n            text-indent: 0 !important;\n            text-shadow: none !important;\n        }\n        ._access-menu {\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            position: fixed;\n            width: ").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n            height: ").concat(this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units, ";\n            transition-duration: .35s;\n            z-index: ").concat(this.options.icon.zIndex + 1, ";\n            opacity: 1;\n            background-color: #fff;\n            color: #000;\n            border-radius: 3px;\n            border: solid 1px #f1f0f1;\n            font-family: ").concat(this.options.menu.fontFamily, ";\n            min-width: 300px;\n            box-shadow: 0px 0px 1px #aaa;\n            max-height: 100vh;\n            ").concat(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '', "\n        }\n        ._access-menu.close {\n            z-index: -1;\n            width: 0;\n            opacity: 0;\n            background-color: transparent;\n        }\n        ._access-menu.bottom {\n            bottom: 0;\n        }\n        ._access-menu.top {\n            top: 0;\n        }\n        ._access-menu.left {\n            left: 0;\n        }\n        ._access-menu.close.left {\n            left: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu.right {\n            right: 0;\n        }\n        ._access-menu.close.right {\n            right: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu ._text-center {\n            text-align: center;\n        }\n        ._access-menu h3 {\n            font-size: 22px !important;\n            margin-top: 20px;\n            margin-bottom: 10px;\n            padding: 0;\n            color: rgba(0,0,0,.87);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ._menu-close-btn {\n            left: 5px;\n            color: #d63c3c;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {\n            ").concat(this.options.animations.buttons ? 'transform: rotate(180deg);' : '', "\n        }\n        ._access-menu ._menu-reset-btn {\n            right: 5px;\n            color: #4054b2;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-btn {\n            position: absolute;\n            top: 5px;\n            cursor: pointer;\n            font-size: 24px !important;\n            font-weight: bold;\n            background: transparent;\n            border: none;\n        }\n        ._access-menu ul {\n            padding: 0;\n            position: relative;\n            font-size: 18px !important;\n            margin: 0;\n            overflow: auto;\n            max-height: calc(100vh - 77px);\n        }\n        html._access_cursor * {\n            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;\n        }\n        ._access-menu ul li {\n            list-style-type: none;\n            -ms-user-select: none;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            user-select: none;\n            margin: 5px;\n            font-size: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            line-height: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            color: rgba(0,0,0,.6);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ul li button {\n            background: #f9f9f9;\n            padding: 10px 0;\n            width: 100%;\n            text-indent: 35px;\n            text-align: start;\n            position: relative;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n            border: solid 1px #f1f0f1;\n            border-radius: 4px;\n        }\n        ._access-menu ul.before-collapse li button {\n            opacity: 0.05;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover {\n            background-color: #000;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover, ._access-menu ul li button.active:before, ._access-menu ul li button.active:hover:before {\n            color: #fff;\n        }\n        ._access-menu ul li button:hover {\n            color: rgba(0,0,0,.8);\n            background-color: #eaeaea;\n        }\n        ._access-menu ul li.not-supported {\n            display: none;\n        }\n        ._access-menu ul li button:before {\n            content: ' ';\n            ").concat(!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : '', "\n            text-rendering: optimizeLegibility;\n            font-feature-settings: \"liga\" 1;\n            font-style: normal;\n            text-transform: none;\n            line-height: ").concat(!this.options.icon.useEmojis ? '1' : '1.1', ";\n            font-size: ").concat(!this.options.icon.useEmojis ? '24px' : '20px', " !important;\n            width: 30px;\n            height: 30px;\n            display: inline-block;\n            overflow: hidden;\n            -webkit-font-smoothing: antialiased;\n            top: 7px;\n            left: 5px;\n            position: absolute;\n            color: rgba(0,0,0,.6);\n            direction: ltr;\n            text-indent: 0;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        ._access-menu ul li button svg path {\n            fill: rgba(0,0,0,.6);\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        ._access-menu ul li button:hover svg path {\n            fill: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active svg path {\n            fill: #fff;\n        }\n        ._access-menu ul li:hover button:before {\n            color: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active button:before {\n            color: #fff;\n        }\n        ._access-menu ul li button[data-access-action=\"increaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"increaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"invertColors\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"grayHues\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"underlineLinks\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_underlined"' : '"💯"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"bigCursor\"]:before {\n            /*content: 'touch_app';*/\n        }\n        ._access-menu ul li button[data-access-action=\"readingGuide\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"textToSpeech\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"speechToText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"mic"' : '"🎤"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"disableAnimations\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"iframeModals\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"policy"' : '"⚖️"', ";\n        }");
       var className = '_access-main-css';
 
       this._common.injectStyle(css, {
@@ -399,7 +400,7 @@ var Accessibility = /*#__PURE__*/function () {
     value: function injectMenu() {
       var _this2 = this;
 
-      var menuElem = this._common.jsonToHtml({
+      var json = {
         type: 'div',
         attrs: {
           'class': '_access-menu close _access'
@@ -410,7 +411,7 @@ var Accessibility = /*#__PURE__*/function () {
             'class': '_text-center'
           },
           children: [{
-            type: 'i',
+            type: 'button',
             attrs: {
               'class': "_menu-close-btn _menu-btn ".concat(this.options.icon.fontClass),
               'title': this.options.labels.closeTitle
@@ -423,7 +424,7 @@ var Accessibility = /*#__PURE__*/function () {
             type: '#text',
             text: this.options.labels.menuTitle
           }, {
-            type: 'i',
+            type: 'button',
             attrs: {
               'class': "_menu-reset-btn _menu-btn ".concat(this.options.icon.fontClass),
               'title': this.options.labels.resetTitle
@@ -440,125 +441,198 @@ var Accessibility = /*#__PURE__*/function () {
           },
           children: [{
             type: 'li',
-            attrs: {
-              'data-access-action': 'increaseText'
-            },
             children: [{
-              type: '#text',
-              text: this.options.labels.increaseText
-            }]
-          }, {
-            type: 'li',
-            attrs: {
-              'data-access-action': 'decreaseText'
-            },
-            children: [{
-              type: '#text',
-              text: this.options.labels.decreaseText
-            }]
-          }, {
-            type: 'li',
-            attrs: {
-              'data-access-action': 'increaseTextSpacing'
-            },
-            children: [{
-              type: '#text',
-              text: this.options.labels.increaseTextSpacing
-            }]
-          }, {
-            type: 'li',
-            attrs: {
-              'data-access-action': 'decreaseTextSpacing'
-            },
-            children: [{
-              type: '#text',
-              text: this.options.labels.decreaseTextSpacing
-            }]
-          }, {
-            type: 'li',
-            attrs: {
-              'data-access-action': 'invertColors',
-              'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
-            },
-            children: [{
-              type: '#text',
-              text: this.options.labels.invertColors
-            }]
-          }, {
-            type: 'li',
-            attrs: {
-              'data-access-action': 'grayHues',
-              'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
-            },
-            children: [{
-              type: '#text',
-              text: this.options.labels.grayHues
-            }]
-          }, {
-            type: 'li',
-            attrs: {
-              'data-access-action': 'underlineLinks',
-              'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
-            },
-            children: [{
-              type: '#text',
-              text: this.options.labels.underlineLinks
-            }]
-          }, {
-            type: 'li',
-            attrs: {
-              'data-access-action': 'bigCursor',
-              'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
-            },
-            children: [{
-              type: 'div',
+              type: 'button',
               attrs: {
-                'id': 'iconBigCursor'
-              }
-            }, {
-              type: '#text',
-              text: this.options.labels.bigCursor
+                'data-access-action': 'increaseText'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.increaseText
+              }]
             }]
           }, {
             type: 'li',
-            attrs: {
-              'data-access-action': 'readingGuide',
-              'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
-            },
             children: [{
-              type: '#text',
-              text: this.options.labels.readingGuide
+              type: 'button',
+              attrs: {
+                'data-access-action': 'decreaseText'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.decreaseText
+              }]
             }]
           }, {
             type: 'li',
-            attrs: {
-              'data-access-action': 'textToSpeech'
-            },
             children: [{
-              type: '#text',
-              text: this.options.labels.textToSpeech
+              type: 'button',
+              attrs: {
+                'data-access-action': 'increaseTextSpacing'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.increaseTextSpacing
+              }]
             }]
           }, {
             type: 'li',
-            attrs: {
-              'data-access-action': 'speechToText'
-            },
             children: [{
-              type: '#text',
-              text: this.options.labels.speechToText
+              type: 'button',
+              attrs: {
+                'data-access-action': 'decreaseTextSpacing'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.decreaseTextSpacing
+              }]
             }]
           }, {
             type: 'li',
-            attrs: {
-              'data-access-action': 'disableAnimations'
-            },
             children: [{
-              type: '#text',
-              text: this.options.labels.disableAnimations
+              type: 'button',
+              attrs: {
+                'data-access-action': 'invertColors',
+                'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.invertColors
+              }]
+            }]
+          }, {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'grayHues',
+                'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.grayHues
+              }]
+            }]
+          }, {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'underlineLinks',
+                'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.underlineLinks
+              }]
+            }]
+          }, {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'bigCursor',
+                'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
+              },
+              children: [{
+                type: 'div',
+                attrs: {
+                  'id': 'iconBigCursor'
+                }
+              }, {
+                type: '#text',
+                text: this.options.labels.bigCursor
+              }]
+            }]
+          }, {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'readingGuide',
+                'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.readingGuide
+              }]
+            }]
+          }, {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'textToSpeech'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.textToSpeech
+              }]
+            }]
+          }, {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'speechToText'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.speechToText
+              }]
+            }]
+          }, {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'disableAnimations'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.disableAnimations
+              }]
             }]
           }]
         }]
-      });
+      };
+
+      if (this.options.iframeModals) {
+        this.options.iframeModals.forEach(function (im, i) {
+          var btn = {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'iframeModals',
+                'data-access-url': im.iframeUrl
+              },
+              children: [{
+                type: '#text',
+                text: im.buttonText
+              }]
+            }]
+          };
+          var icon = null;
+          if (im.icon && !_this2.options.icon.useEmojis) icon = im.icon;else if (im.emoji && _this2.options.icon.useEmojis) icon = im.emoji;
+
+          if (icon) {
+            btn.children[0].attrs['data-access-iframe-index'] = i;
+            var css = "._access-menu ul li button[data-access-action=\"iframeModals\"][data-access-iframe-index=\"".concat(i, "\"]:before {\n                        content: \"").concat(icon, "\";\n                    }");
+            var className = '_data-access-iframe-index-' + i;
+
+            _this2._common.injectStyle(css, {
+              className: className
+            });
+
+            _this2._common.deployedObjects.set('.' + className, false);
+          }
+
+          json.children[1].children.push(btn);
+        });
+      }
+
+      var menuElem = this._common.jsonToHtml(json);
 
       for (var i in this.options.icon.position) {
         menuElem.classList.add(i);
@@ -570,7 +644,7 @@ var Accessibility = /*#__PURE__*/function () {
         var ic = document.getElementById('iconBigCursor');
 
         if (ic) {
-          ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
+          ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;top: 9px; left: 9px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
           document.getElementById('iconBigCursor').remove();
         }
       }, 1);
@@ -598,7 +672,7 @@ var Accessibility = /*#__PURE__*/function () {
         lis[i].addEventListener('click', function (e) {
           var evt = e || window.event;
 
-          _this3.invoke(evt.target.getAttribute('data-access-action'));
+          _this3.invoke(evt.target.getAttribute('data-access-action'), evt.target);
         }, false);
       }
     }
@@ -921,8 +995,8 @@ var Accessibility = /*#__PURE__*/function () {
     }
   }, {
     key: "invoke",
-    value: function invoke(action) {
-      if (typeof this.menuInterface[action] === 'function') this.menuInterface[action]();
+    value: function invoke(action, button) {
+      if (typeof this.menuInterface[action] === 'function') this.menuInterface[action](undefined, button);
     }
   }, {
     key: "build",
