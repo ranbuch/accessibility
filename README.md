@@ -119,7 +119,7 @@ But you can also position the icon in the upper left corner of the screen and ca
 `new Accessibility(options);`
 
 ### ICON IMAGE:
-You can change the default icon as described [here](https://ranbuch.github.io/accessibility/src/)
+You can change the default icon as described [here](https://ranbuch.github.io/accessibility/src/#icon-image)
 
 ### LICENSE:
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://spdx.org/licenses/MIT)
