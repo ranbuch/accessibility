@@ -39,6 +39,15 @@ export interface IAccessibilityOptions {
     modules?: IAccessibilityModulesOptions;
     session?: IAccessibilitySessionOptions;
     iframeModals?: Array<IIframeModal>;
+    customFunctions?: Array<ICustomFunction>;
+}
+export interface ICustomFunction {
+    method: Function;
+    buttonText: string;
+    id: any;
+    toggle: boolean;
+    icon?: string;
+    emoji?: string;
 }
 export interface IIframeModal {
     iframeUrl: string;

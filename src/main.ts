@@ -247,7 +247,8 @@ export class Accessibility implements IAccessibility {
             session: {
                 persistent: true
             },
-            iframeModals: []
+            iframeModals: [],
+            customFunctions: []
         };
     }
 
@@ -582,6 +583,9 @@ export class Accessibility implements IAccessibility {
         }
         ._access-menu ul li button[data-access-action="iframeModals"]:before {
             content: ${!this.options.icon.useEmojis ? '"policy"' : '"⚖️"'};
+        }
+        ._access-menu ul li button[data-access-action="customFunctions"]:before {
+            content: ${!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"'};
         }`;
         let className = '_access-main-css';
         this._common.injectStyle(css, { className: className });
@@ -930,6 +934,43 @@ export class Accessibility implements IAccessibility {
                         content: "${icon}";
                     }`;
                     let className = '_data-access-iframe-index-' + i;
+                    this._common.injectStyle(css, { className: className });
+                    this._common.deployedObjects.set('.' + className, false);
+                }
+                json.children[1].children.push(btn);
+            });
+        }
+        if (this.options.customFunctions) {
+            this.options.customFunctions.forEach((cf, i) => {
+                const btn = {
+                    type: 'li',
+                    children: [
+                        {
+                            type: 'button',
+                            attrs: {
+                                'data-access-action': 'customFunctions',
+                                'data-access-custom-id': cf.id,
+                                'data-access-custom-index': i
+                            },
+                            children: [
+                                {
+                                    type: '#text',
+                                    text: cf.buttonText
+                                }
+                            ]
+                        }
+                    ]
+                } as IJsonToHtml;
+                let icon = null;
+                if (cf.icon && !this.options.icon.useEmojis)
+                    icon = cf.icon;
+                else if (cf.emoji && this.options.icon.useEmojis)
+                    icon = cf.emoji;
+                if (icon) {
+                    const css = `._access-menu ul li button[data-access-action="customFunctions"][data-access-custom-id="${cf.id}"]:before {
+                        content: "${icon}";
+                    }`;
+                    let className = '_data-access-custom-id-' + cf.id;
                     this._common.injectStyle(css, { className: className });
                     this._common.deployedObjects.set('.' + className, false);
                 }

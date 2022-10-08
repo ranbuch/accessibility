@@ -12,4 +12,5 @@ export interface IMenuInterface {
     speechToText(destroy?: boolean): void;
     disableAnimations(destroy?: boolean): void;
     iframeModals(destroy?: boolean, button?: HTMLElement): void;
+    customFunctions(destroy?: boolean, button?: HTMLElement): void;
 }

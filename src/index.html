@@ -631,7 +631,6 @@
 
             <div class="ui raised segment">
                 <h3 class="ui header">add custom iframe</h3>
-
                 <p>
                     You can add buttons that will open a model with custom iframes (for accessibility terms for example)
                     like so:
@@ -676,6 +675,77 @@
                 </p>
                 <p>
                     You can find icons <a href="https://mui.com/material-ui/material-icons/" target="_blank">here</a>
+                </p>
+            </div>
+
+            <div class="ui raised segment">
+                <h3 class="ui header">add custom functions</h3>
+                <p>
+                    You can add buttons that will invoke custom functions like so:
+                </p>
+                <code>
+                    var options = {
+                    <p class="b-space-1">
+                        customFunctions: [{
+                    </p>
+                    <p class="b-space-2">
+                        method: (cf, state) => {
+                    </p>
+                    <p class="b-space-3">
+                        console.log('The provided customFunctions object:', cf);
+                    </p>
+                    <p class="b-space-3">
+                        console.log('Toggle state:', state);
+                    </p>
+                    <p class="b-space-2">
+                        },
+                    </p>
+                    <p class="b-space-2">
+                        buttonText: 'my foo',
+                    </p>
+                    <p class="b-space-2">
+                        id: 1,
+                    </p>
+                    <p class="b-space-2">
+                        toggle: true,
+                    </p>
+                    <p class="b-space-2">
+                        icon: 'psychology_alt',
+                    </p>
+                    <p class="b-space-2">
+                        emoji: '❓'
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    <p>
+                        }
+                    </p>
+                    <p>
+                        new Accessibility(options);
+                    </p>
+                </code>
+                <br>
+                <p>
+                    In case you will not provide the "icon" and the "emoji" we will use this setup:
+                </p>
+                <p>
+                    <code>
+                        icon: 'psychology_alt',
+                        <br>
+                        emoji: '❓'
+                    </code>
+                </p>
+                <p>
+                    You can find icons <a href="https://mui.com/material-ui/material-icons/" target="_blank">here</a>
+                </p>
+                <p>
+                    You have to provide the "id" parameter. This would also be your way to identify the button in case
+                    you are using more then on function while using the same custom function.
+                </p>
+                <p>
+                    You have to provide the "toggle" parameter. This will determine whether the button will toggle his
+                    state active state (on and off) or not.
                 </p>
             </div>
 

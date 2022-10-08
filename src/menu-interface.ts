@@ -185,7 +185,6 @@ export class MenuInterface implements IMenuInterface {
     }
 
     textToSpeech(destroy: boolean) {
-        console.log('textToSpeech', destroy);
         // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
         this._acc.onChange(false);
         const className = '_access-text-to-speech';
@@ -424,6 +423,24 @@ export class MenuInterface implements IMenuInterface {
             });
             document.body.appendChild(this._dialog);
             this._dialog.showModal();
+        }
+    }
+
+    customFunctions(destroy?: boolean, button?: HTMLElement) {
+        if (!button)
+            return;
+        const cf = this._acc.options.customFunctions[parseInt(button.getAttribute('data-access-custom-index'))];
+        if (cf.toggle && button.classList.contains('active'))
+            destroy = true;
+        if (destroy) {
+            if (cf.toggle)
+                button.classList.remove('active');
+            cf.method(cf, false);
+        }
+        else {
+            if (cf.toggle)
+                button.classList.add('active');
+            cf.method(cf, true);
         }
     }
 }

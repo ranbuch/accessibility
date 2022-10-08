@@ -247,8 +247,7 @@ var MenuInterface = /*#__PURE__*/function () {
     value: function textToSpeech(destroy) {
       var _this2 = this;
 
-      console.log('textToSpeech', destroy); // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
-
+      // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
       this._acc.onChange(false);
 
       var className = '_access-text-to-speech';
@@ -538,6 +537,23 @@ var MenuInterface = /*#__PURE__*/function () {
         document.body.appendChild(this._dialog);
 
         this._dialog.showModal();
+      }
+    }
+  }, {
+    key: "customFunctions",
+    value: function customFunctions(destroy, button) {
+      if (!button) return;
+
+      var cf = this._acc.options.customFunctions[parseInt(button.getAttribute('data-access-custom-index'))];
+
+      if (cf.toggle && button.classList.contains('active')) destroy = true;
+
+      if (destroy) {
+        if (cf.toggle) button.classList.remove('active');
+        cf.method(cf, false);
+      } else {
+        if (cf.toggle) button.classList.add('active');
+        cf.method(cf, true);
       }
     }
   }]);
