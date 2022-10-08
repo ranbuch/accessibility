@@ -51,18 +51,18 @@ export interface IIframeModal {
 }
 
 export interface IAccessibilityIconOptions {
-    position: IAccessibilityIconPositionOptions;
-    dimensions: IAccessibilityIconDimensionsOptions;
-    zIndex: string;
-    backgroundColor: string;
-    color: string;
-    img: string;
-    circular: boolean;
-    circularBorder: false,
-    fontFaceSrc: Array<string>;
-    fontClass: string;
-    useEmojis: boolean;
-    fontFamily: string;
+    position?: IAccessibilityIconPositionOptions;
+    dimensions?: IAccessibilityIconDimensionsOptions;
+    zIndex?: string;
+    backgroundColor?: string;
+    color?: string;
+    img?: string;
+    circular?: boolean;
+    circularBorder?: false,
+    fontFaceSrc?: Array<string>;
+    fontClass?: string;
+    useEmojis?: boolean;
+    fontFamily?: string;
     forceFont?: boolean;
 }
 

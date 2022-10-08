@@ -480,6 +480,7 @@ export class Accessibility implements IAccessibility {
             transition-timing-function: ease-in-out;
             border: solid 1px #f1f0f1;
             border-radius: 4px;
+            cursor: pointer;
         }
         ._access-menu ul.before-collapse li button {
             opacity: 0.05;
