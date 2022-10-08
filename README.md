@@ -18,7 +18,7 @@ initialize component:
     new Accessibility();
 }, false);`
 
-### Full Documentation [here](https://ranbuch.github.io/accessibility/)
+### Full Documentation [here](https://ranbuch.github.io/accessibility/src/)
 
 >We are proud to announce that [Joomla!](https://www.joomdev.com/blog/entry/enable-joomla-4-accessibility) are now using this repo as there built-in accessibility tool.
 
