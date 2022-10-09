@@ -367,11 +367,23 @@ export class MenuInterface implements IMenuInterface {
             destroy = true;
         const close = () => {
             if (this._dialog) {
-                this._dialog.close();
-                this._dialog.remove();
+                this._dialog.classList.add('closing');
+                setTimeout(() => {
+                    this._dialog.classList.remove('closing');
+                    this._dialog.close();
+                    this._dialog.remove();
+                }, 350);
+                detach();
             }
             if (button)
                 button.classList.remove('active');
+        };
+        const onClose = () => {
+            close();
+        };
+        const detach = () => {
+            this._dialog.querySelector('button').removeEventListener('click', onClose, false);
+            this._dialog.removeEventListener('close', onClose);
         };
         if (destroy) {
             close();
@@ -380,6 +392,7 @@ export class MenuInterface implements IMenuInterface {
             button.classList.add('active');
             if (!this._dialog)
                 this._dialog = document.createElement('dialog');
+            this._dialog.classList.add('_access');
             this._dialog.innerHTML = '';
             this._dialog.appendChild(this._acc.common.jsonToHtml({
                 type: 'div',
@@ -390,12 +403,23 @@ export class MenuInterface implements IMenuInterface {
                             {
                                 type: 'button',
                                 attrs: {
-                                    role: 'button'
+                                    role: 'button',
+                                    'class': this._acc.options.icon.useEmojis ? '' : 'material-icons',
+                                    style: `position: absolute;
+                                    top: 5px;
+                                    cursor: pointer;
+                                    font-size: 24px !important;
+                                    font-weight: bold;
+                                    background: transparent;
+                                    border: none;
+                                    left: 5px;
+                                    color: #d63c3c;
+                                    padding: 0;`
                                 },
                                 children: [
                                     {
                                         type: '#text',
-                                        text: 'X'
+                                        text: this._acc.options.icon.useEmojis ? 'X' : 'close'
                                     }
                                 ]
                             }
@@ -408,20 +432,16 @@ export class MenuInterface implements IMenuInterface {
                                 type: 'iframe',
                                 attrs: {
                                     src: button.getAttribute('data-access-url'),
-                                    style: 'width: 50vw;height: 50vh;'
+                                    style: 'width: 50vw;height: 50vh;padding: 30px;'
                                 }
                             }
                         ]
                     }
                 ]
             }));
-            this._dialog.querySelector('button').addEventListener('click', () => {
-                close();
-            }, false);
-            this._dialog.addEventListener('close', () => {
-                close();
-            });
             document.body.appendChild(this._dialog);
+            this._dialog.querySelector('button').addEventListener('click', onClose, false);
+            this._dialog.addEventListener('close', onClose);
             this._dialog.showModal();
         }
     }

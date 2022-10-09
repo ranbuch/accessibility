@@ -522,6 +522,33 @@ export class Accessibility implements IAccessibility {
             transition-duration: .35s;
             transition-timing-function: ease-in-out;
         }
+        @keyframes _access-dialog-backdrop {
+            0% {
+                background: rgba(0, 0, 0, 0.1);
+            }
+            100% {
+                background: rgba(0, 0, 0, 0.5);
+            }
+        }
+        dialog._access::backdrop, dialog._access {
+            transition-duration: 0.35s;
+            transition-timing-function: ease-in-out;
+        }
+        dialog._access:modal {
+            border-color: transparent;
+            border-width: 0;
+            padding: 0;
+        }
+        dialog._access[open]::backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            animation: _access-dialog-backdrop 0.35s ease-in-out;
+        }
+        dialog._access.closing[open]::backdrop {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        dialog._access.closing[open] {
+            opacity: 0;
+        }
         ._access-menu ul li button svg path {
             fill: rgba(0,0,0,.6);
             transition-duration: .35s;

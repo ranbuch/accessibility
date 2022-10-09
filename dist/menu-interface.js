@@ -485,12 +485,29 @@ var MenuInterface = /*#__PURE__*/function () {
 
       var close = function close() {
         if (_this5._dialog) {
-          _this5._dialog.close();
+          _this5._dialog.classList.add('closing');
 
-          _this5._dialog.remove();
+          setTimeout(function () {
+            _this5._dialog.classList.remove('closing');
+
+            _this5._dialog.close();
+
+            _this5._dialog.remove();
+          }, 350);
+          detach();
         }
 
         if (button) button.classList.remove('active');
+      };
+
+      var onClose = function onClose() {
+        close();
+      };
+
+      var detach = function detach() {
+        _this5._dialog.querySelector('button').removeEventListener('click', onClose, false);
+
+        _this5._dialog.removeEventListener('close', onClose);
       };
 
       if (destroy) {
@@ -498,6 +515,9 @@ var MenuInterface = /*#__PURE__*/function () {
       } else {
         button.classList.add('active');
         if (!this._dialog) this._dialog = document.createElement('dialog');
+
+        this._dialog.classList.add('_access');
+
         this._dialog.innerHTML = '';
 
         this._dialog.appendChild(this._acc.common.jsonToHtml({
@@ -507,11 +527,13 @@ var MenuInterface = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                role: 'button'
+                role: 'button',
+                'class': this._acc.options.icon.useEmojis ? '' : 'material-icons',
+                style: "position: absolute;\n                                    top: 5px;\n                                    cursor: pointer;\n                                    font-size: 24px !important;\n                                    font-weight: bold;\n                                    background: transparent;\n                                    border: none;\n                                    left: 5px;\n                                    color: #d63c3c;\n                                    padding: 0;"
               },
               children: [{
                 type: '#text',
-                text: 'X'
+                text: this._acc.options.icon.useEmojis ? 'X' : 'close'
               }]
             }]
           }, {
@@ -520,21 +542,17 @@ var MenuInterface = /*#__PURE__*/function () {
               type: 'iframe',
               attrs: {
                 src: button.getAttribute('data-access-url'),
-                style: 'width: 50vw;height: 50vh;'
+                style: 'width: 50vw;height: 50vh;padding: 30px;'
               }
             }]
           }]
         }));
 
-        this._dialog.querySelector('button').addEventListener('click', function () {
-          close();
-        }, false);
-
-        this._dialog.addEventListener('close', function () {
-          close();
-        });
-
         document.body.appendChild(this._dialog);
+
+        this._dialog.querySelector('button').addEventListener('click', onClose, false);
+
+        this._dialog.addEventListener('close', onClose);
 
         this._dialog.showModal();
       }
