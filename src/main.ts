@@ -1193,7 +1193,7 @@ export class Accessibility implements IAccessibility {
     getVoices(): Promise<SpeechSynthesisVoice[]> {
         return new Promise((resolve => {
             let synth = window.speechSynthesis;
-            let id: number;
+            let id: NodeJS.Timer;
 
             id = setInterval(() => {
                 if (synth.getVoices().length !== 0) {
@@ -1201,7 +1201,7 @@ export class Accessibility implements IAccessibility {
                     clearInterval(id);
                 }
             }, 10);
-        }))
+        }));
     }
 
     async injectTts(): Promise<void> {
@@ -1252,23 +1252,23 @@ export class Accessibility implements IAccessibility {
 
     addListeners() {
         let lis = document.querySelectorAll('._access-menu ul li');
-        let step1 = document.getElementsByClassName('screen-reader-wrapper-step-1'); 
-        let step2 = document.getElementsByClassName('screen-reader-wrapper-step-2'); 
+        let step1 = document.getElementsByClassName('screen-reader-wrapper-step-1');
+        let step2 = document.getElementsByClassName('screen-reader-wrapper-step-2');
         let step3 = document.getElementsByClassName('screen-reader-wrapper-step-3');
 
         for (let i = 0; i < lis.length; i++) {
             ['click','keyup'].forEach(evt =>
                 lis[i].addEventListener(evt, (e: Event | KeyboardEvent) => {
                     let evt = e || window.event;
-                    if((evt as KeyboardEvent).detail === 0 && (evt as KeyboardEvent).key !== "Enter") return;
+                    if((evt as KeyboardEvent).detail === 0 && (evt as KeyboardEvent).key !== 'Enter') return;
                     this.invoke((evt.target as HTMLElement).getAttribute('data-access-action'), evt.target as HTMLElement);
                 })
-            )
+            );
         }
 
         [...Array.from(step1), ...Array.from(step2), ...Array.from(step3)].forEach(el =>
             el.addEventListener('click', (e: Event) => {
-                let evt = e || window.event
+                let evt = e || window.event;
                 this.invoke((evt.target as HTMLElement).parentElement.parentElement.getAttribute('data-access-action'), evt.target as HTMLElement);
             }, false)
         );
@@ -1319,7 +1319,7 @@ export class Accessibility implements IAccessibility {
 
     resetLineHeight() {
         this.resetIfDefined(this._stateValues.body.lineHeight, this.body.style, 'lineHeight');
-        let all = document.querySelectorAll('[data-init-line-height]')
+        let all = document.querySelectorAll('[data-init-line-height]');
 
         for (let i = 0; i < all.length; i++) {
             (all[i] as HTMLElement).style.lineHeight = all[i].getAttribute('data-init-line-height');
@@ -1613,7 +1613,7 @@ export class Accessibility implements IAccessibility {
         catch (ex) { }
 
         let allContent = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
-        for (const key in allContent ){
+        for (const key in allContent ) {
             if (allContent[key] === window.event.target && (e instanceof MouseEvent) ) return;
         }
         if (e instanceof KeyboardEvent && (e.shiftKey && e.key === 'Tab' || e.key === 'Tab')) {
@@ -1655,9 +1655,9 @@ export class Accessibility implements IAccessibility {
                     (child as HTMLElement).tabIndex = -1;
                     child.childNodes.forEach(li => {
                         (li as HTMLElement).tabIndex = 0;
-                    })
+                    });
                 }
-            })
+            });
         }
         else {
             if (this.options.animations && this.options.animations.buttons) {
@@ -1674,9 +1674,9 @@ export class Accessibility implements IAccessibility {
                     (child as HTMLElement).tabIndex = -1;
                     child.childNodes.forEach(li => {
                         (li as HTMLElement).tabIndex = -1;
-                    })
+                    });
                 }
-            })
+            });
         }
     }
 
@@ -1704,10 +1704,10 @@ export class Accessibility implements IAccessibility {
         this._icon = this.injectIcon();
         this._menu = this.injectMenu();
         this.injectTts();
-        setTimeout(()=>{
+        setTimeout(()=> {
             this.addListeners();
             this.disableUnsupportedModules();
-        },10)
+        }, 10);
         if (this.options.hotkeys.enabled) {
             document.onkeydown = (e: KeyboardEvent) => {
                 let act = Object.entries(this.options.hotkeys.keys).find(function (val) {
@@ -1734,12 +1734,12 @@ export class Accessibility implements IAccessibility {
         ['click','keyup'].forEach(evt => {
             this._icon.addEventListener(evt, (e) => {
                 let et = e || window.event;
-                if((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== "Enter") {
+                if((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== 'Enter') {
                     return;
                 }
                 this.toggleMenu();
             }, false);
-        })
+        });
 
         this._icon.addEventListener('click', () => {
             this.toggleMenu();

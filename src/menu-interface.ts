@@ -44,7 +44,7 @@ export class MenuInterface implements IMenuInterface {
         }
 
         if (this._acc.stateValues.invertColors && this._acc.stateValues.textToSpeech) {
-            this._acc.textToSpeech("Colors Set To Normal");
+            this._acc.textToSpeech('Colors Set To Normal');
         }
         document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
         this._acc.stateValues.invertColors = !this._acc.stateValues.invertColors;
@@ -56,7 +56,7 @@ export class MenuInterface implements IMenuInterface {
             this._acc.html.style.filter = 'invert(1)';
 
             if(this._acc.stateValues.textToSpeech) {
-                this._acc.textToSpeech("Colors Inverted");
+                this._acc.textToSpeech('Colors Inverted');
             }
         }
         else {
@@ -90,16 +90,16 @@ export class MenuInterface implements IMenuInterface {
         this._acc.stateValues.grayHues = !this._acc.stateValues.grayHues;
         this._acc.sessionState.grayHues = this._acc.stateValues.grayHues;
         this._acc.onChange(true);
-        if(this._acc.stateValues.textToSpeech && !this._acc.stateValues.grayHues) 
-            this._acc.textToSpeech("Gray Hues Disabled.");
+        if (this._acc.stateValues.textToSpeech && !this._acc.stateValues.grayHues)
+            this._acc.textToSpeech('Gray Hues Disabled.');
         let val;
         if (this._acc.stateValues.grayHues) {
             val = 'grayscale(1)';
-            if (this._acc.stateValues.invertColors){
+            if (this._acc.stateValues.invertColors) {
                 this.invertColors(true);
             }
             if(this._acc.stateValues.textToSpeech) {
-                this._acc.textToSpeech("Gray Hues Enabled.");
+                this._acc.textToSpeech('Gray Hues Enabled.');
             }
         } else {
             val = '';
@@ -141,12 +141,12 @@ export class MenuInterface implements IMenuInterface {
             this._acc.common.injectStyle(css, { className: className });
             this._acc.common.deployedObjects.set('.' + className, true);
             if (this._acc.stateValues.textToSpeech) {
-                this._acc.textToSpeech("Links UnderLined");
+                this._acc.textToSpeech('Links UnderLined');
             }
         }
         else {
             if (this._acc.stateValues.textToSpeech) {
-                this._acc.textToSpeech("Links UnderLine Removed");
+                this._acc.textToSpeech('Links UnderLine Removed');
             }
             remove();
         }
@@ -167,8 +167,8 @@ export class MenuInterface implements IMenuInterface {
         this._acc.sessionState.bigCursor = this._acc.stateValues.bigCursor;
         this._acc.onChange(true);
         this._acc.html.classList.toggle('_access_cursor');
-        if (this._acc.stateValues.textToSpeech && this._acc.stateValues.bigCursor) this._acc.textToSpeech("Big Cursor Enabled");
-        if (this._acc.stateValues.textToSpeech && !this._acc.stateValues.bigCursor) this._acc.textToSpeech("Big Cursor Disabled");
+        if (this._acc.stateValues.textToSpeech && this._acc.stateValues.bigCursor) this._acc.textToSpeech('Big Cursor Enabled');
+        if (this._acc.stateValues.textToSpeech && !this._acc.stateValues.bigCursor) this._acc.textToSpeech('Big Cursor Disabled');
     }
 
     readingGuide(destroy: boolean) {
@@ -182,7 +182,7 @@ export class MenuInterface implements IMenuInterface {
             this._acc.onChange(true);
             document.body.removeEventListener('touchmove', this._acc.updateReadGuide, false);
             document.body.removeEventListener('mousemove', this._acc.updateReadGuide, false);
-            if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech("Reading Guide Enabled");
+            if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech('Reading Guide Enabled');
             return;
         }
         document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
@@ -202,15 +202,15 @@ export class MenuInterface implements IMenuInterface {
             }
             document.body.removeEventListener('touchmove', this._acc.updateReadGuide, false);
             document.body.removeEventListener('mousemove', this._acc.updateReadGuide, false);
-            if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech("Reading Guide Disabled");
+            if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech('Reading Guide Disabled');
         }
     }
 
     textToSpeech(destroy: boolean) {
         // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
         let tSpeechList = document.querySelector('._access-menu [data-access-action="textToSpeech"]');
-        let step1 = document.getElementsByClassName('screen-reader-wrapper-step-1'); 
-        let step2 = document.getElementsByClassName('screen-reader-wrapper-step-2'); 
+        let step1 = document.getElementsByClassName('screen-reader-wrapper-step-1');
+        let step2 = document.getElementsByClassName('screen-reader-wrapper-step-2');
         let step3 = document.getElementsByClassName('screen-reader-wrapper-step-3');
         this._acc.onChange(false);
         const className = '_access-text-to-speech';
@@ -229,9 +229,9 @@ export class MenuInterface implements IMenuInterface {
 
         if (destroy) {
             document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.remove('active');
-            (step1[0] as HTMLElement).style.background="#ffffff";
-            (step2[0] as HTMLElement).style.background="#ffffff";
-            (step3[0] as HTMLElement).style.background="#ffffff";
+            (step1[0] as HTMLElement).style.background='#ffffff';
+            (step2[0] as HTMLElement).style.background='#ffffff';
+            (step3[0] as HTMLElement).style.background='#ffffff';
             this._acc.stateValues.textToSpeech = false;
             window.speechSynthesis.cancel();
             return remove();
@@ -239,23 +239,23 @@ export class MenuInterface implements IMenuInterface {
 
         if (this._acc.stateValues.speechRate === 1 && !tSpeechList.classList.contains('active')) {
             this._acc.stateValues.textToSpeech = true;
-            this._acc.textToSpeech("Screen Reader enabled. Reading Pace - Normal");
+            this._acc.textToSpeech('Screen Reader enabled. Reading Pace - Normal');
             tSpeechList.classList.add('active');
-            (step2[0] as HTMLElement).style.background="#000000";
-            (step3[0] as HTMLElement).style.background="#000000";
+            (step2[0] as HTMLElement).style.background='#000000';
+            (step3[0] as HTMLElement).style.background='#000000';
         }
         else if(this._acc.stateValues.speechRate === 1 && tSpeechList.classList.contains('active')) {
             this._acc.stateValues.speechRate = 1.5;
-            this._acc.textToSpeech("Reading Pace - Fast");
-            (step2[0] as HTMLElement).style.background="#ffffff";
+            this._acc.textToSpeech('Reading Pace - Fast');
+            (step2[0] as HTMLElement).style.background='#ffffff';
         }
         else if(this._acc.stateValues.speechRate === 1.5 && tSpeechList.classList.contains('active')) {
             this._acc.stateValues.speechRate = 0.7;
-            this._acc.textToSpeech("Reading Pace - Slow");
-            (step3[0] as HTMLElement).style.background="#ffffff";
+            this._acc.textToSpeech('Reading Pace - Slow');
+            (step3[0] as HTMLElement).style.background='#ffffff';
         } else {
             this._acc.stateValues.speechRate = 1;
-            this._acc.textToSpeech("Screen Reader - Disabled");
+            this._acc.textToSpeech('Screen Reader - Disabled');
             tSpeechList.classList.remove('active');
             this._acc.stateValues.textToSpeech = false;
         }
@@ -266,8 +266,8 @@ export class MenuInterface implements IMenuInterface {
                     box-shadow: 2px 2px 2px rgba(180,180,180,0.7);
                 }
             `;
-            
-            if (tSpeechList.classList.contains('active') && this._acc.stateValues.speechRate === 1){
+
+            if (tSpeechList.classList.contains('active') && this._acc.stateValues.speechRate === 1) {
                 this._acc.common.injectStyle(css, { className: className });
                 this._acc.common.deployedObjects.set('.' + className, true);
                 document.addEventListener('click', this.readBind, false);
@@ -524,7 +524,6 @@ export class MenuInterface implements IMenuInterface {
     decreaseLineHeight() {
         this._acc.alterLineHeight(false);
     }
-    
 
     pauseAnimations(destroy: boolean) {
         const className = '_access-disable-animations', autoplayStopped = 'data-autoplay-stopped', state = 'state';
