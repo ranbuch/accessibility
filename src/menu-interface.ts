@@ -55,7 +55,7 @@ export class MenuInterface implements IMenuInterface {
                 this._acc.menuInterface.grayHues(true);
             this._acc.html.style.filter = 'invert(1)';
 
-            if(this._acc.stateValues.textToSpeech) {
+            if (this._acc.stateValues.textToSpeech) {
                 this._acc.textToSpeech('Colors Inverted');
             }
         }
@@ -98,7 +98,7 @@ export class MenuInterface implements IMenuInterface {
             if (this._acc.stateValues.invertColors) {
                 this.invertColors(true);
             }
-            if(this._acc.stateValues.textToSpeech) {
+            if (this._acc.stateValues.textToSpeech) {
                 this._acc.textToSpeech('Gray Hues Enabled.');
             }
         } else {
@@ -229,9 +229,9 @@ export class MenuInterface implements IMenuInterface {
 
         if (destroy) {
             document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.remove('active');
-            (step1[0] as HTMLElement).style.background='#ffffff';
-            (step2[0] as HTMLElement).style.background='#ffffff';
-            (step3[0] as HTMLElement).style.background='#ffffff';
+            (step1[0] as HTMLElement).style.background = '#ffffff';
+            (step2[0] as HTMLElement).style.background = '#ffffff';
+            (step3[0] as HTMLElement).style.background = '#ffffff';
             this._acc.stateValues.textToSpeech = false;
             window.speechSynthesis.cancel();
             return remove();
@@ -241,18 +241,18 @@ export class MenuInterface implements IMenuInterface {
             this._acc.stateValues.textToSpeech = true;
             this._acc.textToSpeech('Screen Reader enabled. Reading Pace - Normal');
             tSpeechList.classList.add('active');
-            (step2[0] as HTMLElement).style.background='#000000';
-            (step3[0] as HTMLElement).style.background='#000000';
+            (step2[0] as HTMLElement).style.background = '#000000';
+            (step3[0] as HTMLElement).style.background = '#000000';
         }
-        else if(this._acc.stateValues.speechRate === 1 && tSpeechList.classList.contains('active')) {
+        else if (this._acc.stateValues.speechRate === 1 && tSpeechList.classList.contains('active')) {
             this._acc.stateValues.speechRate = 1.5;
             this._acc.textToSpeech('Reading Pace - Fast');
-            (step2[0] as HTMLElement).style.background='#ffffff';
+            (step2[0] as HTMLElement).style.background = '#ffffff';
         }
-        else if(this._acc.stateValues.speechRate === 1.5 && tSpeechList.classList.contains('active')) {
+        else if (this._acc.stateValues.speechRate === 1.5 && tSpeechList.classList.contains('active')) {
             this._acc.stateValues.speechRate = 0.7;
             this._acc.textToSpeech('Reading Pace - Slow');
-            (step3[0] as HTMLElement).style.background='#ffffff';
+            (step3[0] as HTMLElement).style.background = '#ffffff';
         } else {
             this._acc.stateValues.speechRate = 1;
             this._acc.textToSpeech('Screen Reader - Disabled');
@@ -538,10 +538,10 @@ export class MenuInterface implements IMenuInterface {
             let allImages = document.querySelectorAll('[data-org-src]');
             allImages.forEach((i: HTMLMediaElement) => {
                 const screenshot = i.src;
-                if(i.getAttribute(state) === 'paused') {
+                if (i.getAttribute(state) === 'paused') {
                     i.setAttribute('src', i.getAttribute('data-org-src'));
                     i.setAttribute('data-org-src', screenshot);
-                    i.setAttribute(state,'playing');
+                    i.setAttribute(state, 'playing');
                 }
             });
 
@@ -576,9 +576,9 @@ export class MenuInterface implements IMenuInterface {
             let extensions = i.src.split('.');
             let ext = extensions[extensions.length - 1].toLowerCase();
             ext = ext.substring(0, 4);
-            if(ext === 'gif') {
+            if (ext === 'gif') {
                 let screenshot = i.getAttribute('data-org-src');
-                if(!screenshot) {
+                if (!screenshot) {
                     screenshot = await this._acc.createScreenShot(i.src);
                 }
                 i.setAttribute('data-org-src', i.src);
@@ -587,7 +587,7 @@ export class MenuInterface implements IMenuInterface {
             }
         });
         const allVideos = document.querySelectorAll('video[autoplay]');
-        if(allVideos) {
+        if (allVideos) {
             allVideos.forEach((v: HTMLMediaElement) => {
                 v.removeAttribute('autoplay');
                 v.pause();

@@ -1004,7 +1004,7 @@ export class Accessibility implements IAccessibility {
                             },
                             children: [
                                 {
-                                    type: "#text",
+                                    type: '#text',
                                     text: this.options.labels.screenReader
                                 },
                                 {
@@ -1171,18 +1171,18 @@ export class Accessibility implements IAccessibility {
         }, 1);
         this._common.deployedObjects.set('._access-menu', false);
         let closeBtn = document.querySelector('._access-menu ._menu-close-btn');
-        ['click','keyup'].forEach(evt => {
+        ['click', 'keyup'].forEach(evt => {
             closeBtn.addEventListener(evt, (e: Event | KeyboardEvent) => {
                 let et = e || window.event;
-                if((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== "Enter") return;
+                if ((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== 'Enter') return;
                 this.toggleMenu();
             }, false);
         });
         let resetBtn = document.querySelector('._access-menu ._menu-reset-btn');
-        ['click','keyup'].forEach(evt => {
+        ['click', 'keyup'].forEach(evt => {
             resetBtn.addEventListener(evt, (e: Event | KeyboardEvent) => {
                 let et = e || window.event;
-                if((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== "Enter") return;
+                if ((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== 'Enter') return;
                 this.resetAll();
             }, false);
         });
@@ -1193,7 +1193,7 @@ export class Accessibility implements IAccessibility {
     getVoices(): Promise<SpeechSynthesisVoice[]> {
         return new Promise((resolve => {
             let synth = window.speechSynthesis;
-            let id: NodeJS.Timer;
+            let id: ReturnType<typeof setInterval>;
 
             id = setInterval(() => {
                 if (synth.getVoices().length !== 0) {
@@ -1215,7 +1215,7 @@ export class Accessibility implements IAccessibility {
             }
         }
 
-        if(isLngSupported) {
+        if (isLngSupported) {
             let tts = this.common.jsonToHtml(
                 {
                     type: 'li',
@@ -1257,10 +1257,10 @@ export class Accessibility implements IAccessibility {
         let step3 = document.getElementsByClassName('screen-reader-wrapper-step-3');
 
         for (let i = 0; i < lis.length; i++) {
-            ['click','keyup'].forEach(evt =>
+            ['click', 'keyup'].forEach(evt =>
                 lis[i].addEventListener(evt, (e: Event | KeyboardEvent) => {
                     let evt = e || window.event;
-                    if((evt as KeyboardEvent).detail === 0 && (evt as KeyboardEvent).key !== 'Enter') return;
+                    if ((evt as KeyboardEvent).detail === 0 && (evt as KeyboardEvent).key !== 'Enter') return;
                     this.invoke((evt.target as HTMLElement).getAttribute('data-access-action'), evt.target as HTMLElement);
                 })
             );
@@ -1366,7 +1366,7 @@ export class Accessibility implements IAccessibility {
                     fSize = parseInt(fSize.replace('px', '')) + factor as any;
                     (all[i] as HTMLElement).style.fontSize = fSize + 'px';
                 }
-                if (this._stateValues.textToSpeech) this.textToSpeech(`Text Size ${isIncrease ?'Increased' : 'Decreased'}`);
+                if (this._stateValues.textToSpeech) this.textToSpeech(`Text Size ${isIncrease ? 'Increased' : 'Decreased'}`);
             }
         }
         else if (this.options.textEmlMode) {
@@ -1374,7 +1374,7 @@ export class Accessibility implements IAccessibility {
             if (fp.indexOf('%')) {
                 fp = parseInt(fp.replace('%', '')) as any;
                 this._html.style.fontSize = (fp + factor) + '%';
-                if (this._stateValues.textToSpeech) this.textToSpeech(`Text Size ${isIncrease ?'Increased' : 'Decreased'}`);
+                if (this._stateValues.textToSpeech) this.textToSpeech(`Text Size ${isIncrease ? 'Increased' : 'Decreased'}`);
             }
             else {
                 this._common.warn('Accessibility.textEmlMode, html element is not set in %.');
@@ -1413,7 +1413,7 @@ export class Accessibility implements IAccessibility {
                     const newPixel = parseInt(lHeight.replace('px', '')) + factor;
                     (all[i] as HTMLElement).style.lineHeight = `${newPixel}px`;
                 }
-                if (this._stateValues.textToSpeech) this.textToSpeech(`Line Height ${isIncrease ?'Increased' : 'Decreased'}`);
+                if (this._stateValues.textToSpeech) this.textToSpeech(`Line Height ${isIncrease ? 'Increased' : 'Decreased'}`);
             }
 
             else if (this.options.textEmlMode) {
@@ -1428,7 +1428,7 @@ export class Accessibility implements IAccessibility {
                     inPercent += factor;
                     (all[i] as HTMLElement).style.lineHeight = inPercent + '%';
                 }
-                if(this._stateValues.textToSpeech) this.textToSpeech(`Line height ${isIncrease ?'Increased' : 'Decreased'}`);
+                if (this._stateValues.textToSpeech) this.textToSpeech(`Line height ${isIncrease ? 'Increased' : 'Decreased'}`);
             }
         }
     }
@@ -1470,7 +1470,7 @@ export class Accessibility implements IAccessibility {
                     (all[i] as HTMLElement).style.letterSpacing = factor + 'px';
                 }
             }
-            if (this._stateValues.textToSpeech) this.textToSpeech(`Text Spacing ${isIncrease ?'Increased' : 'Decreased'}`);
+            if (this._stateValues.textToSpeech) this.textToSpeech(`Text Spacing ${isIncrease ? 'Increased' : 'Decreased'}`);
         }
         else {
             // wordSpacing
@@ -1487,7 +1487,7 @@ export class Accessibility implements IAccessibility {
             if (fSpacing2 && fSpacing2.sufix && !isNaN(fSpacing2.size * 1)) {
                 this._body.style.letterSpacing = ((fSpacing2.size * 1) + factor) + fSpacing2.sufix;
             }
-            if (this._stateValues.textToSpeech) this.textToSpeech(`Text Spacing ${isIncrease ?'Increased' : 'Decreased'}`);
+            if (this._stateValues.textToSpeech) this.textToSpeech(`Text Spacing ${isIncrease ? 'Increased' : 'Decreased'}`);
         }
     }
 
@@ -1651,7 +1651,7 @@ export class Accessibility implements IAccessibility {
             this.options.icon.tabIndex = 0;
             children.forEach(child => {
                 (child as HTMLElement).tabIndex = 0;
-                if(child.hasChildNodes()) {
+                if (child.hasChildNodes()) {
                     (child as HTMLElement).tabIndex = -1;
                     child.childNodes.forEach(li => {
                         (li as HTMLElement).tabIndex = 0;
@@ -1670,7 +1670,7 @@ export class Accessibility implements IAccessibility {
             this._menu.tabIndex = -1;
             children.forEach(child => {
                 (child as HTMLElement).tabIndex = 0;
-                if(child.hasChildNodes()) {
+                if (child.hasChildNodes()) {
                     (child as HTMLElement).tabIndex = -1;
                     child.childNodes.forEach(li => {
                         (li as HTMLElement).tabIndex = -1;
@@ -1704,7 +1704,7 @@ export class Accessibility implements IAccessibility {
         this._icon = this.injectIcon();
         this._menu = this.injectMenu();
         this.injectTts();
-        setTimeout(()=> {
+        setTimeout(() => {
             this.addListeners();
             this.disableUnsupportedModules();
         }, 10);
@@ -1731,10 +1731,10 @@ export class Accessibility implements IAccessibility {
             };
         }
 
-        ['click','keyup'].forEach(evt => {
+        ['click', 'keyup'].forEach(evt => {
             this._icon.addEventListener(evt, (e) => {
                 let et = e || window.event;
-                if((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== 'Enter') {
+                if ((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== 'Enter') {
                     return;
                 }
                 this.toggleMenu();
