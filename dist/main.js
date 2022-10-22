@@ -639,7 +639,7 @@ var Accessibility = /*#__PURE__*/function () {
               'tabIndex': '-1'
             },
             children: [{
-              type: "#text",
+              type: '#text',
               text: this.options.labels.screenReader
             }, {
               type: 'div',
@@ -791,7 +791,7 @@ var Accessibility = /*#__PURE__*/function () {
       ['click', 'keyup'].forEach(function (evt) {
         closeBtn.addEventListener(evt, function (e) {
           var et = e || window.event;
-          if (et.detail === 0 && et.key !== "Enter") return;
+          if (et.detail === 0 && et.key !== 'Enter') return;
 
           _this2.toggleMenu();
         }, false);
@@ -800,7 +800,7 @@ var Accessibility = /*#__PURE__*/function () {
       ['click', 'keyup'].forEach(function (evt) {
         resetBtn.addEventListener(evt, function (e) {
           var et = e || window.event;
-          if (et.detail === 0 && et.key !== "Enter") return;
+          if (et.detail === 0 && et.key !== 'Enter') return;
 
           _this2.resetAll();
         }, false);

@@ -1,8 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 
-const ROOT = path.resolve( __dirname, 'src' );
-const DESTINATION = path.resolve( __dirname, 'dist' );
+const ROOT = path.resolve(__dirname, 'src');
+const DESTINATION = path.resolve(__dirname, 'dist');
 
 module.exports = {
     mode: 'production',
@@ -57,7 +57,7 @@ module.exports = {
     devtool: 'cheap-module-source-map',
     devServer: {
         historyApiFallback: true,
-        static: path.resolve(__dirname, './src'),
+        static: path.resolve(__dirname),
         hot: true,
         port: 8080
     }
