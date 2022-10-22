@@ -854,27 +854,37 @@ export class Accessibility implements IAccessibility {
                         },
                         {
                             type: 'li',
-                            attrs: {
-                                'data-access-action': 'increaseLineHeight',
-                                'tabIndex': '-1'
-                            },
                             children: [
                                 {
-                                    type: '#text',
-                                    text: this.options.labels.increaseLineHeight
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'increaseLineHeight',
+                                        'tabIndex': '-1'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.increaseLineHeight
+                                        }
+                                    ]
                                 }
                             ]
                         },
                         {
                             type: 'li',
-                            attrs: {
-                                'data-access-action': 'decreaseLineHeight',
-                                'tabIndex': '-1'
-                            },
                             children: [
                                 {
-                                    type: '#text',
-                                    text: this.options.labels.decreaseLineHeight
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'decreaseLineHeight',
+                                        'tabIndex': '-1'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.decreaseLineHeight
+                                        }
+                                    ]
                                 }
                             ]
                         },
@@ -1170,6 +1180,7 @@ export class Accessibility implements IAccessibility {
             }
         }, 1);
         this._common.deployedObjects.set('._access-menu', false);
+
         let closeBtn = document.querySelector('._access-menu ._menu-close-btn');
         ['click', 'keyup'].forEach(evt => {
             closeBtn.addEventListener(evt, (e: Event | KeyboardEvent) => {
@@ -1178,6 +1189,7 @@ export class Accessibility implements IAccessibility {
                 this.toggleMenu();
             }, false);
         });
+
         let resetBtn = document.querySelector('._access-menu ._menu-reset-btn');
         ['click', 'keyup'].forEach(evt => {
             resetBtn.addEventListener(evt, (e: Event | KeyboardEvent) => {
@@ -1643,41 +1655,26 @@ export class Accessibility implements IAccessibility {
         }
     }
     toggleMenu() {
-        let children = this._menu.childNodes;
-        if (this._menu.classList.contains('close')) {
-            if (this.options.animations && this.options.animations.buttons)
-                setTimeout(() => { this._menu.querySelector('ul').classList.toggle('before-collapse'); }, 500);
-            setTimeout(() => { this._menu.classList.toggle('close'); }, 10);
-            this.options.icon.tabIndex = 0;
-            children.forEach(child => {
-                (child as HTMLElement).tabIndex = 0;
-                if (child.hasChildNodes()) {
-                    (child as HTMLElement).tabIndex = -1;
-                    child.childNodes.forEach(li => {
-                        (li as HTMLElement).tabIndex = 0;
-                    });
-                }
-            });
+        const shouldClose = this._menu.classList.contains('close');
+
+        if (this.options.animations && this.options.animations.buttons) {
+            setTimeout(() => {
+                this._menu.querySelector('ul').classList.toggle('before-collapse');
+            }, shouldClose ? 500 : 10);
         }
-        else {
-            if (this.options.animations && this.options.animations.buttons) {
-                setTimeout(() => { this._menu.classList.toggle('close'); }, 500);
-                setTimeout(() => { this._menu.querySelector('ul').classList.toggle('before-collapse'); }, 10);
+
+        this._menu.classList.toggle('close');
+
+        this.options.icon.tabIndex = shouldClose ? 0 : -1;
+        this._menu.childNodes.forEach(child => {
+            (child as HTMLElement).tabIndex = 0;
+            if (child.hasChildNodes()) {
+                (child as HTMLElement).tabIndex = -1;
+                child.childNodes.forEach(li => {
+                    (li as HTMLElement).tabIndex = shouldClose ? 0 : -1;
+                });
             }
-            else {
-                this._menu.classList.toggle('close');
-            }
-            this._menu.tabIndex = -1;
-            children.forEach(child => {
-                (child as HTMLElement).tabIndex = 0;
-                if (child.hasChildNodes()) {
-                    (child as HTMLElement).tabIndex = -1;
-                    child.childNodes.forEach(li => {
-                        (li as HTMLElement).tabIndex = -1;
-                    });
-                }
-            });
-        }
+        });
     }
 
     invoke(action: string, button: HTMLElement) {
@@ -1731,18 +1728,13 @@ export class Accessibility implements IAccessibility {
             };
         }
 
-        ['click', 'keyup'].forEach(evt => {
-            this._icon.addEventListener(evt, (e) => {
-                let et = e || window.event;
-                if ((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== 'Enter') {
-                    return;
-                }
-                this.toggleMenu();
-            }, false);
-        });
-
         this._icon.addEventListener('click', () => {
             this.toggleMenu();
+        }, false);
+        this._icon.addEventListener('keyup', (event) => {
+            if (event.key === 'Enter') {
+                this.toggleMenu();
+            }
         }, false);
         setTimeout(() => {
             this._icon.style.opacity = '1';
