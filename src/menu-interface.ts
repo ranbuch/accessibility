@@ -43,7 +43,9 @@ export class MenuInterface implements IMenuInterface {
             return;
         }
 
-
+        if (this._acc.stateValues.invertColors && this._acc.stateValues.textToSpeech) {
+            this._acc.textToSpeech("Colors Set To Normal");
+        }
         document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
         this._acc.stateValues.invertColors = !this._acc.stateValues.invertColors;
         this._acc.sessionState.invertColors = this._acc.stateValues.invertColors;
@@ -52,6 +54,10 @@ export class MenuInterface implements IMenuInterface {
             if (this._acc.stateValues.grayHues)
                 this._acc.menuInterface.grayHues(true);
             this._acc.html.style.filter = 'invert(1)';
+
+            if(this._acc.stateValues.textToSpeech) {
+                this._acc.textToSpeech("Colors Inverted");
+            }
         }
         else {
             this._acc.html.style.filter = '';
@@ -84,11 +90,17 @@ export class MenuInterface implements IMenuInterface {
         this._acc.stateValues.grayHues = !this._acc.stateValues.grayHues;
         this._acc.sessionState.grayHues = this._acc.stateValues.grayHues;
         this._acc.onChange(true);
+        if(this._acc.stateValues.textToSpeech && !this._acc.stateValues.grayHues) 
+            this._acc.textToSpeech("Gray Hues Disabled.");
         let val;
         if (this._acc.stateValues.grayHues) {
             val = 'grayscale(1)';
-            if (this._acc.stateValues.invertColors)
-                this._acc.menuInterface.invertColors(true);
+            if (this._acc.stateValues.invertColors){
+                this.invertColors(true);
+            }
+            if(this._acc.stateValues.textToSpeech) {
+                this._acc.textToSpeech("Gray Hues Enabled.");
+            }
         } else {
             val = '';
         }
@@ -128,8 +140,14 @@ export class MenuInterface implements IMenuInterface {
         `;
             this._acc.common.injectStyle(css, { className: className });
             this._acc.common.deployedObjects.set('.' + className, true);
+            if (this._acc.stateValues.textToSpeech) {
+                this._acc.textToSpeech("Links UnderLined");
+            }
         }
         else {
+            if (this._acc.stateValues.textToSpeech) {
+                this._acc.textToSpeech("Links UnderLine Removed");
+            }
             remove();
         }
     }
@@ -149,6 +167,8 @@ export class MenuInterface implements IMenuInterface {
         this._acc.sessionState.bigCursor = this._acc.stateValues.bigCursor;
         this._acc.onChange(true);
         this._acc.html.classList.toggle('_access_cursor');
+        if (this._acc.stateValues.textToSpeech && this._acc.stateValues.bigCursor) this._acc.textToSpeech("Big Cursor Enabled");
+        if (this._acc.stateValues.textToSpeech && !this._acc.stateValues.bigCursor) this._acc.textToSpeech("Big Cursor Disabled");
     }
 
     readingGuide(destroy: boolean) {
@@ -162,6 +182,7 @@ export class MenuInterface implements IMenuInterface {
             this._acc.onChange(true);
             document.body.removeEventListener('touchmove', this._acc.updateReadGuide, false);
             document.body.removeEventListener('mousemove', this._acc.updateReadGuide, false);
+            if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech("Reading Guide Enabled");
             return;
         }
         document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
@@ -181,11 +202,16 @@ export class MenuInterface implements IMenuInterface {
             }
             document.body.removeEventListener('touchmove', this._acc.updateReadGuide, false);
             document.body.removeEventListener('mousemove', this._acc.updateReadGuide, false);
+            if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech("Reading Guide Disabled");
         }
     }
 
     textToSpeech(destroy: boolean) {
         // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
+        let tSpeechList = document.querySelector('._access-menu [data-access-action="textToSpeech"]');
+        let step1 = document.getElementsByClassName('screen-reader-wrapper-step-1'); 
+        let step2 = document.getElementsByClassName('screen-reader-wrapper-step-2'); 
+        let step3 = document.getElementsByClassName('screen-reader-wrapper-step-3');
         this._acc.onChange(false);
         const className = '_access-text-to-speech';
         let remove = () => {
@@ -193,6 +219,7 @@ export class MenuInterface implements IMenuInterface {
             if (style) {
                 style.parentElement.removeChild(style);
                 document.removeEventListener('click', this.readBind, false);
+                document.removeEventListener('keyup', this.readBind, false);
                 this._acc.common.deployedObjects.remove('.' + className);
             }
             if (window.speechSynthesis)
@@ -202,22 +229,50 @@ export class MenuInterface implements IMenuInterface {
 
         if (destroy) {
             document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.remove('active');
+            (step1[0] as HTMLElement).style.background="#ffffff";
+            (step2[0] as HTMLElement).style.background="#ffffff";
+            (step3[0] as HTMLElement).style.background="#ffffff";
             this._acc.stateValues.textToSpeech = false;
+            window.speechSynthesis.cancel();
             return remove();
         }
 
-        document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.toggle('active');
+        if (this._acc.stateValues.speechRate === 1 && !tSpeechList.classList.contains('active')) {
+            this._acc.stateValues.textToSpeech = true;
+            this._acc.textToSpeech("Screen Reader enabled. Reading Pace - Normal");
+            tSpeechList.classList.add('active');
+            (step2[0] as HTMLElement).style.background="#000000";
+            (step3[0] as HTMLElement).style.background="#000000";
+        }
+        else if(this._acc.stateValues.speechRate === 1 && tSpeechList.classList.contains('active')) {
+            this._acc.stateValues.speechRate = 1.5;
+            this._acc.textToSpeech("Reading Pace - Fast");
+            (step2[0] as HTMLElement).style.background="#ffffff";
+        }
+        else if(this._acc.stateValues.speechRate === 1.5 && tSpeechList.classList.contains('active')) {
+            this._acc.stateValues.speechRate = 0.7;
+            this._acc.textToSpeech("Reading Pace - Slow");
+            (step3[0] as HTMLElement).style.background="#ffffff";
+        } else {
+            this._acc.stateValues.speechRate = 1;
+            this._acc.textToSpeech("Screen Reader - Disabled");
+            tSpeechList.classList.remove('active');
+            this._acc.stateValues.textToSpeech = false;
+        }
 
-        this._acc.stateValues.textToSpeech = !this._acc.stateValues.textToSpeech;
         if (this._acc.stateValues.textToSpeech) {
             let css = `
                 *:hover {
                     box-shadow: 2px 2px 2px rgba(180,180,180,0.7);
                 }
             `;
-            this._acc.common.injectStyle(css, { className: className });
-            this._acc.common.deployedObjects.set('.' + className, true);
-            document.addEventListener('click', this.readBind, false);
+            
+            if (tSpeechList.classList.contains('active') && this._acc.stateValues.speechRate === 1){
+                this._acc.common.injectStyle(css, { className: className });
+                this._acc.common.deployedObjects.set('.' + className, true);
+                document.addEventListener('click', this.readBind, false);
+                document.addEventListener('keyup', this.readBind, false);
+            }
         }
         else {
             remove();
@@ -250,8 +305,6 @@ export class MenuInterface implements IMenuInterface {
             this._acc.stateValues.speechToText = false;
             return remove();
         }
-
-        document.querySelector('._access-menu [data-access-action="speechToText"]').classList.toggle('active');
 
         this._acc.stateValues.speechToText = !this._acc.stateValues.speechToText;
         if (this._acc.stateValues.speechToText) {
@@ -461,6 +514,86 @@ export class MenuInterface implements IMenuInterface {
             if (cf.toggle)
                 button.classList.add('active');
             cf.method(cf, true);
+        }
+    }
+
+    increaseLineHeight() {
+        this._acc.alterLineHeight(true);
+    }
+
+    decreaseLineHeight() {
+        this._acc.alterLineHeight(false);
+    }
+    
+
+    pauseAnimations(destroy: boolean) {
+        const className = '_access-disable-animations', autoplayStopped = 'data-autoplay-stopped', state = 'state';
+        let remove = () => {
+            document.querySelector('._access-menu [data-access-action="pauseAnimations"]').classList.remove('active');
+            this._acc.stateValues.disableAnimations = false;
+            let style = document.querySelector('.' + className);
+            if (style) {
+                style.parentElement.removeChild(style);
+                this._acc.common.deployedObjects.remove('.' + className);
+            }
+            let allImages = document.querySelectorAll('[data-org-src]');
+            allImages.forEach((i: HTMLMediaElement) => {
+                const screenshot = i.src;
+                if(i.getAttribute(state) === 'paused') {
+                    i.setAttribute('src', i.getAttribute('data-org-src'));
+                    i.setAttribute('data-org-src', screenshot);
+                    i.setAttribute(state,'playing');
+                }
+            });
+
+
+            const allVideos = document.querySelectorAll(`video[${autoplayStopped}]`);
+            allVideos.forEach((v: HTMLMediaElement) => {
+                v.setAttribute('autoplay', '');
+                v.removeAttribute(autoplayStopped);
+                v.play();
+            });
+        };
+
+        if (destroy) {
+            remove();
+            return;
+        }
+        this._acc.stateValues.disableAnimations = !this._acc.stateValues.disableAnimations;
+        if (!this._acc.stateValues.disableAnimations) {
+            remove();
+            return;
+        }
+        document.querySelector('._access-menu [data-access-action="pauseAnimations"]').classList.add('active');
+        let css = `
+        body * {
+            animation-duration: 0.0ms !important;
+            transition-duration: 0.0ms !important;
+        }`;
+        this._acc.common.injectStyle(css, { className: className });
+        this._acc.common.deployedObjects.set('.' + className, true);
+        const allImages = document.querySelectorAll('img');
+        allImages.forEach(async i => {
+            let extensions = i.src.split('.');
+            let ext = extensions[extensions.length - 1].toLowerCase();
+            ext = ext.substring(0, 4);
+            if(ext === 'gif') {
+                let screenshot = i.getAttribute('data-org-src');
+                if(!screenshot) {
+                    screenshot = await this._acc.createScreenShot(i.src);
+                }
+                i.setAttribute('data-org-src', i.src);
+                i.setAttribute(state, 'paused');
+                i.src = screenshot;
+            }
+        });
+        const allVideos = document.querySelectorAll('video[autoplay]');
+        if(allVideos) {
+            allVideos.forEach((v: HTMLMediaElement) => {
+                v.removeAttribute('autoplay');
+                v.pause();
+                v.setAttribute(autoplayStopped, '');
+            });
         }
     }
 }
