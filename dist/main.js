@@ -13,6 +13,22 @@ var _storage = require("./storage");
 
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -77,6 +93,7 @@ var Accessibility = /*#__PURE__*/function () {
     this._sessionState = {
       textSize: 0,
       textSpace: 0,
+      lineHeight: 0,
       invertColors: false,
       grayHues: false,
       underlineLinks: false,
@@ -255,7 +272,11 @@ var Accessibility = /*#__PURE__*/function () {
           underlineLinks: 'underline links',
           textToSpeech: 'text to speech',
           speechToText: 'speech to text',
-          disableAnimations: 'disable animations'
+          disableAnimations: 'disable animations',
+          increaseLineHeight: 'increase line height',
+          decreaseLineHeight: 'decrease line height',
+          screenReader: 'screen reader',
+          pauseAnimations: 'pause animations'
         },
         textToSpeechLang: 'en-US',
         speechToTextLang: 'en-US',
@@ -282,7 +303,17 @@ var Accessibility = /*#__PURE__*/function () {
           persistent: true
         },
         iframeModals: [],
-        customFunctions: []
+        customFunctions: [],
+        statement: {
+          url: ''
+        },
+        feedback: {
+          url: ''
+        },
+        language: {
+          textToSpeechLang: '',
+          speechToTextLang: ''
+        }
       };
     }
   }, {
@@ -344,7 +375,7 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "injectCss",
     value: function injectCss() {
-      var css = "\n        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {\n            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {\n            width: 6px;\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {\n            background-color: #999999;\n        }\n        ._access-icon {\n            position: ".concat(this.options.icon.position.type, ";\n            background-repeat: no-repeat;\n            background-size: contain;\n            cursor: pointer;\n            opacity: 0;\n            transition-duration: .35s;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            ").concat(!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : '', "\n            transform: ").concat(!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(14deg)', ";\n        }\n        ._access-icon:hover {\n            ") + (this.options.animations.buttons && !this.options.icon.useEmojis ? "\n            box-shadow: 1px 1px 10px rgba(0,0,0,.9);\n            transform: scale(1.1);\n            " : '') + "\n        }\n        .circular._access-icon {\n            border-radius: 50%;\n            border: .5px solid white;\n        }\n        " + (this.options.animations.buttons && this.options.icon.circularBorder ? "\n        .circular._access-icon:hover {\n            border: 5px solid white;\n            border-style: double;\n            font-size: 35px!important;\n            vertical-align: middle;\n            padding-top: 2px;\n            text-align: center;\n        }\n        " : '') + "\n        .access_read_guide_bar{\n            box-sizing: border-box;\n            background: ".concat(this.options.guide.cBackground, ";\n            width: 100%!important;\n            min-width: 100%!important;\n            position: fixed!important;\n            height: ").concat(this.options.guide.height, " !important;\n            border: solid 3px ").concat(this.options.guide.cBorder, ";\n            border-radius: 5px;\n            top: 15px;\n            z-index: 2147483647;\n        }\n        .access-high-contrast *{\n            background-color: #000 !important;\n            background-image: none !important;\n            border-color: #fff !important;\n            -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n            color: #fff !important;\n            text-indent: 0 !important;\n            text-shadow: none !important;\n        }\n        ._access-menu {\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            position: fixed;\n            width: ").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n            height: ").concat(this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units, ";\n            transition-duration: .35s;\n            z-index: ").concat(this.options.icon.zIndex + 1, ";\n            opacity: 1;\n            background-color: #fff;\n            color: #000;\n            border-radius: 3px;\n            border: solid 1px #f1f0f1;\n            font-family: ").concat(this.options.menu.fontFamily, ";\n            min-width: 300px;\n            box-shadow: 0px 0px 1px #aaa;\n            max-height: 100vh;\n            ").concat(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '', "\n        }\n        ._access-menu.close {\n            z-index: -1;\n            width: 0;\n            opacity: 0;\n            background-color: transparent;\n        }\n        ._access-menu.bottom {\n            bottom: 0;\n        }\n        ._access-menu.top {\n            top: 0;\n        }\n        ._access-menu.left {\n            left: 0;\n        }\n        ._access-menu.close.left {\n            left: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu.right {\n            right: 0;\n        }\n        ._access-menu.close.right {\n            right: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu ._text-center {\n            text-align: center;\n        }\n        ._access-menu h3 {\n            font-size: 22px !important;\n            margin-top: 20px;\n            margin-bottom: 10px;\n            padding: 0;\n            color: rgba(0,0,0,.87);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ._menu-close-btn {\n            left: 5px;\n            color: #d63c3c;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {\n            ").concat(this.options.animations.buttons ? 'transform: rotate(180deg);' : '', "\n        }\n        ._access-menu ._menu-reset-btn {\n            right: 5px;\n            color: #4054b2;\n            transition: .3s ease;\n            transform: rotate(0deg);\n        }\n        ._access-menu ._menu-btn {\n            position: absolute;\n            top: 5px;\n            cursor: pointer;\n            font-size: 24px !important;\n            font-weight: bold;\n            background: transparent;\n            border: none;\n        }\n        ._access-menu ul {\n            padding: 0;\n            position: relative;\n            font-size: 18px !important;\n            margin: 0;\n            overflow: auto;\n            max-height: calc(100vh - 77px);\n        }\n        html._access_cursor * {\n            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;\n        }\n        ._access-menu ul li {\n            list-style-type: none;\n            -ms-user-select: none;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            user-select: none;\n            margin: 5px;\n            font-size: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            line-height: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            color: rgba(0,0,0,.6);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ul li button {\n            background: #f9f9f9;\n            padding: 10px 0;\n            width: 100%;\n            text-indent: 35px;\n            text-align: start;\n            position: relative;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n            border: solid 1px #f1f0f1;\n            border-radius: 4px;\n            cursor: pointer;\n        }\n        ._access-menu ul.before-collapse li button {\n            opacity: 0.05;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover {\n            background-color: #000;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover, ._access-menu ul li button.active:before, ._access-menu ul li button.active:hover:before {\n            color: #fff;\n        }\n        ._access-menu ul li button:hover {\n            color: rgba(0,0,0,.8);\n            background-color: #eaeaea;\n        }\n        ._access-menu ul li.not-supported {\n            display: none;\n        }\n        ._access-menu ul li button:before {\n            content: ' ';\n            ").concat(!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : '', "\n            text-rendering: optimizeLegibility;\n            font-feature-settings: \"liga\" 1;\n            font-style: normal;\n            text-transform: none;\n            line-height: ").concat(!this.options.icon.useEmojis ? '1' : '1.1', ";\n            font-size: ").concat(!this.options.icon.useEmojis ? '24px' : '20px', " !important;\n            width: 30px;\n            height: 30px;\n            display: inline-block;\n            overflow: hidden;\n            -webkit-font-smoothing: antialiased;\n            top: 7px;\n            left: 5px;\n            position: absolute;\n            color: rgba(0,0,0,.6);\n            direction: ltr;\n            text-indent: 0;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        @keyframes _access-dialog-backdrop {\n            0% {\n                background: rgba(0, 0, 0, 0.1);\n            }\n            100% {\n                background: rgba(0, 0, 0, 0.5);\n            }\n        }\n        dialog._access::backdrop, dialog._access {\n            transition-duration: 0.35s;\n            transition-timing-function: ease-in-out;\n        }\n        dialog._access:modal {\n            border-color: transparent;\n            border-width: 0;\n            padding: 0;\n        }\n        dialog._access[open]::backdrop {\n            background: rgba(0, 0, 0, 0.5);\n            animation: _access-dialog-backdrop 0.35s ease-in-out;\n        }\n        dialog._access.closing[open]::backdrop {\n            background: rgba(0, 0, 0, 0.1);\n        }\n        dialog._access.closing[open] {\n            opacity: 0;\n        }\n        ._access-menu ul li button svg path {\n            fill: rgba(0,0,0,.6);\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        ._access-menu ul li button:hover svg path {\n            fill: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active svg path {\n            fill: #fff;\n        }\n        ._access-menu ul li:hover button:before {\n            color: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active button:before {\n            color: #fff;\n        }\n        ._access-menu ul li button[data-access-action=\"increaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"increaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"invertColors\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"grayHues\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"underlineLinks\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_underlined"' : '"💯"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"bigCursor\"]:before {\n            /*content: 'touch_app';*/\n        }\n        ._access-menu ul li button[data-access-action=\"readingGuide\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"textToSpeech\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"speechToText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"mic"' : '"🎤"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"disableAnimations\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"iframeModals\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"policy"' : '"⚖️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"customFunctions\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"', ";\n        }");
+      var css = "\n        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {\n            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {\n            width: 6px;\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {\n            background-color: #999999;\n        }\n        ._access-icon {\n            position: ".concat(this.options.icon.position.type, ";\n            background-repeat: no-repeat;\n            background-size: contain;\n            cursor: pointer;\n            opacity: 0;\n            transition-duration: .35s;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            ").concat(!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : '', "\n            transform: ").concat(!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(14deg)', ";\n        }\n        ._access-icon:hover {\n            ") + (this.options.animations.buttons && !this.options.icon.useEmojis ? "\n            box-shadow: 1px 1px 10px rgba(0,0,0,.9);\n            transform: scale(1.1);\n            " : '') + "\n        }\n        .circular._access-icon {\n            border-radius: 50%;\n            border: .5px solid white;\n        }\n        " + (this.options.animations.buttons && this.options.icon.circularBorder ? "\n        .circular._access-icon:hover {\n            border: 5px solid white;\n            border-style: double;\n            font-size: 35px!important;\n            vertical-align: middle;\n            padding-top: 2px;\n            text-align: center;\n        }\n        " : '') + "\n        .access_read_guide_bar{\n            box-sizing: border-box;\n            background: ".concat(this.options.guide.cBackground, ";\n            width: 100%!important;\n            min-width: 100%!important;\n            position: fixed!important;\n            height: ").concat(this.options.guide.height, " !important;\n            border: solid 3px ").concat(this.options.guide.cBorder, ";\n            border-radius: 5px;\n            top: 15px;\n            z-index: 2147483647;\n        }\n        .access-high-contrast *{\n            background-color: #000 !important;\n            background-image: none !important;\n            border-color: #fff !important;\n            -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n            color: #fff !important;\n            text-indent: 0 !important;\n            text-shadow: none !important;\n        }\n        ._access-menu {\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            position: fixed;\n            width: ").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n            height: ").concat(this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units, ";\n            transition-duration: .35s;\n            z-index: ").concat(this.options.icon.zIndex + 1, ";\n            opacity: 1;\n            background-color: #fff;\n            color: #000;\n            border-radius: 3px;\n            border: solid 1px #f1f0f1;\n            font-family: ").concat(this.options.menu.fontFamily, ";\n            min-width: 300px;\n            box-shadow: 0px 0px 1px #aaa;\n            max-height: 100vh;\n            ").concat(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '', "\n        }\n        ._access-menu.close {\n            z-index: -1;\n            width: 0;\n            opacity: 0;\n            background-color: transparent;\n        }\n        ._access-menu.bottom {\n            bottom: 0;\n        }\n        ._access-menu.top {\n            top: 0;\n        }\n        ._access-menu.left {\n            left: 0;\n        }\n        ._access-menu.close.left {\n            left: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu.right {\n            right: 0;\n        }\n        ._access-menu.close.right {\n            right: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu ._text-center {\n            font-size: 22px !important;\n            font-weight: bold;\n            margin-top: 20px;\n            margin-bottom: 10px;\n            padding: 0;\n            color: rgba(0,0,0,.87);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n            text-align: center;\n        }\n        ._access-menu ._menu-close-btn {\n            left: 5px;\n            color: #d63c3c;\n            transition: .3s ease;\n            transform: rotate(0deg);\n            font-style: normal !important;\n        }\n        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {\n            ").concat(this.options.animations.buttons ? 'transform: rotate(180deg);' : '', "\n        }\n        ._access-menu ._menu-reset-btn {\n            right: 5px;\n            color: #4054b2;\n            transition: .3s ease;\n            transform: rotate(0deg);\n            font-style: normal !important;\n        }\n        ._access-menu ._menu-btn {\n            position: absolute;\n            top: 5px;\n            cursor: pointer;\n            font-size: 24px !important;\n            font-weight: bold;\n            background: transparent;\n            border: none;\n        }\n        ._access-menu ul {\n            padding: 0;\n            position: relative;\n            font-size: 18px !important;\n            margin: 0;\n            overflow: auto;\n            max-height: calc(100vh - 77px);\n        }\n        html._access_cursor * {\n            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;\n        }\n        .texting {\n            height:50px;\n            text-align: center;\n            border: solid 2.4px #f1f0f1;\n            border-radius: 4px;\n            width: 100%;\n            display: inline-block;\n        }\n        .screen-reader-wrapper {\n            margin-top: 13px;\n            margin-left: 10px;\n            margin-right: 10px;\n        }\n        .screen-reader-wrapper-step-1 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        .screen-reader-wrapper-step-2 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        .screen-reader-wrapper-step-3 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        ._access-menu ul li {\n            list-style-type: none;\n            -ms-user-select: none;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            user-select: none;\n            margin: 5px;\n            font-size: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            line-height: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            color: rgba(0,0,0,.6);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ul li button {\n            background: #f9f9f9;\n            padding: 10px 0;\n            width: 100%;\n            text-indent: 35px;\n            text-align: start;\n            position: relative;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n            border: solid 1px #f1f0f1;\n            border-radius: 4px;\n            cursor: pointer;\n        }\n        ._access-menu ul li.position {\n            display: inline-block;\n            width: auto;\n        }\n        ._access-menu ul.before-collapse li button {\n            opacity: 0.05;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover {\n            background-color: #000;\n        }\n        ._access-menu div.active {\n            color: #fff;\n            background-color: #000;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover, ._access-menu ul li button.active:before, ._access-menu ul li button.active:hover:before {\n            color: #fff;\n        }\n        ._access-menu ul li button:hover {\n            color: rgba(0,0,0,.8);\n            background-color: #eaeaea;\n        }\n        ._access-menu ul li.not-supported {\n            display: none;\n        }\n        ._access-menu ul li button:before {\n            content: ' ';\n            ").concat(!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : '', "\n            text-rendering: optimizeLegibility;\n            font-feature-settings: \"liga\" 1;\n            font-style: normal;\n            text-transform: none;\n            line-height: ").concat(!this.options.icon.useEmojis ? '1' : '1.1', ";\n            font-size: ").concat(!this.options.icon.useEmojis ? '24px' : '20px', " !important;\n            width: 30px;\n            height: 30px;\n            display: inline-block;\n            overflow: hidden;\n            -webkit-font-smoothing: antialiased;\n            top: 7px;\n            left: 5px;\n            position: absolute;\n            color: rgba(0,0,0,.6);\n            direction: ltr;\n            text-indent: 0;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        @keyframes _access-dialog-backdrop {\n            0% {\n                background: rgba(0, 0, 0, 0.1);\n            }\n            100% {\n                background: rgba(0, 0, 0, 0.5);\n            }\n        }\n        dialog._access::backdrop, dialog._access {\n            transition-duration: 0.35s;\n            transition-timing-function: ease-in-out;\n        }\n        dialog._access:modal {\n            border-color: transparent;\n            border-width: 0;\n            padding: 0;\n        }\n        dialog._access[open]::backdrop {\n            background: rgba(0, 0, 0, 0.5);\n            animation: _access-dialog-backdrop 0.35s ease-in-out;\n        }\n        dialog._access.closing[open]::backdrop {\n            background: rgba(0, 0, 0, 0.1);\n        }\n        dialog._access.closing[open] {\n            opacity: 0;\n        }\n        ._access-menu ul li button svg path {\n            fill: rgba(0,0,0,.6);\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        ._access-menu ul li button:hover svg path {\n            fill: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active svg path {\n            fill: #fff;\n        }\n        ._access-menu ul li:hover button:before {\n            color: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active button:before {\n            color: #fff;\n        }\n        ._access-menu ul li button[data-access-action=\"increaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"increaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"invertColors\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"grayHues\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"underlineLinks\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_underlined"' : '"🔗"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"bigCursor\"]:before {\n            /*content: 'touch_app';*/\n        }\n        ._access-menu ul li button[data-access-action=\"readingGuide\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"textToSpeech\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"speechToText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"mic"' : '"🎤"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"disableAnimations\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"iframeModals\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"policy"' : '"⚖️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"customFunctions\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"', ";\n        }\n        ._access-menu ul li[data-access-action=\"increaseLineHeight\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"', ";\n        }\n        ._access-menu ul li[data-access-action=\"decreaseLineHeight\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"', ";\n        }\n        ._access-menu ul li[data-access-action=\"pauseAnimations\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"pause"' : '"⏯️"', ";\n        }");
       var className = '_access-main-css';
 
       this._common.injectStyle(css, {
@@ -375,7 +406,8 @@ var Accessibility = /*#__PURE__*/function () {
         attrs: {
           'class': className,
           'style': iStyle,
-          'title': this.options.labels.menuTitle
+          'title': this.options.labels.menuTitle,
+          'tabIndex': 0
         },
         children: [{
           type: '#text',
@@ -407,9 +439,10 @@ var Accessibility = /*#__PURE__*/function () {
           'class': '_access-menu close _access'
         },
         children: [{
-          type: 'h3',
+          type: 'p',
           attrs: {
-            'class': '_text-center'
+            'class': '_text-center',
+            'role': 'presentation'
           },
           children: [{
             type: 'button',
@@ -445,7 +478,8 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'increaseText'
+                'data-access-action': 'increaseText',
+                'tabIndex': '-1'
               },
               children: [{
                 type: '#text',
@@ -457,7 +491,8 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'decreaseText'
+                'data-access-action': 'decreaseText',
+                'tabIndex': '-1'
               },
               children: [{
                 type: '#text',
@@ -469,7 +504,8 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'increaseTextSpacing'
+                'data-access-action': 'increaseTextSpacing',
+                'tabIndex': '-1'
               },
               children: [{
                 type: '#text',
@@ -481,7 +517,8 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'decreaseTextSpacing'
+                'data-access-action': 'decreaseTextSpacing',
+                'tabIndex': '-1'
               },
               children: [{
                 type: '#text',
@@ -490,11 +527,32 @@ var Accessibility = /*#__PURE__*/function () {
             }]
           }, {
             type: 'li',
+            attrs: {
+              'data-access-action': 'increaseLineHeight',
+              'tabIndex': '-1'
+            },
+            children: [{
+              type: '#text',
+              text: this.options.labels.increaseLineHeight
+            }]
+          }, {
+            type: 'li',
+            attrs: {
+              'data-access-action': 'decreaseLineHeight',
+              'tabIndex': '-1'
+            },
+            children: [{
+              type: '#text',
+              text: this.options.labels.decreaseLineHeight
+            }]
+          }, {
+            type: 'li',
             children: [{
               type: 'button',
               attrs: {
                 'data-access-action': 'invertColors',
-                'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
+                'title': this.parseKeys(this.options.hotkeys.keys.invertColors),
+                'tabIndex': '-1'
               },
               children: [{
                 type: '#text',
@@ -507,7 +565,8 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'grayHues',
-                'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
+                'title': this.parseKeys(this.options.hotkeys.keys.grayHues),
+                'tabIndex': '-1'
               },
               children: [{
                 type: '#text',
@@ -520,7 +579,8 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'underlineLinks',
-                'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
+                'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks),
+                'tabIndex': '-1'
               },
               children: [{
                 type: '#text',
@@ -533,7 +593,8 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'bigCursor',
-                'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
+                'title': this.parseKeys(this.options.hotkeys.keys.bigCursor),
+                'tabIndex': '-1'
               },
               children: [{
                 type: 'div',
@@ -551,7 +612,8 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'readingGuide',
-                'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
+                'title': this.parseKeys(this.options.hotkeys.keys.readingGuide),
+                'tabIndex': '-1'
               },
               children: [{
                 type: '#text',
@@ -563,15 +625,53 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'textToSpeech'
+                'data-access-action': 'pauseAnimations'
               },
               children: [{
                 type: '#text',
-                text: this.options.labels.textToSpeech
+                text: this.options.labels.pauseAnimations
               }]
             }]
           }, {
             type: 'li',
+            attrs: {
+              'data-access-action': 'textToSpeech',
+              'tabIndex': '-1'
+            },
+            children: [{
+              type: "#text",
+              text: this.options.labels.screenReader
+            }, {
+              type: 'div',
+              attrs: {
+                'class': 'screen-reader-wrapper'
+              },
+              children: [{
+                type: 'div',
+                attrs: {
+                  'class': 'screen-reader-wrapper-step-1',
+                  'tabIndex': '-1'
+                }
+              }, {
+                type: 'div',
+                attrs: {
+                  'class': 'screen-reader-wrapper-step-2',
+                  'tabIndex': '-1'
+                }
+              }, {
+                type: 'div',
+                attrs: {
+                  'class': 'screen-reader-wrapper-step-3',
+                  'tabIndex': '-1'
+                }
+              }]
+            }]
+          }, {
+            type: 'li',
+            attrs: {
+              'data-access-action': 'speechToText',
+              'tabIndex': '-1'
+            },
             children: [{
               type: 'button',
               attrs: {
@@ -688,29 +788,148 @@ var Accessibility = /*#__PURE__*/function () {
       this._common.deployedObjects.set('._access-menu', false);
 
       var closeBtn = document.querySelector('._access-menu ._menu-close-btn');
-      closeBtn.addEventListener('click', function () {
-        _this2.toggleMenu();
-      }, false);
+      ['click', 'keyup'].forEach(function (evt) {
+        closeBtn.addEventListener(evt, function (e) {
+          var et = e || window.event;
+          if (et.detail === 0 && et.key !== "Enter") return;
+
+          _this2.toggleMenu();
+        }, false);
+      });
       var resetBtn = document.querySelector('._access-menu ._menu-reset-btn');
-      resetBtn.addEventListener('click', function () {
-        _this2.resetAll();
-      }, false);
+      ['click', 'keyup'].forEach(function (evt) {
+        resetBtn.addEventListener(evt, function (e) {
+          var et = e || window.event;
+          if (et.detail === 0 && et.key !== "Enter") return;
+
+          _this2.resetAll();
+        }, false);
+      });
       return menuElem;
     }
+  }, {
+    key: "getVoices",
+    value: function getVoices() {
+      return new Promise(function (resolve) {
+        var synth = window.speechSynthesis;
+        var id;
+        id = setInterval(function () {
+          if (synth.getVoices().length !== 0) {
+            resolve(synth.getVoices());
+            clearInterval(id);
+          }
+        }, 10);
+      });
+    }
+  }, {
+    key: "injectTts",
+    value: function () {
+      var _injectTts = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var voices, isLngSupported, i, tts, sts, ul;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return this.getVoices();
+
+              case 2:
+                voices = _context.sent;
+                isLngSupported = false;
+                i = 0;
+
+              case 5:
+                if (!(i < voices.length)) {
+                  _context.next = 12;
+                  break;
+                }
+
+                if (!(voices[i].lang === this.options.language.textToSpeechLang)) {
+                  _context.next = 9;
+                  break;
+                }
+
+                isLngSupported = true;
+                return _context.abrupt("break", 12);
+
+              case 9:
+                i++;
+                _context.next = 5;
+                break;
+
+              case 12:
+                if (isLngSupported) {
+                  tts = this.common.jsonToHtml({
+                    type: 'li',
+                    attrs: {
+                      'data-access-action': 'textToSpeech'
+                    },
+                    children: [{
+                      type: '#text',
+                      text: this.options.labels.textToSpeech
+                    }]
+                  });
+                  sts = this.common.jsonToHtml({
+                    type: 'li',
+                    attrs: {
+                      'data-access-action': 'speechToText'
+                    },
+                    children: [{
+                      type: '#text',
+                      text: this.options.labels.speechToText
+                    }]
+                  });
+                  ul = document.querySelector('._access-menu ul');
+                  ul.appendChild(tts);
+                  ul.appendChild(sts);
+                }
+
+              case 13:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function injectTts() {
+        return _injectTts.apply(this, arguments);
+      }
+
+      return injectTts;
+    }()
   }, {
     key: "addListeners",
     value: function addListeners() {
       var _this3 = this;
 
       var lis = document.querySelectorAll('._access-menu ul li');
+      var step1 = document.getElementsByClassName('screen-reader-wrapper-step-1');
+      var step2 = document.getElementsByClassName('screen-reader-wrapper-step-2');
+      var step3 = document.getElementsByClassName('screen-reader-wrapper-step-3');
+
+      var _loop = function _loop(i) {
+        ['click', 'keyup'].forEach(function (evt) {
+          return lis[i].addEventListener(evt, function (e) {
+            var evt = e || window.event;
+            if (evt.detail === 0 && evt.key !== 'Enter') return;
+
+            _this3.invoke(evt.target.getAttribute('data-access-action'), evt.target);
+          });
+        });
+      };
 
       for (var i = 0; i < lis.length; i++) {
-        lis[i].addEventListener('click', function (e) {
+        _loop(i);
+      }
+
+      [].concat(_toConsumableArray(Array.from(step1)), _toConsumableArray(Array.from(step2)), _toConsumableArray(Array.from(step3))).forEach(function (el) {
+        return el.addEventListener('click', function (e) {
           var evt = e || window.event;
 
-          _this3.invoke(evt.target.getAttribute('data-access-action'), evt.target);
+          _this3.invoke(evt.target.parentElement.parentElement.getAttribute('data-access-action'), evt.target);
         }, false);
-      }
+      });
     }
   }, {
     key: "disableUnsupportedModules",
@@ -739,8 +958,10 @@ var Accessibility = /*#__PURE__*/function () {
       this.menuInterface.invertColors(true);
       this.menuInterface.bigCursor(true);
       this.menuInterface.readingGuide(true);
+      this.menuInterface.pauseAnimations(true);
       this.resetTextSize();
       this.resetTextSpace();
+      this.resetLineHeight();
     }
   }, {
     key: "resetTextSize",
@@ -755,6 +976,20 @@ var Accessibility = /*#__PURE__*/function () {
       }
 
       this._sessionState.textSize = 0;
+      this.onChange(true);
+    }
+  }, {
+    key: "resetLineHeight",
+    value: function resetLineHeight() {
+      this.resetIfDefined(this._stateValues.body.lineHeight, this.body.style, 'lineHeight');
+      var all = document.querySelectorAll('[data-init-line-height]');
+
+      for (var i = 0; i < all.length; i++) {
+        all[i].style.lineHeight = all[i].getAttribute('data-init-line-height');
+        all[i].removeAttribute('data-init-line-height');
+      }
+
+      this.sessionState.lineHeight = 0;
       this.onChange(true);
     }
   }, {
@@ -784,7 +1019,7 @@ var Accessibility = /*#__PURE__*/function () {
     value: function alterTextSize(isIncrease) {
       this._sessionState.textSize += isIncrease ? 1 : -1;
       this.onChange(true);
-      var factor = 2;
+      var factor = 12.5;
       if (!isIncrease) factor *= -1;
 
       if (this.options.textPixelMode) {
@@ -798,6 +1033,8 @@ var Accessibility = /*#__PURE__*/function () {
             fSize = parseInt(fSize.replace('px', '')) + factor;
             all[i].style.fontSize = fSize + 'px';
           }
+
+          if (this._stateValues.textToSpeech) this.textToSpeech("Text Size ".concat(isIncrease ? 'Increased' : 'Decreased'));
         }
       } else if (this.options.textEmlMode) {
         var fp = this._html.style.fontSize;
@@ -805,6 +1042,7 @@ var Accessibility = /*#__PURE__*/function () {
         if (fp.indexOf('%')) {
           fp = parseInt(fp.replace('%', ''));
           this._html.style.fontSize = fp + factor + '%';
+          if (this._stateValues.textToSpeech) this.textToSpeech("Text Size ".concat(isIncrease ? 'Increased' : 'Decreased'));
         } else {
           this._common.warn('Accessibility.textEmlMode, html element is not set in %.');
         }
@@ -819,11 +1057,55 @@ var Accessibility = /*#__PURE__*/function () {
       }
     }
   }, {
+    key: "alterLineHeight",
+    value: function alterLineHeight(isIncrease) {
+      this.sessionState.lineHeight += isIncrease ? 1 : -1;
+      this.onChange(true);
+      var factor = 2;
+      if (!isIncrease) factor *= -1;
+      var all = document.querySelectorAll('*:not(._access)');
+      var exclude = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
+
+      for (var i = 0; i < all.length; i++) {
+        if (exclude.includes(all[i])) {
+          continue;
+        }
+
+        if (this.options.textPixelMode) {
+          var lHeight = getComputedStyle(all[i]).lineHeight;
+
+          if (lHeight && lHeight.indexOf('px') > -1) {
+            if (!all[i].getAttribute('data-init-line-height')) all[i].setAttribute('data-init-line-height', lHeight);
+            var newPixel = parseInt(lHeight.replace('px', '')) + factor;
+            all[i].style.lineHeight = "".concat(newPixel, "px");
+          }
+
+          if (this._stateValues.textToSpeech) this.textToSpeech("Line Height ".concat(isIncrease ? 'Increased' : 'Decreased'));
+        } else if (this.options.textEmlMode) {
+          var lTextSize = getComputedStyle(all[i]).fontSize;
+          var _lHeight = getComputedStyle(all[i]).lineHeight;
+
+          var lHeight2 = _lHeight.replace('px', '');
+
+          var lTextSize2 = lTextSize.replace('px', '');
+          var inPercent = parseInt(lHeight2) * 100 / parseInt(lTextSize2);
+
+          if (_lHeight && _lHeight.indexOf('px') > -1) {
+            if (!all[i].getAttribute('data-init-line-height')) all[i].setAttribute('data-init-line-height', inPercent + '%');
+            inPercent += factor;
+            all[i].style.lineHeight = inPercent + '%';
+          }
+
+          if (this._stateValues.textToSpeech) this.textToSpeech("Line height ".concat(isIncrease ? 'Increased' : 'Decreased'));
+        }
+      }
+    }
+  }, {
     key: "alterTextSpace",
     value: function alterTextSpace(isIncrease) {
       this._sessionState.textSpace += isIncrease ? 1 : -1;
       this.onChange(true);
-      var factor = 1;
+      var factor = 2;
       if (!isIncrease) factor *= -1;
 
       if (this.options.textPixelMode) {
@@ -859,6 +1141,8 @@ var Accessibility = /*#__PURE__*/function () {
             all[i].style.letterSpacing = factor + 'px';
           }
         }
+
+        if (this._stateValues.textToSpeech) this.textToSpeech("Text Spacing ".concat(isIncrease ? 'Increased' : 'Decreased'));
       } else {
         // wordSpacing
         var _fSpacing = this._common.getFormattedDim(getComputedStyle(this._body).wordSpacing);
@@ -877,6 +1161,8 @@ var Accessibility = /*#__PURE__*/function () {
         if (_fSpacing2 && _fSpacing2.sufix && !isNaN(_fSpacing2.size * 1)) {
           this._body.style.letterSpacing = _fSpacing2.size * 1 + factor + _fSpacing2.sufix;
         }
+
+        if (this._stateValues.textToSpeech) this.textToSpeech("Text Spacing ".concat(isIncrease ? 'Increased' : 'Decreased'));
       }
     }
   }, {
@@ -925,7 +1211,7 @@ var Accessibility = /*#__PURE__*/function () {
           }
         };
 
-        this._recognition.lang = this.options.speechToTextLang;
+        this._recognition.lang = this.options.language.speechToTextLang;
 
         this._recognition.start();
       }
@@ -938,7 +1224,9 @@ var Accessibility = /*#__PURE__*/function () {
       var windowAny = window;
       if (!windowAny.SpeechSynthesisUtterance || !windowAny.speechSynthesis) return;
       var msg = new windowAny.SpeechSynthesisUtterance(text);
+      msg.lang = this.options.language.textToSpeechLang;
       msg.lang = this.options.textToSpeechLang;
+      msg.rate = this._stateValues.speechRate;
 
       msg.onend = function () {
         _this5._isReading = false;
@@ -959,8 +1247,60 @@ var Accessibility = /*#__PURE__*/function () {
         this._common.warn('text to speech language not supported!');
       }
 
+      if (window.speechSynthesis.pending || window.speechSynthesis.speaking) {
+        window.speechSynthesis.pause;
+        window.speechSynthesis.cancel();
+      }
+
       window.speechSynthesis.speak(msg);
       this._isReading = true;
+    }
+  }, {
+    key: "createScreenShot",
+    value: function createScreenShot(url) {
+      return new Promise(function (resolve) {
+        var canvas = document.createElement('canvas');
+        var img = new Image();
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.opacity = '0';
+        canvas.style.transform = 'scale(0.05)';
+        img.crossOrigin = 'anonymous';
+        img.onload = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+          var ctx, res;
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  document.body.appendChild(canvas);
+                  ctx = canvas.getContext('2d');
+                  canvas.width = img.naturalWidth;
+                  canvas.height = img.naturalHeight;
+                  ctx.clearRect(0, 0, canvas.width, canvas.height);
+                  ctx.drawImage(img, 0, 0);
+
+                  try {
+                    res = canvas.toDataURL('image/png');
+                  } catch (e) {}
+
+                  resolve(res);
+                  canvas.remove();
+
+                case 9:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2);
+        }));
+
+        img.onerror = function () {
+          resolve(_common.Common.DEFAULT_PIXEL);
+        };
+
+        img.src = url;
+      });
     }
   }, {
     key: "listen",
@@ -980,6 +1320,17 @@ var Accessibility = /*#__PURE__*/function () {
           e.stopPropagation();
         }
       } catch (ex) {}
+
+      var allContent = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
+
+      for (var key in allContent) {
+        if (allContent[key] === window.event.target && e instanceof MouseEvent) return;
+      }
+
+      if (e instanceof KeyboardEvent && (e.shiftKey && e.key === 'Tab' || e.key === 'Tab')) {
+        this.textToSpeech(window.event.target.innerText);
+        return;
+      }
 
       if (this._isReading) {
         window.speechSynthesis.cancel();
@@ -1009,6 +1360,8 @@ var Accessibility = /*#__PURE__*/function () {
     value: function toggleMenu() {
       var _this6 = this;
 
+      var children = this._menu.childNodes;
+
       if (this._menu.classList.contains('close')) {
         if (this.options.animations && this.options.animations.buttons) setTimeout(function () {
           _this6._menu.querySelector('ul').classList.toggle('before-collapse');
@@ -1016,6 +1369,17 @@ var Accessibility = /*#__PURE__*/function () {
         setTimeout(function () {
           _this6._menu.classList.toggle('close');
         }, 10);
+        this.options.icon.tabIndex = 0;
+        children.forEach(function (child) {
+          child.tabIndex = 0;
+
+          if (child.hasChildNodes()) {
+            child.tabIndex = -1;
+            child.childNodes.forEach(function (li) {
+              li.tabIndex = 0;
+            });
+          }
+        });
       } else {
         if (this.options.animations && this.options.animations.buttons) {
           setTimeout(function () {
@@ -1027,6 +1391,18 @@ var Accessibility = /*#__PURE__*/function () {
         } else {
           this._menu.classList.toggle('close');
         }
+
+        this._menu.tabIndex = -1;
+        children.forEach(function (child) {
+          child.tabIndex = 0;
+
+          if (child.hasChildNodes()) {
+            child.tabIndex = -1;
+            child.childNodes.forEach(function (li) {
+              li.tabIndex = -1;
+            });
+          }
+        });
       }
     }
   }, {
@@ -1044,6 +1420,8 @@ var Accessibility = /*#__PURE__*/function () {
         textToSpeech: false,
         bigCursor: false,
         readingGuide: false,
+        pauseAnimations: false,
+        speechRate: 1,
         body: {},
         html: {}
       };
@@ -1053,8 +1431,12 @@ var Accessibility = /*#__PURE__*/function () {
       this.injectCss();
       this._icon = this.injectIcon();
       this._menu = this.injectMenu();
-      this.addListeners();
-      this.disableUnsupportedModules();
+      this.injectTts();
+      setTimeout(function () {
+        _this7.addListeners();
+
+        _this7.disableUnsupportedModules();
+      }, 10);
 
       if (this.options.hotkeys.enabled) {
         document.onkeydown = function (e) {
@@ -1081,6 +1463,18 @@ var Accessibility = /*#__PURE__*/function () {
           }
         };
       }
+
+      ['click', 'keyup'].forEach(function (evt) {
+        _this7._icon.addEventListener(evt, function (e) {
+          var et = e || window.event;
+
+          if (et.detail === 0 && et.key !== 'Enter') {
+            return;
+          }
+
+          _this7.toggleMenu();
+        }, false);
+      });
 
       this._icon.addEventListener('click', function () {
         _this7.toggleMenu();
@@ -1163,6 +1557,20 @@ var Accessibility = /*#__PURE__*/function () {
           } else {
             while (textSpace++) {
               this.alterTextSpace(false);
+            }
+          }
+        }
+
+        if (sessionState.lineHeight) {
+          var lineHeight = sessionState.lineHeight;
+
+          if (lineHeight > 0) {
+            while (lineHeight--) {
+              this.alterLineHeight(true);
+            }
+          } else {
+            while (lineHeight--) {
+              this.alterLineHeight(false);
             }
           }
         }
