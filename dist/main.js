@@ -527,23 +527,29 @@ var Accessibility = /*#__PURE__*/function () {
             }]
           }, {
             type: 'li',
-            attrs: {
-              'data-access-action': 'increaseLineHeight',
-              'tabIndex': '-1'
-            },
             children: [{
-              type: '#text',
-              text: this.options.labels.increaseLineHeight
+              type: 'button',
+              attrs: {
+                'data-access-action': 'increaseLineHeight',
+                'tabIndex': '-1'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.increaseLineHeight
+              }]
             }]
           }, {
             type: 'li',
-            attrs: {
-              'data-access-action': 'decreaseLineHeight',
-              'tabIndex': '-1'
-            },
             children: [{
-              type: '#text',
-              text: this.options.labels.decreaseLineHeight
+              type: 'button',
+              attrs: {
+                'data-access-action': 'decreaseLineHeight',
+                'tabIndex': '-1'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.decreaseLineHeight
+              }]
             }]
           }, {
             type: 'li',
@@ -634,13 +640,15 @@ var Accessibility = /*#__PURE__*/function () {
             }]
           }, {
             type: 'li',
-            attrs: {
-              'data-access-action': 'textToSpeech',
-              'tabIndex': '-1'
-            },
             children: [{
-              type: '#text',
-              text: this.options.labels.screenReader
+              type: 'button',
+              attrs: {
+                'data-access-action': 'textToSpeech'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.screenReader
+              }]
             }, {
               type: 'div',
               attrs: {
