@@ -800,6 +800,7 @@ var Accessibility = /*#__PURE__*/function () {
         closeBtn.addEventListener(evt, function (e) {
           var et = e || window.event;
           if (et.detail === 0 && et.key !== 'Enter') return;
+          console.log('close with close-btn');
 
           _this2.toggleMenu();
         }, false);
@@ -1350,6 +1351,7 @@ var Accessibility = /*#__PURE__*/function () {
     value: function runHotkey(name) {
       switch (name) {
         case 'toggleMenu':
+          console.log('close with hotkey');
           this.toggleMenu();
           break;
 
@@ -1368,50 +1370,28 @@ var Accessibility = /*#__PURE__*/function () {
     value: function toggleMenu() {
       var _this6 = this;
 
-      var children = this._menu.childNodes;
+      var shouldClose = this._menu.classList.contains('close');
 
-      if (this._menu.classList.contains('close')) {
-        if (this.options.animations && this.options.animations.buttons) setTimeout(function () {
-          _this6._menu.querySelector('ul').classList.toggle('before-collapse');
-        }, 500);
+      if (this.options.animations && this.options.animations.buttons) {
         setTimeout(function () {
-          _this6._menu.classList.toggle('close');
-        }, 10);
-        this.options.icon.tabIndex = 0;
-        children.forEach(function (child) {
-          child.tabIndex = 0;
-
-          if (child.hasChildNodes()) {
-            child.tabIndex = -1;
-            child.childNodes.forEach(function (li) {
-              li.tabIndex = 0;
-            });
-          }
-        });
-      } else {
-        if (this.options.animations && this.options.animations.buttons) {
-          setTimeout(function () {
-            _this6._menu.classList.toggle('close');
-          }, 500);
-          setTimeout(function () {
-            _this6._menu.querySelector('ul').classList.toggle('before-collapse');
-          }, 10);
-        } else {
-          this._menu.classList.toggle('close');
-        }
-
-        this._menu.tabIndex = -1;
-        children.forEach(function (child) {
-          child.tabIndex = 0;
-
-          if (child.hasChildNodes()) {
-            child.tabIndex = -1;
-            child.childNodes.forEach(function (li) {
-              li.tabIndex = -1;
-            });
-          }
-        });
+          _this6._menu.querySelector('ul').classList.toggle('before-collapse');
+        }, shouldClose ? 500 : 10);
       }
+
+      this._menu.classList.toggle('close');
+
+      this.options.icon.tabIndex = shouldClose ? 0 : -1;
+
+      this._menu.childNodes.forEach(function (child) {
+        child.tabIndex = 0;
+
+        if (child.hasChildNodes()) {
+          child.tabIndex = -1;
+          child.childNodes.forEach(function (li) {
+            li.tabIndex = shouldClose ? 0 : -1;
+          });
+        }
+      });
     }
   }, {
     key: "invoke",
@@ -1472,20 +1452,18 @@ var Accessibility = /*#__PURE__*/function () {
         };
       }
 
-      ['click', 'keyup'].forEach(function (evt) {
-        _this7._icon.addEventListener(evt, function (e) {
-          var et = e || window.event;
+      this._icon.addEventListener('click', function () {
+        console.log('close with icon');
 
-          if (et.detail === 0 && et.key !== 'Enter') {
-            return;
-          }
+        _this7.toggleMenu();
+      }, false);
+
+      this._icon.addEventListener('keyup', function (event) {
+        if (event.key === 'Enter') {
+          console.log('close with icon');
 
           _this7.toggleMenu();
-        }, false);
-      });
-
-      this._icon.addEventListener('click', function () {
-        _this7.toggleMenu();
+        }
       }, false);
 
       setTimeout(function () {
