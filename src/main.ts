@@ -225,8 +225,7 @@ export class Accessibility implements IAccessibility {
                 disableAnimations: 'disable animations',
                 increaseLineHeight: 'increase line height',
                 decreaseLineHeight: 'decrease line height',
-                screenReader: 'screen reader',
-                pauseAnimations: 'pause animations'
+                screenReader: 'screen reader'
             },
             textToSpeechLang: 'en-US',
             speechToTextLang: 'en-US',
@@ -672,14 +671,11 @@ export class Accessibility implements IAccessibility {
         ._access-menu ul li button[data-access-action="customFunctions"]:before {
             content: ${!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"'};
         }
-        ._access-menu ul li[data-access-action="increaseLineHeight"]:before {
+        ._access-menu ul li button[data-access-action="increaseLineHeight"]:before {
             content: ${!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"'};
         }
-        ._access-menu ul li[data-access-action="decreaseLineHeight"]:before {
+        ._access-menu ul li button[data-access-action="decreaseLineHeight"]:before {
             content: ${!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"'};
-        }
-        ._access-menu ul li[data-access-action="pauseAnimations"]:before {
-            content: ${!this.options.icon.useEmojis ? '"pause"' : '"⏯️"'};
         }`;
         let className = '_access-main-css';
         this._common.injectStyle(css, { className: className });
@@ -995,23 +991,6 @@ export class Accessibility implements IAccessibility {
                                 {
                                     type: 'button',
                                     attrs: {
-                                        'data-access-action': 'pauseAnimations'
-                                    },
-                                    children: [
-                                        {
-                                            type: '#text',
-                                            text: this.options.labels.pauseAnimations
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            children: [
-                                {
-                                    type: 'button',
-                                    attrs: {
                                         'data-access-action': 'textToSpeech'
                                     },
                                     children: [
@@ -1312,7 +1291,6 @@ export class Accessibility implements IAccessibility {
         this.menuInterface.invertColors(true);
         this.menuInterface.bigCursor(true);
         this.menuInterface.readingGuide(true);
-        this.menuInterface.pauseAnimations(true);
         this.resetTextSize();
         this.resetTextSpace();
         this.resetLineHeight();
@@ -1692,7 +1670,6 @@ export class Accessibility implements IAccessibility {
             textToSpeech: false,
             bigCursor: false,
             readingGuide: false,
-            pauseAnimations: false,
             speechRate: 1,
             body: {},
             html: {}

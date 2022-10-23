@@ -21,5 +21,4 @@ export declare class MenuInterface implements IMenuInterface {
     customFunctions(destroy?: boolean, button?: HTMLElement): void;
     increaseLineHeight(): void;
     decreaseLineHeight(): void;
-    pauseAnimations(destroy: boolean): void;
 }

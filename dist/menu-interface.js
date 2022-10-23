@@ -317,6 +317,7 @@ var MenuInterface = /*#__PURE__*/function () {
         this._acc.textToSpeech('Screen Reader enabled. Reading Pace - Normal');
 
         tSpeechList.classList.add('active');
+        step1[0].style.background = '#000000';
         step2[0].style.background = '#000000';
         step3[0].style.background = '#000000';
       } else if (this._acc.stateValues.speechRate === 1 && tSpeechList.classList.contains('active')) {
@@ -324,37 +325,45 @@ var MenuInterface = /*#__PURE__*/function () {
 
         this._acc.textToSpeech('Reading Pace - Fast');
 
-        step2[0].style.background = '#ffffff';
+        step1[0].style.background = '#ffffff';
       } else if (this._acc.stateValues.speechRate === 1.5 && tSpeechList.classList.contains('active')) {
         this._acc.stateValues.speechRate = 0.7;
 
         this._acc.textToSpeech('Reading Pace - Slow');
 
-        step3[0].style.background = '#ffffff';
+        step2[0].style.background = '#ffffff';
       } else {
         this._acc.stateValues.speechRate = 1;
 
         this._acc.textToSpeech('Screen Reader - Disabled');
 
         tSpeechList.classList.remove('active');
-        this._acc.stateValues.textToSpeech = false;
+        step3[0].style.background = '#ffffff';
+        var timeout = setInterval(function () {
+          console.log(_this2._acc);
+
+          if (_this2._acc.isReading) {
+            return;
+          }
+
+          _this2._acc.stateValues.textToSpeech = false;
+          remove();
+          clearTimeout(timeout);
+        }, 500);
+        return;
       }
 
-      if (this._acc.stateValues.textToSpeech) {
-        var css = "\n                *:hover {\n                    box-shadow: 2px 2px 2px rgba(180,180,180,0.7);\n                }\n            ";
+      var css = "\n            *:hover {\n                box-shadow: 2px 2px 2px rgba(180,180,180,0.7);\n            }\n        ";
 
-        if (tSpeechList.classList.contains('active') && this._acc.stateValues.speechRate === 1) {
-          this._acc.common.injectStyle(css, {
-            className: className
-          });
+      if (tSpeechList.classList.contains('active') && this._acc.stateValues.speechRate === 1) {
+        this._acc.common.injectStyle(css, {
+          className: className
+        });
 
-          this._acc.common.deployedObjects.set('.' + className, true);
+        this._acc.common.deployedObjects.set('.' + className, true);
 
-          document.addEventListener('click', this.readBind, false);
-          document.addEventListener('keyup', this.readBind, false);
-        }
-      } else {
-        remove();
+        document.addEventListener('click', this.readBind, false);
+        document.addEventListener('keyup', this.readBind, false);
       }
     }
   }, {
@@ -650,122 +659,6 @@ var MenuInterface = /*#__PURE__*/function () {
     key: "decreaseLineHeight",
     value: function decreaseLineHeight() {
       this._acc.alterLineHeight(false);
-    }
-  }, {
-    key: "pauseAnimations",
-    value: function pauseAnimations(destroy) {
-      var _this6 = this;
-
-      var className = '_access-disable-animations',
-          autoplayStopped = 'data-autoplay-stopped',
-          state = 'state';
-
-      var remove = function remove() {
-        document.querySelector('._access-menu [data-access-action="pauseAnimations"]').classList.remove('active');
-        _this6._acc.stateValues.disableAnimations = false;
-        var style = document.querySelector('.' + className);
-
-        if (style) {
-          style.parentElement.removeChild(style);
-
-          _this6._acc.common.deployedObjects.remove('.' + className);
-        }
-
-        var allImages = document.querySelectorAll('[data-org-src]');
-        allImages.forEach(function (i) {
-          var screenshot = i.src;
-
-          if (i.getAttribute(state) === 'paused') {
-            i.setAttribute('src', i.getAttribute('data-org-src'));
-            i.setAttribute('data-org-src', screenshot);
-            i.setAttribute(state, 'playing');
-          }
-        });
-        var allVideos = document.querySelectorAll("video[".concat(autoplayStopped, "]"));
-        allVideos.forEach(function (v) {
-          v.setAttribute('autoplay', '');
-          v.removeAttribute(autoplayStopped);
-          v.play();
-        });
-      };
-
-      if (destroy) {
-        remove();
-        return;
-      }
-
-      this._acc.stateValues.disableAnimations = !this._acc.stateValues.disableAnimations;
-
-      if (!this._acc.stateValues.disableAnimations) {
-        remove();
-        return;
-      }
-
-      document.querySelector('._access-menu [data-access-action="pauseAnimations"]').classList.add('active');
-      var css = "\n        body * {\n            animation-duration: 0.0ms !important;\n            transition-duration: 0.0ms !important;\n        }";
-
-      this._acc.common.injectStyle(css, {
-        className: className
-      });
-
-      this._acc.common.deployedObjects.set('.' + className, true);
-
-      var allImages = document.querySelectorAll('img');
-      allImages.forEach( /*#__PURE__*/function () {
-        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(i) {
-          var extensions, ext, screenshot;
-          return regeneratorRuntime.wrap(function _callee3$(_context3) {
-            while (1) {
-              switch (_context3.prev = _context3.next) {
-                case 0:
-                  extensions = i.src.split('.');
-                  ext = extensions[extensions.length - 1].toLowerCase();
-                  ext = ext.substring(0, 4);
-
-                  if (!(ext === 'gif')) {
-                    _context3.next = 12;
-                    break;
-                  }
-
-                  screenshot = i.getAttribute('data-org-src');
-
-                  if (screenshot) {
-                    _context3.next = 9;
-                    break;
-                  }
-
-                  _context3.next = 8;
-                  return _this6._acc.createScreenShot(i.src);
-
-                case 8:
-                  screenshot = _context3.sent;
-
-                case 9:
-                  i.setAttribute('data-org-src', i.src);
-                  i.setAttribute(state, 'paused');
-                  i.src = screenshot;
-
-                case 12:
-                case "end":
-                  return _context3.stop();
-              }
-            }
-          }, _callee3);
-        }));
-
-        return function (_x3) {
-          return _ref3.apply(this, arguments);
-        };
-      }());
-      var allVideos = document.querySelectorAll('video[autoplay]');
-
-      if (allVideos) {
-        allVideos.forEach(function (v) {
-          v.removeAttribute('autoplay');
-          v.pause();
-          v.setAttribute(autoplayStopped, '');
-        });
-      }
     }
   }]);
 

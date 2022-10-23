@@ -138,7 +138,6 @@ export interface IAccessibilityMenuLabelsOptions {
     increaseLineHeight: string;
     decreaseLineHeight: string;
     screenReader: string;
-    pauseAnimations: string;
 }
 export interface IAccessibilityAnimationsOptions {
     buttons: boolean;
@@ -187,7 +186,6 @@ export interface IStateValues {
     speechToText?: boolean;
     disableAnimations?: boolean;
     speechRate?: number;
-    pauseAnimations?: boolean;
     body: any;
     html: any;
 }

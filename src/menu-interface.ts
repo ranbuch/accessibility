@@ -241,41 +241,50 @@ export class MenuInterface implements IMenuInterface {
             this._acc.stateValues.textToSpeech = true;
             this._acc.textToSpeech('Screen Reader enabled. Reading Pace - Normal');
             tSpeechList.classList.add('active');
+            (step1[0] as HTMLElement).style.background = '#000000';
             (step2[0] as HTMLElement).style.background = '#000000';
             (step3[0] as HTMLElement).style.background = '#000000';
         }
         else if (this._acc.stateValues.speechRate === 1 && tSpeechList.classList.contains('active')) {
             this._acc.stateValues.speechRate = 1.5;
             this._acc.textToSpeech('Reading Pace - Fast');
-            (step2[0] as HTMLElement).style.background = '#ffffff';
+            (step1[0] as HTMLElement).style.background = '#ffffff';
         }
         else if (this._acc.stateValues.speechRate === 1.5 && tSpeechList.classList.contains('active')) {
             this._acc.stateValues.speechRate = 0.7;
             this._acc.textToSpeech('Reading Pace - Slow');
-            (step3[0] as HTMLElement).style.background = '#ffffff';
+            (step2[0] as HTMLElement).style.background = '#ffffff';
         } else {
             this._acc.stateValues.speechRate = 1;
             this._acc.textToSpeech('Screen Reader - Disabled');
             tSpeechList.classList.remove('active');
-            this._acc.stateValues.textToSpeech = false;
-        }
+            (step3[0] as HTMLElement).style.background = '#ffffff';
 
-        if (this._acc.stateValues.textToSpeech) {
-            let css = `
-                *:hover {
-                    box-shadow: 2px 2px 2px rgba(180,180,180,0.7);
+            let timeout: ReturnType<typeof setInterval> = setInterval(() => {
+                console.log(this._acc);
+                if (this._acc.isReading) {
+                    return;
                 }
-            `;
+                this._acc.stateValues.textToSpeech = false;
 
-            if (tSpeechList.classList.contains('active') && this._acc.stateValues.speechRate === 1) {
-                this._acc.common.injectStyle(css, { className: className });
-                this._acc.common.deployedObjects.set('.' + className, true);
-                document.addEventListener('click', this.readBind, false);
-                document.addEventListener('keyup', this.readBind, false);
-            }
+                remove();
+                clearTimeout(timeout);
+            }, 500);
+
+            return;
         }
-        else {
-            remove();
+
+        let css = `
+            *:hover {
+                box-shadow: 2px 2px 2px rgba(180,180,180,0.7);
+            }
+        `;
+
+        if (tSpeechList.classList.contains('active') && this._acc.stateValues.speechRate === 1) {
+            this._acc.common.injectStyle(css, { className: className });
+            this._acc.common.deployedObjects.set('.' + className, true);
+            document.addEventListener('click', this.readBind, false);
+            document.addEventListener('keyup', this.readBind, false);
         }
     }
 
@@ -523,76 +532,5 @@ export class MenuInterface implements IMenuInterface {
 
     decreaseLineHeight() {
         this._acc.alterLineHeight(false);
-    }
-
-    pauseAnimations(destroy: boolean) {
-        const className = '_access-disable-animations', autoplayStopped = 'data-autoplay-stopped', state = 'state';
-        let remove = () => {
-            document.querySelector('._access-menu [data-access-action="pauseAnimations"]').classList.remove('active');
-            this._acc.stateValues.disableAnimations = false;
-            let style = document.querySelector('.' + className);
-            if (style) {
-                style.parentElement.removeChild(style);
-                this._acc.common.deployedObjects.remove('.' + className);
-            }
-            let allImages = document.querySelectorAll('[data-org-src]');
-            allImages.forEach((i: HTMLMediaElement) => {
-                const screenshot = i.src;
-                if (i.getAttribute(state) === 'paused') {
-                    i.setAttribute('src', i.getAttribute('data-org-src'));
-                    i.setAttribute('data-org-src', screenshot);
-                    i.setAttribute(state, 'playing');
-                }
-            });
-
-
-            const allVideos = document.querySelectorAll(`video[${autoplayStopped}]`);
-            allVideos.forEach((v: HTMLMediaElement) => {
-                v.setAttribute('autoplay', '');
-                v.removeAttribute(autoplayStopped);
-                v.play();
-            });
-        };
-
-        if (destroy) {
-            remove();
-            return;
-        }
-        this._acc.stateValues.disableAnimations = !this._acc.stateValues.disableAnimations;
-        if (!this._acc.stateValues.disableAnimations) {
-            remove();
-            return;
-        }
-        document.querySelector('._access-menu [data-access-action="pauseAnimations"]').classList.add('active');
-        let css = `
-        body * {
-            animation-duration: 0.0ms !important;
-            transition-duration: 0.0ms !important;
-        }`;
-        this._acc.common.injectStyle(css, { className: className });
-        this._acc.common.deployedObjects.set('.' + className, true);
-        const allImages = document.querySelectorAll('img');
-        allImages.forEach(async i => {
-            let extensions = i.src.split('.');
-            let ext = extensions[extensions.length - 1].toLowerCase();
-            ext = ext.substring(0, 4);
-            if (ext === 'gif') {
-                let screenshot = i.getAttribute('data-org-src');
-                if (!screenshot) {
-                    screenshot = await this._acc.createScreenShot(i.src);
-                }
-                i.setAttribute('data-org-src', i.src);
-                i.setAttribute(state, 'paused');
-                i.src = screenshot;
-            }
-        });
-        const allVideos = document.querySelectorAll('video[autoplay]');
-        if (allVideos) {
-            allVideos.forEach((v: HTMLMediaElement) => {
-                v.removeAttribute('autoplay');
-                v.pause();
-                v.setAttribute(autoplayStopped, '');
-            });
-        }
     }
 }
