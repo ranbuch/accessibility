@@ -672,10 +672,10 @@ export class Accessibility implements IAccessibility {
             content: ${!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"'};
         }
         ._access-menu ul li button[data-access-action="increaseLineHeight"]:before {
-            content: ${!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"'};
+            content: ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'};
         }
         ._access-menu ul li button[data-access-action="decreaseLineHeight"]:before {
-            content: ${!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"'};
+            content: ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'};
         }`;
         let className = '_access-main-css';
         this._common.injectStyle(css, { className: className });
