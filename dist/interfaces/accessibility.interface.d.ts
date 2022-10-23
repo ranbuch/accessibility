@@ -12,6 +12,7 @@ export interface IAccessibility {
     readonly recognition: any;
     alterTextSize(isIncrease: boolean): void;
     alterTextSpace(isIncrease: boolean): void;
+    alterLineHeight(isIncrease: boolean): void;
     speechToText(): void;
     textToSpeech(text: string): void;
     listen(): void;
@@ -23,6 +24,7 @@ export interface IAccessibility {
     updateReadGuide(e: Event | TouchEvent | any): void;
     resetIfDefined(src: string, dest: any, prop: string): void;
     onChange(updateSession: boolean): void;
+    createScreenShot(url: string): Promise<string>;
 }
 export interface IAccessibilityOptions {
     icon?: IAccessibilityIconOptions;
@@ -40,6 +42,9 @@ export interface IAccessibilityOptions {
     session?: IAccessibilitySessionOptions;
     iframeModals?: Array<IIframeModal>;
     customFunctions?: Array<ICustomFunction>;
+    statement?: IAccessibilityUrlOptions;
+    feedback?: IAccessibilityUrlOptions;
+    language?: IAccessibilityLanguageOptions;
 }
 export interface ICustomFunction {
     method: Function;
@@ -69,6 +74,7 @@ export interface IAccessibilityIconOptions {
     useEmojis?: boolean;
     fontFamily?: string;
     forceFont?: boolean;
+    tabIndex?: number;
 }
 export interface IAccessibilityIconPositionOptions {
     top?: IUnitsDim;
@@ -129,6 +135,9 @@ export interface IAccessibilityMenuLabelsOptions {
     textToSpeech: string;
     speechToText: string;
     disableAnimations: string;
+    increaseLineHeight: string;
+    decreaseLineHeight: string;
+    screenReader: string;
 }
 export interface IAccessibilityAnimationsOptions {
     buttons: boolean;
@@ -150,9 +159,17 @@ export interface IAccessibilityModulesOptions {
 export interface IAccessibilitySessionOptions {
     persistent: boolean;
 }
+export interface IAccessibilityUrlOptions {
+    url: string;
+}
+export interface IAccessibilityLanguageOptions {
+    textToSpeechLang: string;
+    speechToTextLang: string;
+}
 export interface ISessionState {
     textSize: number;
     textSpace: number;
+    lineHeight: number;
     invertColors: boolean;
     grayHues: boolean;
     underlineLinks: boolean;
@@ -168,6 +185,7 @@ export interface IStateValues {
     grayHues?: boolean;
     speechToText?: boolean;
     disableAnimations?: boolean;
+    speechRate?: number;
     body: any;
     html: any;
 }

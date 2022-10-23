@@ -74,6 +74,10 @@ var MenuInterface = /*#__PURE__*/function () {
         return;
       }
 
+      if (this._acc.stateValues.invertColors && this._acc.stateValues.textToSpeech) {
+        this._acc.textToSpeech('Colors Set To Normal');
+      }
+
       document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
       this._acc.stateValues.invertColors = !this._acc.stateValues.invertColors;
       this._acc.sessionState.invertColors = this._acc.stateValues.invertColors;
@@ -83,6 +87,10 @@ var MenuInterface = /*#__PURE__*/function () {
       if (this._acc.stateValues.invertColors) {
         if (this._acc.stateValues.grayHues) this._acc.menuInterface.grayHues(true);
         this._acc.html.style.filter = 'invert(1)';
+
+        if (this._acc.stateValues.textToSpeech) {
+          this._acc.textToSpeech('Colors Inverted');
+        }
       } else {
         this._acc.html.style.filter = '';
       }
@@ -119,11 +127,19 @@ var MenuInterface = /*#__PURE__*/function () {
 
       this._acc.onChange(true);
 
+      if (this._acc.stateValues.textToSpeech && !this._acc.stateValues.grayHues) this._acc.textToSpeech('Gray Hues Disabled.');
       var val;
 
       if (this._acc.stateValues.grayHues) {
         val = 'grayscale(1)';
-        if (this._acc.stateValues.invertColors) this._acc.menuInterface.invertColors(true);
+
+        if (this._acc.stateValues.invertColors) {
+          this.invertColors(true);
+        }
+
+        if (this._acc.stateValues.textToSpeech) {
+          this._acc.textToSpeech('Gray Hues Enabled.');
+        }
       } else {
         val = '';
       }
@@ -174,7 +190,15 @@ var MenuInterface = /*#__PURE__*/function () {
         });
 
         this._acc.common.deployedObjects.set('.' + className, true);
+
+        if (this._acc.stateValues.textToSpeech) {
+          this._acc.textToSpeech('Links UnderLined');
+        }
       } else {
+        if (this._acc.stateValues.textToSpeech) {
+          this._acc.textToSpeech('Links UnderLine Removed');
+        }
+
         remove();
       }
     }
@@ -200,6 +224,9 @@ var MenuInterface = /*#__PURE__*/function () {
       this._acc.onChange(true);
 
       this._acc.html.classList.toggle('_access_cursor');
+
+      if (this._acc.stateValues.textToSpeech && this._acc.stateValues.bigCursor) this._acc.textToSpeech('Big Cursor Enabled');
+      if (this._acc.stateValues.textToSpeech && !this._acc.stateValues.bigCursor) this._acc.textToSpeech('Big Cursor Disabled');
     }
   }, {
     key: "readingGuide",
@@ -217,6 +244,7 @@ var MenuInterface = /*#__PURE__*/function () {
 
         document.body.removeEventListener('touchmove', this._acc.updateReadGuide, false);
         document.body.removeEventListener('mousemove', this._acc.updateReadGuide, false);
+        if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech('Reading Guide Enabled');
         return;
       }
 
@@ -240,6 +268,7 @@ var MenuInterface = /*#__PURE__*/function () {
 
         document.body.removeEventListener('touchmove', this._acc.updateReadGuide, false);
         document.body.removeEventListener('mousemove', this._acc.updateReadGuide, false);
+        if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech('Reading Guide Disabled');
       }
     }
   }, {
@@ -248,6 +277,11 @@ var MenuInterface = /*#__PURE__*/function () {
       var _this2 = this;
 
       // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
+      var tSpeechList = document.querySelector('._access-menu [data-access-action="textToSpeech"]');
+      var step1 = document.getElementsByClassName('screen-reader-wrapper-step-1');
+      var step2 = document.getElementsByClassName('screen-reader-wrapper-step-2');
+      var step3 = document.getElementsByClassName('screen-reader-wrapper-step-3');
+
       this._acc.onChange(false);
 
       var className = '_access-text-to-speech';
@@ -258,6 +292,7 @@ var MenuInterface = /*#__PURE__*/function () {
         if (style) {
           style.parentElement.removeChild(style);
           document.removeEventListener('click', _this2.readBind, false);
+          document.removeEventListener('keyup', _this2.readBind, false);
 
           _this2._acc.common.deployedObjects.remove('.' + className);
         }
@@ -268,16 +303,59 @@ var MenuInterface = /*#__PURE__*/function () {
 
       if (destroy) {
         document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.remove('active');
+        step1[0].style.background = '#ffffff';
+        step2[0].style.background = '#ffffff';
+        step3[0].style.background = '#ffffff';
         this._acc.stateValues.textToSpeech = false;
+        window.speechSynthesis.cancel();
         return remove();
       }
 
-      document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.toggle('active');
-      this._acc.stateValues.textToSpeech = !this._acc.stateValues.textToSpeech;
+      if (this._acc.stateValues.speechRate === 1 && !tSpeechList.classList.contains('active')) {
+        this._acc.stateValues.textToSpeech = true;
 
-      if (this._acc.stateValues.textToSpeech) {
-        var css = "\n                *:hover {\n                    box-shadow: 2px 2px 2px rgba(180,180,180,0.7);\n                }\n            ";
+        this._acc.textToSpeech('Screen Reader enabled. Reading Pace - Normal');
 
+        tSpeechList.classList.add('active');
+        step1[0].style.background = '#000000';
+        step2[0].style.background = '#000000';
+        step3[0].style.background = '#000000';
+      } else if (this._acc.stateValues.speechRate === 1 && tSpeechList.classList.contains('active')) {
+        this._acc.stateValues.speechRate = 1.5;
+
+        this._acc.textToSpeech('Reading Pace - Fast');
+
+        step1[0].style.background = '#ffffff';
+      } else if (this._acc.stateValues.speechRate === 1.5 && tSpeechList.classList.contains('active')) {
+        this._acc.stateValues.speechRate = 0.7;
+
+        this._acc.textToSpeech('Reading Pace - Slow');
+
+        step2[0].style.background = '#ffffff';
+      } else {
+        this._acc.stateValues.speechRate = 1;
+
+        this._acc.textToSpeech('Screen Reader - Disabled');
+
+        tSpeechList.classList.remove('active');
+        step3[0].style.background = '#ffffff';
+        var timeout = setInterval(function () {
+          console.log(_this2._acc);
+
+          if (_this2._acc.isReading) {
+            return;
+          }
+
+          _this2._acc.stateValues.textToSpeech = false;
+          remove();
+          clearTimeout(timeout);
+        }, 500);
+        return;
+      }
+
+      var css = "\n            *:hover {\n                box-shadow: 2px 2px 2px rgba(180,180,180,0.7);\n            }\n        ";
+
+      if (tSpeechList.classList.contains('active') && this._acc.stateValues.speechRate === 1) {
         this._acc.common.injectStyle(css, {
           className: className
         });
@@ -285,8 +363,7 @@ var MenuInterface = /*#__PURE__*/function () {
         this._acc.common.deployedObjects.set('.' + className, true);
 
         document.addEventListener('click', this.readBind, false);
-      } else {
-        remove();
+        document.addEventListener('keyup', this.readBind, false);
       }
     }
   }, {
@@ -328,7 +405,6 @@ var MenuInterface = /*#__PURE__*/function () {
         return remove();
       }
 
-      document.querySelector('._access-menu [data-access-action="speechToText"]').classList.toggle('active');
       this._acc.stateValues.speechToText = !this._acc.stateValues.speechToText;
 
       if (this._acc.stateValues.speechToText) {
@@ -573,6 +649,16 @@ var MenuInterface = /*#__PURE__*/function () {
         if (cf.toggle) button.classList.add('active');
         cf.method(cf, true);
       }
+    }
+  }, {
+    key: "increaseLineHeight",
+    value: function increaseLineHeight() {
+      this._acc.alterLineHeight(true);
+    }
+  }, {
+    key: "decreaseLineHeight",
+    value: function decreaseLineHeight() {
+      this._acc.alterLineHeight(false);
     }
   }]);
 
