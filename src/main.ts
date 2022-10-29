@@ -253,13 +253,13 @@ export class Accessibility implements IAccessibility {
             },
             iframeModals: [],
             customFunctions: [],
-            statement : {
+            statement: {
                 url: '',
             },
-            feedback : {
+            feedback: {
                 url: '',
             },
-            language : {
+            language: {
                 textToSpeechLang: '',
                 speechToTextLang: ''
             }
@@ -987,6 +987,44 @@ export class Accessibility implements IAccessibility {
                         },
                         {
                             type: 'li',
+                            attrs: {
+                                'data-access-action': 'speechToText',
+                                'tabIndex': '-1'
+                            },
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'speechToText'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.speechToText
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
+                            children: [
+                                {
+                                    type: 'button',
+                                    attrs: {
+                                        'data-access-action': 'disableAnimations'
+                                    },
+                                    children: [
+                                        {
+                                            type: '#text',
+                                            text: this.options.labels.disableAnimations
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            type: 'li',
                             children: [
                                 {
                                     type: 'button',
@@ -1031,44 +1069,6 @@ export class Accessibility implements IAccessibility {
                                     ]
                                 },
                             ]
-                        },
-                        {
-                            type: 'li',
-                            attrs: {
-                                'data-access-action': 'speechToText',
-                                'tabIndex': '-1'
-                            },
-                            children: [
-                                {
-                                    type: 'button',
-                                    attrs: {
-                                        'data-access-action': 'speechToText'
-                                    },
-                                    children: [
-                                        {
-                                            type: '#text',
-                                            text: this.options.labels.speechToText
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        {
-                            type: 'li',
-                            children: [
-                                {
-                                    type: 'button',
-                                    attrs: {
-                                        'data-access-action': 'disableAnimations'
-                                    },
-                                    children: [
-                                        {
-                                            type: '#text',
-                                            text: this.options.labels.disableAnimations
-                                        }
-                                    ]
-                                }
-                            ]
                         }
                     ]
                 }
@@ -1108,7 +1108,10 @@ export class Accessibility implements IAccessibility {
                     this._common.injectStyle(css, { className: className });
                     this._common.deployedObjects.set('.' + className, false);
                 }
-                json.children[1].children.push(btn);
+                if (this.options.modules.textToSpeech)
+                    json.children[1].children.splice(json.children[1].children.length - 2, 0, btn);
+                else
+                    json.children[1].children.push(btn);
             });
         }
         if (this.options.customFunctions) {
@@ -1145,7 +1148,10 @@ export class Accessibility implements IAccessibility {
                     this._common.injectStyle(css, { className: className });
                     this._common.deployedObjects.set('.' + className, false);
                 }
-                json.children[1].children.push(btn);
+                if (this.options.modules.textToSpeech)
+                    json.children[1].children.splice(json.children[1].children.length - 2, 0, btn);
+                else
+                    json.children[1].children.push(btn);
             });
         }
         let menuElem = this._common.jsonToHtml(json);
@@ -1415,7 +1421,7 @@ export class Accessibility implements IAccessibility {
                 let lHeight = getComputedStyle(all[i]).lineHeight;
                 let lHeight2 = lHeight.replace('px', '');
                 let lTextSize2 = lTextSize.replace('px', '');
-                let inPercent = (parseInt(lHeight2) * 100 ) / parseInt(lTextSize2);
+                let inPercent = (parseInt(lHeight2) * 100) / parseInt(lTextSize2);
                 if (lHeight && (lHeight.indexOf('px') > -1)) {
                     if (!all[i].getAttribute('data-init-line-height'))
                         all[i].setAttribute('data-init-line-height', inPercent + '%');
@@ -1577,7 +1583,7 @@ export class Accessibility implements IAccessibility {
                 let res;
                 try {
                     res = canvas.toDataURL('image/png');
-                } catch (e) {}
+                } catch (e) { }
                 resolve(res);
                 canvas.remove();
             };
@@ -1607,8 +1613,8 @@ export class Accessibility implements IAccessibility {
         catch (ex) { }
 
         let allContent = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
-        for (const key in allContent ) {
-            if (allContent[key] === window.event.target && (e instanceof MouseEvent) ) return;
+        for (const key in allContent) {
+            if (allContent[key] === window.event.target && (e instanceof MouseEvent)) return;
         }
         if (e instanceof KeyboardEvent && (e.shiftKey && e.key === 'Tab' || e.key === 'Tab')) {
             this.textToSpeech((window.event.target as HTMLElement).innerText);

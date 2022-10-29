@@ -261,7 +261,6 @@ export class MenuInterface implements IMenuInterface {
             (step3[0] as HTMLElement).style.background = '#ffffff';
 
             let timeout: ReturnType<typeof setInterval> = setInterval(() => {
-                console.log(this._acc);
                 if (this._acc.isReading) {
                     return;
                 }

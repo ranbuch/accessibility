@@ -627,6 +627,34 @@ var Accessibility = /*#__PURE__*/function () {
             }]
           }, {
             type: 'li',
+            attrs: {
+              'data-access-action': 'speechToText',
+              'tabIndex': '-1'
+            },
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'speechToText'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.speechToText
+              }]
+            }]
+          }, {
+            type: 'li',
+            children: [{
+              type: 'button',
+              attrs: {
+                'data-access-action': 'disableAnimations'
+              },
+              children: [{
+                type: '#text',
+                text: this.options.labels.disableAnimations
+              }]
+            }]
+          }, {
+            type: 'li',
             children: [{
               type: 'button',
               attrs: {
@@ -659,34 +687,6 @@ var Accessibility = /*#__PURE__*/function () {
                   'class': 'screen-reader-wrapper-step-3',
                   'tabIndex': '-1'
                 }
-              }]
-            }]
-          }, {
-            type: 'li',
-            attrs: {
-              'data-access-action': 'speechToText',
-              'tabIndex': '-1'
-            },
-            children: [{
-              type: 'button',
-              attrs: {
-                'data-access-action': 'speechToText'
-              },
-              children: [{
-                type: '#text',
-                text: this.options.labels.speechToText
-              }]
-            }]
-          }, {
-            type: 'li',
-            children: [{
-              type: 'button',
-              attrs: {
-                'data-access-action': 'disableAnimations'
-              },
-              children: [{
-                type: '#text',
-                text: this.options.labels.disableAnimations
               }]
             }]
           }]
@@ -724,7 +724,7 @@ var Accessibility = /*#__PURE__*/function () {
             _this2._common.deployedObjects.set('.' + className, false);
           }
 
-          json.children[1].children.push(btn);
+          if (_this2.options.modules.textToSpeech) json.children[1].children.splice(json.children[1].children.length - 2, 0, btn);else json.children[1].children.push(btn);
         });
       }
 
@@ -759,7 +759,7 @@ var Accessibility = /*#__PURE__*/function () {
             _this2._common.deployedObjects.set('.' + className, false);
           }
 
-          json.children[1].children.push(btn);
+          if (_this2.options.modules.textToSpeech) json.children[1].children.splice(json.children[1].children.length - 2, 0, btn);else json.children[1].children.push(btn);
         });
       }
 

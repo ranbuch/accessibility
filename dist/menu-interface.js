@@ -340,8 +340,6 @@ var MenuInterface = /*#__PURE__*/function () {
         tSpeechList.classList.remove('active');
         step3[0].style.background = '#ffffff';
         var timeout = setInterval(function () {
-          console.log(_this2._acc);
-
           if (_this2._acc.isReading) {
             return;
           }
