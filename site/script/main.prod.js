@@ -1,0 +1,1 @@
+"use strict";var options={hotkeys:{enabled:!0}};new Accessibility(options);
