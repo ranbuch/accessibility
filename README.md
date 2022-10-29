@@ -18,7 +18,7 @@ initialize component:
     new Accessibility();
 }, false);`
 
-### Full Documentation [here](https://ranbuch.github.io/accessibility/src/)
+### Full Documentation [here](https://ranbuch.github.io/accessibility/site/)
 
 >We are proud to announce that [Joomla!](https://www.joomdev.com/blog/entry/enable-joomla-4-accessibility) are now using this repo as there built-in accessibility tool.
 
@@ -119,7 +119,7 @@ But you can also position the icon in the upper left corner of the screen and ca
 `new Accessibility(options);`
 
 ### ICON IMAGE:
-You can change the default icon as described [here](https://ranbuch.github.io/accessibility/src/#icon-image)
+You can change the default icon as described [here](https://ranbuch.github.io/accessibility/site/#icon-image)
 
 ### LICENSE:
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://spdx.org/licenses/MIT)
