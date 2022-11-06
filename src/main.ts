@@ -395,7 +395,7 @@ export class Accessibility implements IAccessibility {
             font-family: ${this.options.menu.fontFamily};
             min-width: 300px;
             box-shadow: 0px 0px 1px #aaa;
-            max-height: calc(100vh - 60px);
+            max-height: calc(100vh - 80px);
             ${(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '')}
         }
         ._access-menu.close {
