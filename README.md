@@ -26,12 +26,14 @@ initialize component:
 **Features:**
 - [x]  increase text size
 - [x]  decrease text size
+- [x]  increase line height
+- [x]  decrease line height
 - [x]  invert colors
 - [x]  gray hues
 - [x]  underline links
 - [x]  big cursor
 - [x]  reading guide
-- [x]  text to speech 
+- [x]  text to speech with 3 reading velocities
 - [x]  speech to text
 - [x]  suppress animations
 
@@ -52,6 +54,8 @@ Easy to use!
 &nbsp;&nbsp;&nbsp;&nbsp;`decreaseText: 'decrease text size (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`increaseTextSpacing: 'increase text spacing (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`decreaseTextSpacing: 'decrease text spacing (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseLineHeight: 'increase line height (in my language)',`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseLineHeight: 'decrease line height (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`invertColors: 'invert colors (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`grayHues: 'gray hues (in my language)',`  
 &nbsp;&nbsp;&nbsp;&nbsp;`underlineLinks: 'underline links (in my language)',`  
@@ -74,6 +78,8 @@ Easy to use!
 &nbsp;&nbsp;&nbsp;&nbsp;`invertColors: [true/false],`  
 &nbsp;&nbsp;&nbsp;&nbsp;`increaseTextSpacing: [true/false],`  
 &nbsp;&nbsp;&nbsp;&nbsp;`decreaseTextSpacing: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`increaseLineHeight: [true/false],`  
+&nbsp;&nbsp;&nbsp;&nbsp;`decreaseLineHeight: [true/false],`  
 &nbsp;&nbsp;&nbsp;&nbsp;`grayHues: [true/false],`  
 &nbsp;&nbsp;&nbsp;&nbsp;`underlineLinks: [true/false],`  
 &nbsp;&nbsp;&nbsp;&nbsp;`bigCursor: [true/false],`  

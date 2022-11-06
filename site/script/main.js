@@ -5,6 +5,10 @@ var options = {
     icon: {
         circular: true
     },
+    language: {
+        textToSpeechLang: 'en-US',
+        speechToTextLang: 'en-US'
+    },
     iframeModals: [{
         iframeUrl: 'http://localhost:8080/',
         buttonText: 'terms'

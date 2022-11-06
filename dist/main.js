@@ -277,8 +277,6 @@ var Accessibility = /*#__PURE__*/function () {
           decreaseLineHeight: 'decrease line height',
           screenReader: 'screen reader'
         },
-        textToSpeechLang: 'en-US',
-        speechToTextLang: 'en-US',
         textPixelMode: false,
         textEmlMode: true,
         animations: {
@@ -627,22 +625,6 @@ var Accessibility = /*#__PURE__*/function () {
             }]
           }, {
             type: 'li',
-            attrs: {
-              'data-access-action': 'speechToText',
-              'tabIndex': '-1'
-            },
-            children: [{
-              type: 'button',
-              attrs: {
-                'data-access-action': 'speechToText'
-              },
-              children: [{
-                type: '#text',
-                text: this.options.labels.speechToText
-              }]
-            }]
-          }, {
-            type: 'li',
             children: [{
               type: 'button',
               attrs: {
@@ -651,42 +633,6 @@ var Accessibility = /*#__PURE__*/function () {
               children: [{
                 type: '#text',
                 text: this.options.labels.disableAnimations
-              }]
-            }]
-          }, {
-            type: 'li',
-            children: [{
-              type: 'button',
-              attrs: {
-                'data-access-action': 'textToSpeech'
-              },
-              children: [{
-                type: '#text',
-                text: this.options.labels.screenReader
-              }]
-            }, {
-              type: 'div',
-              attrs: {
-                'class': 'screen-reader-wrapper'
-              },
-              children: [{
-                type: 'div',
-                attrs: {
-                  'class': 'screen-reader-wrapper-step-1',
-                  'tabIndex': '-1'
-                }
-              }, {
-                type: 'div',
-                attrs: {
-                  'class': 'screen-reader-wrapper-step-2',
-                  'tabIndex': '-1'
-                }
-              }, {
-                type: 'div',
-                attrs: {
-                  'class': 'screen-reader-wrapper-step-3',
-                  'tabIndex': '-1'
-                }
               }]
             }]
           }]
@@ -856,27 +802,57 @@ var Accessibility = /*#__PURE__*/function () {
                 if (isLngSupported) {
                   tts = this.common.jsonToHtml({
                     type: 'li',
-                    attrs: {
-                      'data-access-action': 'textToSpeech'
-                    },
                     children: [{
-                      type: '#text',
-                      text: this.options.labels.textToSpeech
+                      type: 'button',
+                      attrs: {
+                        'data-access-action': 'textToSpeech'
+                      },
+                      children: [{
+                        type: '#text',
+                        text: this.options.labels.textToSpeech
+                      }]
+                    }, {
+                      type: 'div',
+                      attrs: {
+                        'class': 'screen-reader-wrapper'
+                      },
+                      children: [{
+                        type: 'div',
+                        attrs: {
+                          'class': 'screen-reader-wrapper-step-1',
+                          'tabIndex': '-1'
+                        }
+                      }, {
+                        type: 'div',
+                        attrs: {
+                          'class': 'screen-reader-wrapper-step-2',
+                          'tabIndex': '-1'
+                        }
+                      }, {
+                        type: 'div',
+                        attrs: {
+                          'class': 'screen-reader-wrapper-step-3',
+                          'tabIndex': '-1'
+                        }
+                      }]
                     }]
                   });
                   sts = this.common.jsonToHtml({
                     type: 'li',
-                    attrs: {
-                      'data-access-action': 'speechToText'
-                    },
                     children: [{
-                      type: '#text',
-                      text: this.options.labels.speechToText
+                      type: 'button',
+                      attrs: {
+                        'data-access-action': 'speechToText'
+                      },
+                      children: [{
+                        type: '#text',
+                        text: this.options.labels.speechToText
+                      }]
                     }]
                   });
                   ul = document.querySelector('._access-menu ul');
-                  ul.appendChild(tts);
                   ul.appendChild(sts);
+                  ul.appendChild(tts);
                 }
 
               case 13:
