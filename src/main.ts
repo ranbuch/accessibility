@@ -1259,8 +1259,12 @@ export class Accessibility implements IAccessibility {
     }
 
     resetAll() {
-        this.menuInterface.textToSpeech(true);
-        this.menuInterface.speechToText(true);
+        if (this._stateValues.textToSpeech) {
+            this.menuInterface.textToSpeech(true);
+        }
+        if (this._stateValues.speechToText) {
+            this.menuInterface.speechToText(true);
+        }
         this.menuInterface.disableAnimations(true);
         this.menuInterface.underlineLinks(true);
         this.menuInterface.grayHues(true);
