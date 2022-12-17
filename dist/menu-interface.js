@@ -278,6 +278,7 @@ var MenuInterface = /*#__PURE__*/function () {
 
       // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
       var tSpeechList = document.querySelector('._access-menu [data-access-action="textToSpeech"]');
+      if (!tSpeechList) return;
       var step1 = document.getElementsByClassName('screen-reader-wrapper-step-1');
       var step2 = document.getElementsByClassName('screen-reader-wrapper-step-2');
       var step3 = document.getElementsByClassName('screen-reader-wrapper-step-3');
@@ -302,7 +303,7 @@ var MenuInterface = /*#__PURE__*/function () {
       };
 
       if (destroy) {
-        document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.remove('active');
+        tSpeechList.classList.remove('active');
         step1[0].style.background = '#ffffff';
         step2[0].style.background = '#ffffff';
         step3[0].style.background = '#ffffff';
@@ -370,6 +371,9 @@ var MenuInterface = /*#__PURE__*/function () {
       var _this3 = this;
 
       // this.sessionState.speechToText = typeof destroy === 'undefined' ? true : false;
+      var sTextList = document.querySelector('._access-menu [data-access-action="speechToText"]');
+      if (!sTextList) return;
+
       this._acc.onChange(false);
 
       var className = '_access-speech-to-text';
@@ -398,7 +402,7 @@ var MenuInterface = /*#__PURE__*/function () {
       };
 
       if (destroy) {
-        document.querySelector('._access-menu [data-access-action="speechToText"]').classList.remove('active');
+        sTextList.classList.remove('active');
         this._acc.stateValues.speechToText = false;
         return remove();
       }
