@@ -311,10 +311,10 @@ export class MenuInterface implements IMenuInterface {
                 inputs[i].removeEventListener('focus', this._acc.listen.bind(this._acc), false);
                 inputs[i].classList.remove('_access-mic');
             }
+            sTextList.classList.remove('active');
         };
 
         if (destroy) {
-            sTextList.classList.remove('active');
             this._acc.stateValues.speechToText = false;
             return remove();
         }
@@ -360,10 +360,10 @@ export class MenuInterface implements IMenuInterface {
                 inputs[i].addEventListener('focus', this._acc.listen.bind(this._acc), false);
                 inputs[i].parentElement.classList.add('_access-mic');
             }
+            sTextList.classList.add('active');
         }
-        else {
+        else
             remove();
-        }
     }
 
     disableAnimations(destroy: boolean) {

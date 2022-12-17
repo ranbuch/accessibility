@@ -399,10 +399,11 @@ var MenuInterface = /*#__PURE__*/function () {
           inputs[i].removeEventListener('focus', _this3._acc.listen.bind(_this3._acc), false);
           inputs[i].classList.remove('_access-mic');
         }
+
+        sTextList.classList.remove('active');
       };
 
       if (destroy) {
-        sTextList.classList.remove('active');
         this._acc.stateValues.speechToText = false;
         return remove();
       }
@@ -427,9 +428,9 @@ var MenuInterface = /*#__PURE__*/function () {
           inputs[i].addEventListener('focus', this._acc.listen.bind(this._acc), false);
           inputs[i].parentElement.classList.add('_access-mic');
         }
-      } else {
-        remove();
-      }
+
+        sTextList.classList.add('active');
+      } else remove();
     }
   }, {
     key: "disableAnimations",
