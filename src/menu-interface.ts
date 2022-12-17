@@ -208,7 +208,9 @@ export class MenuInterface implements IMenuInterface {
 
     textToSpeech(destroy: boolean) {
         // this.sessionState.textToSpeech = typeof destroy === 'undefined' ? true : false;
-        let tSpeechList = document.querySelector('._access-menu [data-access-action="textToSpeech"]');
+        const tSpeechList = document.querySelector('._access-menu [data-access-action="textToSpeech"]');
+        if (!tSpeechList) return;
+
         let step1 = document.getElementsByClassName('screen-reader-wrapper-step-1');
         let step2 = document.getElementsByClassName('screen-reader-wrapper-step-2');
         let step3 = document.getElementsByClassName('screen-reader-wrapper-step-3');
@@ -228,7 +230,7 @@ export class MenuInterface implements IMenuInterface {
         };
 
         if (destroy) {
-            document.querySelector('._access-menu [data-access-action="textToSpeech"]').classList.remove('active');
+            tSpeechList.classList.remove('active');
             (step1[0] as HTMLElement).style.background = '#ffffff';
             (step2[0] as HTMLElement).style.background = '#ffffff';
             (step3[0] as HTMLElement).style.background = '#ffffff';
@@ -289,6 +291,9 @@ export class MenuInterface implements IMenuInterface {
 
     speechToText(destroy: boolean) {
         // this.sessionState.speechToText = typeof destroy === 'undefined' ? true : false;
+        const sTextList = document.querySelector('._access-menu [data-access-action="speechToText"]');
+        if (!sTextList) return;
+
         this._acc.onChange(false);
         let className = '_access-speech-to-text';
         let remove = () => {
@@ -309,7 +314,7 @@ export class MenuInterface implements IMenuInterface {
         };
 
         if (destroy) {
-            document.querySelector('._access-menu [data-access-action="speechToText"]').classList.remove('active');
+            sTextList.classList.remove('active');
             this._acc.stateValues.speechToText = false;
             return remove();
         }
