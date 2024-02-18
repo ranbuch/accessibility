@@ -136,7 +136,7 @@ export class Accessibility implements IAccessibility {
                 img: 'accessibility',
                 circular: false,
                 circularBorder: false,
-                fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
+                fontFaceSrc: ['https://fonts.bunny.net/icon?family=Material+Icons'],
                 fontFamily: this._common.getFixedFont('Material Icons'),
                 fontClass: 'material-icons',
                 useEmojis: false
