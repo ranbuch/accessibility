@@ -1,3 +1,4 @@
+import 'regenerator-runtime/runtime.js';
 import { Common } from './common';
 import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues } from './interfaces/accessibility.interface';
 import { IMenuInterface } from './interfaces/menu.interface';

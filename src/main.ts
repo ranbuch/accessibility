@@ -1,4 +1,6 @@
 'use strict';
+// Do not delete this as it allows importing the package with other projects
+import 'regenerator-runtime/runtime.js';
 import { Common } from './common';
 import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues } from './interfaces/accessibility.interface';
 import { IFormattedDim, IJsonToHtml } from './interfaces/common.interface';

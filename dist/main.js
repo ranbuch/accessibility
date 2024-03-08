@@ -1,9 +1,11 @@
 'use strict';
 
+// Do not delete this as it allows importing the package with other projects
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = exports.Accessibility = void 0;
+require("regenerator-runtime/runtime.js");
 var _common = require("./common");
 var _menuInterface = require("./menu-interface");
 var _storage = require("./storage");
