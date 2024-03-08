@@ -1250,9 +1250,9 @@ export class Accessibility implements IAccessibility {
             let m = this.options.modules as any;
             m = m[i];
             if (!m) {
-                let moduleLi = document.querySelector('li[data-access-action="' + i + '"]');
+                let moduleLi = document.querySelector('button[data-access-action="' + i + '"]');
                 if (moduleLi) {
-                    moduleLi.classList.add('not-supported');
+                    moduleLi.parentElement.classList.add('not-supported');
                 }
             }
         }
