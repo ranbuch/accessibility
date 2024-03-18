@@ -248,6 +248,8 @@ var Accessibility = /*#__PURE__*/function () {
           decreaseText: true,
           increaseTextSpacing: true,
           decreaseTextSpacing: true,
+          increaseLineHeight: true,
+          decreaseLineHeight: true,
           invertColors: true,
           grayHues: true,
           bigCursor: true,
@@ -926,6 +928,7 @@ var Accessibility = /*#__PURE__*/function () {
       this.onChange(true);
       var factor = 2;
       if (!isIncrease) factor *= -1;
+      if (this.options.textEmlMode) factor *= 10;
       var all = document.querySelectorAll('*:not(._access)');
       var exclude = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
       for (var i = 0; i < all.length; i++) {
@@ -943,12 +946,13 @@ var Accessibility = /*#__PURE__*/function () {
         } else if (this.options.textEmlMode) {
           var lTextSize = getComputedStyle(all[i]).fontSize;
           var _lHeight = getComputedStyle(all[i]).lineHeight;
+          if (_lHeight === 'normal') _lHeight = (parseInt(lTextSize.replace('px', '')) * 1.2).toString() + 'px';
           var lHeight2 = _lHeight.replace('px', '');
           var lTextSize2 = lTextSize.replace('px', '');
           var inPercent = parseInt(lHeight2) * 100 / parseInt(lTextSize2);
           if (_lHeight && _lHeight.indexOf('px') > -1) {
             if (!all[i].getAttribute('data-init-line-height')) all[i].setAttribute('data-init-line-height', inPercent + '%');
-            inPercent += factor;
+            inPercent = inPercent + factor;
             all[i].style.lineHeight = inPercent + '%';
           }
           if (this._stateValues.textToSpeech) this.textToSpeech("Line height ".concat(isIncrease ? 'Increased' : 'Decreased'));

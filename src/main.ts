@@ -239,6 +239,8 @@ export class Accessibility implements IAccessibility {
                 decreaseText: true,
                 increaseTextSpacing: true,
                 decreaseTextSpacing: true,
+                increaseLineHeight: true,
+                decreaseLineHeight: true,
                 invertColors: true,
                 grayHues: true,
                 bigCursor: true,
@@ -1368,6 +1370,8 @@ export class Accessibility implements IAccessibility {
         let factor = 2;
         if (!isIncrease)
             factor *= -1;
+        if (this.options.textEmlMode)
+            factor *= 10;
 
         let all = document.querySelectorAll('*:not(._access)');
         let exclude = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
@@ -1391,13 +1395,15 @@ export class Accessibility implements IAccessibility {
             else if (this.options.textEmlMode) {
                 let lTextSize = getComputedStyle(all[i]).fontSize;
                 let lHeight = getComputedStyle(all[i]).lineHeight;
+                if (lHeight === 'normal')
+                    lHeight = (parseInt(lTextSize.replace('px', '')) * 1.2).toString() + 'px';
                 let lHeight2 = lHeight.replace('px', '');
                 let lTextSize2 = lTextSize.replace('px', '');
                 let inPercent = (parseInt(lHeight2) * 100) / parseInt(lTextSize2);
                 if (lHeight && (lHeight.indexOf('px') > -1)) {
                     if (!all[i].getAttribute('data-init-line-height'))
                         all[i].setAttribute('data-init-line-height', inPercent + '%');
-                    inPercent += factor;
+                    inPercent = inPercent + factor;
                     (all[i] as HTMLElement).style.lineHeight = inPercent + '%';
                 }
                 if (this._stateValues.textToSpeech) this.textToSpeech(`Line height ${isIncrease ? 'Increased' : 'Decreased'}`);

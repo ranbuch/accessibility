@@ -163,6 +163,8 @@ export interface IAccessibilityModulesOptions {
     decreaseText: boolean;
     increaseTextSpacing: boolean;
     decreaseTextSpacing: boolean;
+    increaseLineHeight: boolean;
+    decreaseLineHeight: boolean;
     invertColors: boolean;
     grayHues: boolean;
     bigCursor: boolean;
