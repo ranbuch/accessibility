@@ -2,13 +2,14 @@
 // Do not delete this as it allows importing the package with other projects
 import 'regenerator-runtime/runtime.js';
 import { Common } from './common';
-import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues } from './interfaces/accessibility.interface';
+import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues, AccessibilityModulesType, IIframeModal, ICustomFunction, IAccessibilityModuleOrder } from './interfaces/accessibility.interface';
 import { IFormattedDim, IJsonToHtml } from './interfaces/common.interface';
 import { IMenuInterface } from './interfaces/menu.interface';
 import { MenuInterface } from './menu-interface';
 import { Storage } from './storage';
 
 export class Accessibility implements IAccessibility {
+    static CSS_CLASS_NAME = '_access-main-css';
     private _isReading: boolean;
     private _common: Common;
     private _storage: Storage;
@@ -31,6 +32,7 @@ export class Accessibility implements IAccessibility {
         this._options = this.defaultOptions;
         options = this.deleteOppositesIfDefined(options);
         this.options = this._common.extend(this._options, options);
+        this.addModuleOrderIfNotDefined();
         // Consider adding this:
         // if (options) {
         //     if (!options.textToSpeechLang && document.querySelector('html').getAttribute('lang')) {
@@ -121,7 +123,7 @@ export class Accessibility implements IAccessibility {
 
     // Default options
     private get defaultOptions(): IAccessibilityOptions {
-        return {
+        const res = {
             icon: {
                 position: {
                     bottom: { size: 50, units: 'px' },
@@ -209,6 +211,7 @@ export class Accessibility implements IAccessibility {
                 },
                 fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
             },
+            suppressCssInjection: false,
             labels: {
                 resetTitle: 'Reset',
                 closeTitle: 'Close',
@@ -249,12 +252,15 @@ export class Accessibility implements IAccessibility {
                 textToSpeech: true,
                 speechToText: true,
                 disableAnimations: true,
+                iframeModals: true,
+                customFunctions: true,
             },
+            modulesOrder: [] as Array<IAccessibilityModuleOrder>,
             session: {
                 persistent: true
             },
-            iframeModals: [],
-            customFunctions: [],
+            iframeModals: [] as Array<IIframeModal>,
+            customFunctions: [] as Array<ICustomFunction>,
             statement: {
                 url: '',
             },
@@ -266,6 +272,17 @@ export class Accessibility implements IAccessibility {
                 speechToTextLang: ''
             }
         };
+        const keys = Object.keys(AccessibilityModulesType);
+        keys.forEach((key, index) => {
+            const keyNum  = parseInt(key);
+            if (!isNaN(keyNum)) {
+                res.modulesOrder.push({
+                    type: keyNum,
+                    order: keyNum
+                });
+            }
+        });
+        return res;
     }
 
     initFontSize() {
@@ -300,6 +317,13 @@ export class Accessibility implements IAccessibility {
         return options;
     }
 
+    addModuleOrderIfNotDefined() {
+        this.defaultOptions.modulesOrder.forEach(mo => {
+            if (!this.options.modulesOrder.find(imo => imo.type === mo.type))
+                this.options.modulesOrder.push(mo);
+        });
+    }
+
     disabledUnsupportedFeatures() {
         if (!('webkitSpeechRecognition' in window) || location.protocol !== 'https:') {
             this._common.warn('speech to text isn\'t supported in this browser or in http protocol (https required)');
@@ -312,18 +336,18 @@ export class Accessibility implements IAccessibility {
         }
     }
 
-    injectCss() {
+    public injectCss() {
         let css = `
         ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-            background-color: #F5F5F5;
+            -webkit-box-shadow: var(--_access-scrollbar-track-box-shadow, inset 0 0 6px rgba(0,0,0,0.3));
+            background-color: var(--_access-scrollbar-track-background-color, #F5F5F5);
         }
         ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {
-            width: 6px;
-            background-color: #F5F5F5;
+            width: var(--_access-scrollbar-width, 6px);
+            background-color: var(--_access-scrollbar-background-color, #F5F5F5);
         }
         ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {
-            background-color: #999999;
+            background-color: var(--_access-scrollbar-thumb-background-color, #999999);
         }
         ._access-icon {
             position: ${this.options.icon.position.type};
@@ -359,7 +383,7 @@ export class Accessibility implements IAccessibility {
             text-align: center;
         }
         ` : '') + `
-        .access_read_guide_bar{
+        .access_read_guide_bar {
             box-sizing: border-box;
             background: ${this.options.guide.cBackground};
             width: 100%!important;
@@ -371,7 +395,7 @@ export class Accessibility implements IAccessibility {
             top: 15px;
             z-index: 2147483647;
         }
-        .access-high-contrast *{
+        .access-high-contrast * {
             background-color: #000 !important;
             background-image: none !important;
             border-color: #fff !important;
@@ -389,16 +413,16 @@ export class Accessibility implements IAccessibility {
             position: fixed;
             width: ${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
             height: ${this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units};
-            transition-duration: .35s;
+            transition-duration: var(--_access-menu-transition-duration, .35s);
             z-index: ${this.options.icon.zIndex + 1};
             opacity: 1;
-            background-color: #fff;
-            color: #000;
-            border-radius: 3px;
-            border: solid 1px #f1f0f1;
+            background-color: var(--_access-menu-background-color, #fff);
+            color: var(--_access-menu-color, #000);
+            border-radius: var(--_access-menu-border-radius, 3px);
+            border: var(--_access-menu-border, solid 1px #f1f0f1);
             font-family: ${this.options.menu.fontFamily};
-            min-width: 300px;
-            box-shadow: 0px 0px 1px #aaa;
+            min-width: var(--_access-menu-min-width, 300px);
+            box-shadow: var(--_access-menu-box-shadow, 0px 0px 1px #aaa);
             max-height: calc(100vh - 80px);
             ${(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '')}
         }
@@ -427,15 +451,14 @@ export class Accessibility implements IAccessibility {
             right: -${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
         }
         ._access-menu ._text-center {
-            font-size: 22px !important;
-            font-weight: bold;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            font-size: var(--_access-menu-header-font-size, 22px);
+            font-weight: var(--_access-menu-header-font-weight, nornal);
+            margin: var(--_access-menu-header-margin, 20px 0 10px);
             padding: 0;
-            color: rgba(0,0,0,.87);
-            letter-spacing: initial!important;
-            word-spacing: initial!important;
-            text-align: center;
+            color: var(--_access-menu-header-color, rgba(0,0,0,.87));
+            letter-spacing: var(--_access-menu-header-letter-spacing, initial);
+            word-spacing: var(--_access-menu-header-word-spacing, initial);
+            text-align: var(--_access-menu-header-text-align, center);
         }
         ._access-menu ._menu-close-btn {
             left: 5px;
@@ -464,12 +487,15 @@ export class Accessibility implements IAccessibility {
             border: none;
         }
         ._access-menu ul {
-            padding: 0;
+            padding: 0 0 5px;
             position: relative;
-            font-size: 18px !important;
+            font-size: var(--_access-menu-font-size, 18px);
             margin: 0;
             overflow: auto;
-            max-height: calc(100vh - 77px);
+            max-height: var(--_access-menu-max-height, calc(100vh - 77px));
+            display: flex;
+            flex-flow: column;
+            gap: 5px;
         }
         html._access_cursor * {
             cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;
@@ -483,9 +509,11 @@ export class Accessibility implements IAccessibility {
             display: inline-block;
         }
         .screen-reader-wrapper {
-            margin-top: 13px;
-            margin-left: 10px;
-            margin-right: 10px;
+            margin: 0 10px;
+            position: absolute;
+            bottom: -3px;
+            width: calc(100% - 2px);
+            left: 1px;
         }
         .screen-reader-wrapper-step-1 {
             float: left;
@@ -509,29 +537,31 @@ export class Accessibility implements IAccessibility {
             border-radius: 10px;
         }
         ._access-menu ul li {
+            position: relative;
             list-style-type: none;
             -ms-user-select: none;
             -moz-user-select: none;
             -webkit-user-select: none;
             user-select: none;
-            margin: 5px;
+            margin: 0 5px 0 8px;
             font-size: ${this.options.buttons.font.size + this.options.buttons.font.units} !important;
             line-height: ${this.options.buttons.font.size + this.options.buttons.font.units} !important;
-            color: rgba(0,0,0,.6);
-            letter-spacing: initial!important;
-            word-spacing: initial!important;
+            color: var(--_access-menu-item-color, rgba(0,0,0,.6));
+            letter-spacing: var(--_access-menu-item-letter-spacing, initial);
+            word-spacing: var(--_access-menu-item-word-spacing, initial);
+            width: calc(100% - 17px);
         }
         ._access-menu ul li button {
-            background: #f9f9f9;
-            padding: 10px 0;
+            background: var(--_access-menu-item-button-background, #f9f9f9);
+            padding: var(--_access-menu-item-button-padding, 10px 0);
             width: 100%;
-            text-indent: 35px;
+            text-indent: var(--_access-menu-item-button-text-indent, 35px);
             text-align: start;
             position: relative;
-            transition-duration: .35s;
-            transition-timing-function: ease-in-out;
-            border: solid 1px #f1f0f1;
-            border-radius: 4px;
+            transition-duration: var(--_access-menu-item-button-transition-duration, .35s);
+            transition-timing-function: var(--_access-menu-item-button-transition-timing-function, ease-in-out);
+            border: var(--_access-menu-item-button-border, solid 1px #f1f0f1);
+            border-radius: var(--_access-menu-item-button-border-radius, 4px);
             cursor: pointer;
         }
         ._access-menu ul li.position {
@@ -542,18 +572,18 @@ export class Accessibility implements IAccessibility {
             opacity: 0.05;
         }
         ._access-menu ul li button.active, ._access-menu ul li button.active:hover {
-            background-color: #000;
+            background-color: var(--_access-menu-item-button-active-background-color, #000);
         }
         ._access-menu div.active {
-            color: #fff;
-            background-color: #000;
+            color: var(--_access-menu-div-active-color, #fff);
+            background-color: var(--_access-menu-div-active-background-color, #000);
         }
         ._access-menu ul li button.active, ._access-menu ul li button.active:hover, ._access-menu ul li button.active:before, ._access-menu ul li button.active:hover:before {
-            color: #fff;
+            color: var(--_access-menu-item-button-active-color, #fff);
         }
         ._access-menu ul li button:hover {
-            color: rgba(0,0,0,.8);
-            background-color: #eaeaea;
+            color: var(--_access-menu-item-button-hover-color, rgba(0,0,0,.8));
+            background-color: var(--_access-menu-item-button-hover-background-color, #eaeaea);
         }
         ._access-menu ul li.not-supported {
             display: none;
@@ -583,15 +613,15 @@ export class Accessibility implements IAccessibility {
         }
         @keyframes _access-dialog-backdrop {
             0% {
-                background: rgba(0, 0, 0, 0.1);
+                background: var(--_access-menu-dialog-backdrop-background-start, rgba(0, 0, 0, 0.1))
             }
             100% {
-                background: rgba(0, 0, 0, 0.5);
+                background: var(--_access-menu-dialog-backdrop-background-end, rgba(0, 0, 0, 0.5))
             }
         }
         dialog._access::backdrop, dialog._access {
-            transition-duration: 0.35s;
-            transition-timing-function: ease-in-out;
+            transition-duration: var(--_access-menu-dialog-backdrop-transition-duration, 0.35s);
+            transition-timing-function: var(--_access-menu-dialog-backdrop-transition-timing-function, ease-in-out);
         }
         dialog._access:modal {
             border-color: transparent;
@@ -599,11 +629,11 @@ export class Accessibility implements IAccessibility {
             padding: 0;
         }
         dialog._access[open]::backdrop {
-            background: rgba(0, 0, 0, 0.5);
-            animation: _access-dialog-backdrop 0.35s ease-in-out;
+            background: var(--_access-menu-dialog-backdrop-background-end, rgba(0, 0, 0, 0.5))
+            animation: _access-dialog-backdrop var(--_access-menu-dialog-backdrop-transition-duration, 0.35s) ease-in-out;
         }
         dialog._access.closing[open]::backdrop {
-            background: rgba(0, 0, 0, 0.1);
+            background: var(--_access-menu-dialog-backdrop-background-start, rgba(0, 0, 0, 0.1));
         }
         dialog._access.closing[open] {
             opacity: 0;
@@ -626,62 +656,68 @@ export class Accessibility implements IAccessibility {
             color: #fff;
         }
         ._access-menu ul li button[data-access-action="increaseText"]:before {
-            content: ${!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"'};
+            content: var(--_access-menu-item-icon-increase-text, ${!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"'});
         }
         ._access-menu ul li button[data-access-action="decreaseText"]:before {
-            content: ${!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"'};
+            content: var(--_access-menu-item-icon-decrease-text, ${!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"'});
         }
         ._access-menu ul li button[data-access-action="increaseTextSpacing"]:before {
-            content: ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'};
+            content: var(--_access-menu-item-icon-increase-text-spacing, ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'});
             transform: rotate(90deg) translate(-7px, 2px);
             top: 14px;
             left: 0;
         }
         ._access-menu ul li button[data-access-action="decreaseTextSpacing"]:before {
-            content: ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'};
+            content: var(--_access-menu-item-icon-decrease-text-spacing, ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'});
             transform: rotate(90deg) translate(-7px, 2px);
             top: 14px;
             left: 0;
         }
         ._access-menu ul li button[data-access-action="invertColors"]:before {
-            content: ${!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"'};
+            content: var(--_access-menu-item-icon-invert-colors, ${!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"'});
         }
         ._access-menu ul li button[data-access-action="grayHues"]:before {
-            content: ${!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"'};
+            content: var(--_access-menu-item-icon-gray-hues, ${!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"'});
         }
         ._access-menu ul li button[data-access-action="underlineLinks"]:before {
-            content: ${!this.options.icon.useEmojis ? '"format_underlined"' : '"🔗"'};
+            content: var(--_access-menu-item-icon-underline-links, ${!this.options.icon.useEmojis ? '"format_underlined"' : '"🔗"'});
         }
         ._access-menu ul li button[data-access-action="bigCursor"]:before {
             /*content: 'touch_app';*/
         }
         ._access-menu ul li button[data-access-action="readingGuide"]:before {
-            content: ${!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"'};
+            content: var(--_access-menu-item-icon-reading-guide, ${!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"'});
         }
         ._access-menu ul li button[data-access-action="textToSpeech"]:before {
-            content: ${!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"'};
+            content: var(--_access-menu-item-icon-text-to-speech, ${!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"'});
         }
         ._access-menu ul li button[data-access-action="speechToText"]:before {
-            content: ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'};
+            content: var(--_access-menu-item-icon-speech-to-text, ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'});
         }
         ._access-menu ul li button[data-access-action="disableAnimations"]:before {
-            content: ${!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"'};
+            content: var(--_access-menu-item-icon-disable-animations, ${!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"'});
         }
         ._access-menu ul li button[data-access-action="iframeModals"]:before {
-            content: ${!this.options.icon.useEmojis ? '"policy"' : '"⚖️"'};
+            content: var(--_access-menu-item-icon-iframe-modals, ${!this.options.icon.useEmojis ? '"policy"' : '"⚖️"'});
         }
         ._access-menu ul li button[data-access-action="customFunctions"]:before {
-            content: ${!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"'};
+            content: var(--_access-menu-item-icon-custom-functions, ${!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"'});
         }
         ._access-menu ul li button[data-access-action="increaseLineHeight"]:before {
-            content: ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'};
+            content: var(--_access-menu-item-icon-increase-line-height, ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'});
         }
         ._access-menu ul li button[data-access-action="decreaseLineHeight"]:before {
-            content: ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'};
+            content: var(--_access-menu-item-icon-increase-decrease-line-height, ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'});
         }`;
-        let className = '_access-main-css';
+        const className = Accessibility.CSS_CLASS_NAME;
         this._common.injectStyle(css, { className: className });
-        this._common.deployedObjects.set('.' + className, false);
+        this._common.deployedObjects.set(`.${className}`, false);
+    }
+
+    public removeCSS() {
+        const existing = document.querySelector(`.${Accessibility.CSS_CLASS_NAME}`);
+        if (existing)
+            existing.remove();
     }
 
     injectIcon(): HTMLElement {
@@ -1249,17 +1285,28 @@ export class Accessibility implements IAccessibility {
         );
     }
 
-    disableUnsupportedModules() {
-        for (let i in this.options.modules) {
+    sortModuleTypes() {
+        this.options.modulesOrder.sort((a: IAccessibilityModuleOrder, b: IAccessibilityModuleOrder) => {
+            return a.order - b.order;
+        });
+    }
+
+    disableUnsupportedModulesAndSort() {
+        this.sortModuleTypes();
+        let ul = document.querySelector('._access-menu ul');
+        this.options.modulesOrder.forEach(item => {
+            const i = item.type;
+            const module = AccessibilityModulesType[i];
             let m = this.options.modules as any;
-            m = m[i];
-            if (!m) {
-                let moduleLi = document.querySelector('button[data-access-action="' + i + '"]');
-                if (moduleLi) {
+            m = m[module];
+            let moduleLi = document.querySelector('button[data-access-action="' + module + '"]');
+            if (moduleLi) {
+                moduleLi.parentElement.remove();
+                ul.appendChild(moduleLi.parentElement);
+                if (!m)
                     moduleLi.parentElement.classList.add('not-supported');
-                }
             }
-        }
+        });
     }
 
     resetAll() {
@@ -1662,13 +1709,14 @@ export class Accessibility implements IAccessibility {
         this._html = document.documentElement || document.getElementsByTagName('html')[0];
         if (this.options.textEmlMode)
             this.initFontSize();
-        this.injectCss();
+        if (!this.options.suppressCssInjection)
+            this.injectCss();
         this._icon = this.injectIcon();
         this._menu = this.injectMenu();
         this.injectTts();
         setTimeout(() => {
             this.addListeners();
-            this.disableUnsupportedModules();
+            this.disableUnsupportedModulesAndSort();
         }, 10);
         if (this.options.hotkeys.enabled) {
             document.onkeydown = (e: KeyboardEvent) => {

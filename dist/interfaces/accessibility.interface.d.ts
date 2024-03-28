@@ -1,5 +1,5 @@
-import { ICommon, IUnitsDim } from "./common.interface";
-import { IMenuInterface } from "./menu.interface";
+import { ICommon, IUnitsDim } from './common.interface';
+import { IMenuInterface } from './menu.interface';
 export interface IAccessibility {
     menuInterface: IMenuInterface;
     options: IAccessibilityOptions;
@@ -25,6 +25,7 @@ export interface IAccessibility {
     resetIfDefined(src: string, dest: any, prop: string): void;
     onChange(updateSession: boolean): void;
     createScreenShot(url: string): Promise<string>;
+    injectCss(): void;
 }
 export interface IAccessibilityOptions {
     icon?: IAccessibilityIconOptions;
@@ -39,12 +40,14 @@ export interface IAccessibilityOptions {
     textEmlMode?: boolean;
     animations?: IAccessibilityAnimationsOptions;
     modules?: IAccessibilityModulesOptions;
+    modulesOrder?: Array<IAccessibilityModuleOrder>;
     session?: IAccessibilitySessionOptions;
     iframeModals?: Array<IIframeModal>;
     customFunctions?: Array<ICustomFunction>;
     statement?: IAccessibilityUrlOptions;
     feedback?: IAccessibilityUrlOptions;
     language?: IAccessibilityLanguageOptions;
+    suppressCssInjection?: boolean;
 }
 export interface ICustomFunction {
     method: Function;
@@ -68,7 +71,7 @@ export interface IAccessibilityIconOptions {
     color?: string;
     img?: string;
     circular?: boolean;
-    circularBorder?: false;
+    circularBorder?: true | false;
     fontFaceSrc?: Array<string>;
     fontClass?: string;
     useEmojis?: boolean;
@@ -157,6 +160,28 @@ export interface IAccessibilityModulesOptions {
     textToSpeech: boolean;
     speechToText: boolean;
     disableAnimations: boolean;
+}
+export declare enum AccessibilityModulesType {
+    increaseText = 1,
+    decreaseText = 2,
+    increaseTextSpacing = 3,
+    decreaseTextSpacing = 4,
+    increaseLineHeight = 5,
+    decreaseLineHeight = 6,
+    invertColors = 7,
+    grayHues = 8,
+    bigCursor = 9,
+    readingGuide = 10,
+    underlineLinks = 11,
+    textToSpeech = 12,
+    speechToText = 13,
+    disableAnimations = 14,
+    iframeModals = 15,
+    customFunctions = 16
+}
+export interface IAccessibilityModuleOrder {
+    order: number;
+    type: AccessibilityModulesType;
 }
 export interface IAccessibilitySessionOptions {
     persistent: boolean;

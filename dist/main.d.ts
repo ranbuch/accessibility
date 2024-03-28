@@ -3,6 +3,7 @@ import { Common } from './common';
 import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues } from './interfaces/accessibility.interface';
 import { IMenuInterface } from './interfaces/menu.interface';
 export declare class Accessibility implements IAccessibility {
+    static CSS_CLASS_NAME: string;
     private _isReading;
     private _common;
     private _storage;
@@ -31,15 +32,18 @@ export declare class Accessibility implements IAccessibility {
     initFontSize(): void;
     fontFallback(): void;
     deleteOppositesIfDefined(options: IAccessibilityOptions): IAccessibilityOptions;
+    addModuleOrderIfNotDefined(): void;
     disabledUnsupportedFeatures(): void;
     injectCss(): void;
+    removeCSS(): void;
     injectIcon(): HTMLElement;
     parseKeys(arr: Array<any>): string;
     injectMenu(): HTMLElement;
     getVoices(): Promise<SpeechSynthesisVoice[]>;
     injectTts(): Promise<void>;
     addListeners(): void;
-    disableUnsupportedModules(): void;
+    sortModuleTypes(): void;
+    disableUnsupportedModulesAndSort(): void;
     resetAll(): void;
     resetTextSize(): void;
     resetLineHeight(): void;

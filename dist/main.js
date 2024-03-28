@@ -7,6 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = exports.Accessibility = void 0;
 require("regenerator-runtime/runtime.js");
 var _common = require("./common");
+var _accessibility = require("./interfaces/accessibility.interface");
 var _menuInterface = require("./menu-interface");
 var _storage = require("./storage");
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -50,6 +51,7 @@ var Accessibility = /*#__PURE__*/function () {
     this._options = this.defaultOptions;
     options = this.deleteOppositesIfDefined(options);
     this.options = this._common.extend(this._options, options);
+    this.addModuleOrderIfNotDefined();
     // Consider adding this:
     // if (options) {
     //     if (!options.textToSpeechLang && document.querySelector('html').getAttribute('lang')) {
@@ -145,7 +147,7 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "defaultOptions",
     get: function get() {
-      return {
+      var res = {
         icon: {
           position: {
             bottom: {
@@ -218,6 +220,7 @@ var Accessibility = /*#__PURE__*/function () {
           },
           fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
         },
+        suppressCssInjection: false,
         labels: {
           resetTitle: 'Reset',
           closeTitle: 'Close',
@@ -257,8 +260,11 @@ var Accessibility = /*#__PURE__*/function () {
           underlineLinks: true,
           textToSpeech: true,
           speechToText: true,
-          disableAnimations: true
+          disableAnimations: true,
+          iframeModals: true,
+          customFunctions: true
         },
+        modulesOrder: [],
         session: {
           persistent: true
         },
@@ -275,6 +281,17 @@ var Accessibility = /*#__PURE__*/function () {
           speechToTextLang: ''
         }
       };
+      var keys = Object.keys(_accessibility.AccessibilityModulesType);
+      keys.forEach(function (key, index) {
+        var keyNum = parseInt(key);
+        if (!isNaN(keyNum)) {
+          res.modulesOrder.push({
+            type: keyNum,
+            order: keyNum
+          });
+        }
+      });
+      return res;
     }
   }, {
     key: "initFontSize",
@@ -312,6 +329,16 @@ var Accessibility = /*#__PURE__*/function () {
       return options;
     }
   }, {
+    key: "addModuleOrderIfNotDefined",
+    value: function addModuleOrderIfNotDefined() {
+      var _this2 = this;
+      this.defaultOptions.modulesOrder.forEach(function (mo) {
+        if (!_this2.options.modulesOrder.find(function (imo) {
+          return imo.type === mo.type;
+        })) _this2.options.modulesOrder.push(mo);
+      });
+    }
+  }, {
     key: "disabledUnsupportedFeatures",
     value: function disabledUnsupportedFeatures() {
       if (!('webkitSpeechRecognition' in window) || location.protocol !== 'https:') {
@@ -327,12 +354,18 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "injectCss",
     value: function injectCss() {
-      var css = "\n        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {\n            -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {\n            width: 6px;\n            background-color: #F5F5F5;\n        }\n        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {\n            background-color: #999999;\n        }\n        ._access-icon {\n            position: ".concat(this.options.icon.position.type, ";\n            background-repeat: no-repeat;\n            background-size: contain;\n            cursor: pointer;\n            opacity: 0;\n            transition-duration: .35s;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            ").concat(!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : '', "\n            transform: ").concat(!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(14deg)', ";\n        }\n        ._access-icon:hover {\n            ") + (this.options.animations.buttons && !this.options.icon.useEmojis ? "\n            box-shadow: 1px 1px 10px rgba(0,0,0,.9);\n            transform: scale(1.1);\n            " : '') + "\n        }\n        .circular._access-icon {\n            border-radius: 50%;\n            border: .5px solid white;\n        }\n        " + (this.options.animations.buttons && this.options.icon.circularBorder ? "\n        .circular._access-icon:hover {\n            border: 5px solid white;\n            border-style: double;\n            font-size: 35px!important;\n            vertical-align: middle;\n            padding-top: 2px;\n            text-align: center;\n        }\n        " : '') + "\n        .access_read_guide_bar{\n            box-sizing: border-box;\n            background: ".concat(this.options.guide.cBackground, ";\n            width: 100%!important;\n            min-width: 100%!important;\n            position: fixed!important;\n            height: ").concat(this.options.guide.height, " !important;\n            border: solid 3px ").concat(this.options.guide.cBorder, ";\n            border-radius: 5px;\n            top: 15px;\n            z-index: 2147483647;\n        }\n        .access-high-contrast *{\n            background-color: #000 !important;\n            background-image: none !important;\n            border-color: #fff !important;\n            -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n            color: #fff !important;\n            text-indent: 0 !important;\n            text-shadow: none !important;\n        }\n        ._access-menu {\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            position: fixed;\n            width: ").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n            height: ").concat(this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units, ";\n            transition-duration: .35s;\n            z-index: ").concat(this.options.icon.zIndex + 1, ";\n            opacity: 1;\n            background-color: #fff;\n            color: #000;\n            border-radius: 3px;\n            border: solid 1px #f1f0f1;\n            font-family: ").concat(this.options.menu.fontFamily, ";\n            min-width: 300px;\n            box-shadow: 0px 0px 1px #aaa;\n            max-height: calc(100vh - 80px);\n            ").concat(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '', "\n        }\n        ._access-menu.close {\n            z-index: -1;\n            width: 0;\n            opacity: 0;\n            background-color: transparent;\n        }\n        ._access-menu.bottom {\n            bottom: 0;\n        }\n        ._access-menu.top {\n            top: 0;\n        }\n        ._access-menu.left {\n            left: 0;\n        }\n        ._access-menu.close.left {\n            left: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu.right {\n            right: 0;\n        }\n        ._access-menu.close.right {\n            right: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu ._text-center {\n            font-size: 22px !important;\n            font-weight: bold;\n            margin-top: 20px;\n            margin-bottom: 10px;\n            padding: 0;\n            color: rgba(0,0,0,.87);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n            text-align: center;\n        }\n        ._access-menu ._menu-close-btn {\n            left: 5px;\n            color: #d63c3c;\n            transition: .3s ease;\n            transform: rotate(0deg);\n            font-style: normal !important;\n        }\n        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {\n            ").concat(this.options.animations.buttons ? 'transform: rotate(180deg);' : '', "\n        }\n        ._access-menu ._menu-reset-btn {\n            right: 5px;\n            color: #4054b2;\n            transition: .3s ease;\n            transform: rotate(0deg);\n            font-style: normal !important;\n        }\n        ._access-menu ._menu-btn {\n            position: absolute;\n            top: 5px;\n            cursor: pointer;\n            font-size: 24px !important;\n            font-weight: bold;\n            background: transparent;\n            border: none;\n        }\n        ._access-menu ul {\n            padding: 0;\n            position: relative;\n            font-size: 18px !important;\n            margin: 0;\n            overflow: auto;\n            max-height: calc(100vh - 77px);\n        }\n        html._access_cursor * {\n            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;\n        }\n        .texting {\n            height:50px;\n            text-align: center;\n            border: solid 2.4px #f1f0f1;\n            border-radius: 4px;\n            width: 100%;\n            display: inline-block;\n        }\n        .screen-reader-wrapper {\n            margin-top: 13px;\n            margin-left: 10px;\n            margin-right: 10px;\n        }\n        .screen-reader-wrapper-step-1 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        .screen-reader-wrapper-step-2 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        .screen-reader-wrapper-step-3 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        ._access-menu ul li {\n            list-style-type: none;\n            -ms-user-select: none;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            user-select: none;\n            margin: 5px;\n            font-size: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            line-height: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            color: rgba(0,0,0,.6);\n            letter-spacing: initial!important;\n            word-spacing: initial!important;\n        }\n        ._access-menu ul li button {\n            background: #f9f9f9;\n            padding: 10px 0;\n            width: 100%;\n            text-indent: 35px;\n            text-align: start;\n            position: relative;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n            border: solid 1px #f1f0f1;\n            border-radius: 4px;\n            cursor: pointer;\n        }\n        ._access-menu ul li.position {\n            display: inline-block;\n            width: auto;\n        }\n        ._access-menu ul.before-collapse li button {\n            opacity: 0.05;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover {\n            background-color: #000;\n        }\n        ._access-menu div.active {\n            color: #fff;\n            background-color: #000;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover, ._access-menu ul li button.active:before, ._access-menu ul li button.active:hover:before {\n            color: #fff;\n        }\n        ._access-menu ul li button:hover {\n            color: rgba(0,0,0,.8);\n            background-color: #eaeaea;\n        }\n        ._access-menu ul li.not-supported {\n            display: none;\n        }\n        ._access-menu ul li button:before {\n            content: ' ';\n            ").concat(!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : '', "\n            text-rendering: optimizeLegibility;\n            font-feature-settings: \"liga\" 1;\n            font-style: normal;\n            text-transform: none;\n            line-height: ").concat(!this.options.icon.useEmojis ? '1' : '1.1', ";\n            font-size: ").concat(!this.options.icon.useEmojis ? '24px' : '20px', " !important;\n            width: 30px;\n            height: 30px;\n            display: inline-block;\n            overflow: hidden;\n            -webkit-font-smoothing: antialiased;\n            top: 7px;\n            left: 5px;\n            position: absolute;\n            color: rgba(0,0,0,.6);\n            direction: ltr;\n            text-indent: 0;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        @keyframes _access-dialog-backdrop {\n            0% {\n                background: rgba(0, 0, 0, 0.1);\n            }\n            100% {\n                background: rgba(0, 0, 0, 0.5);\n            }\n        }\n        dialog._access::backdrop, dialog._access {\n            transition-duration: 0.35s;\n            transition-timing-function: ease-in-out;\n        }\n        dialog._access:modal {\n            border-color: transparent;\n            border-width: 0;\n            padding: 0;\n        }\n        dialog._access[open]::backdrop {\n            background: rgba(0, 0, 0, 0.5);\n            animation: _access-dialog-backdrop 0.35s ease-in-out;\n        }\n        dialog._access.closing[open]::backdrop {\n            background: rgba(0, 0, 0, 0.1);\n        }\n        dialog._access.closing[open] {\n            opacity: 0;\n        }\n        ._access-menu ul li button svg path {\n            fill: rgba(0,0,0,.6);\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        ._access-menu ul li button:hover svg path {\n            fill: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active svg path {\n            fill: #fff;\n        }\n        ._access-menu ul li:hover button:before {\n            color: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active button:before {\n            color: #fff;\n        }\n        ._access-menu ul li button[data-access-action=\"increaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"increaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseTextSpacing\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"', ";\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"invertColors\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"grayHues\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"underlineLinks\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"format_underlined"' : '"🔗"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"bigCursor\"]:before {\n            /*content: 'touch_app';*/\n        }\n        ._access-menu ul li button[data-access-action=\"readingGuide\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"textToSpeech\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"speechToText\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"mic"' : '"🎤"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"disableAnimations\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"iframeModals\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"policy"' : '"⚖️"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"customFunctions\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"increaseLineHeight\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"', ";\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseLineHeight\"]:before {\n            content: ").concat(!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"', ";\n        }");
-      var className = '_access-main-css';
+      var css = "\n        ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {\n            -webkit-box-shadow: var(--_access-scrollbar-track-box-shadow, inset 0 0 6px rgba(0,0,0,0.3));\n            background-color: var(--_access-scrollbar-track-background-color, #F5F5F5);\n        }\n        ._access-scrollbar::-webkit-scrollbar, .mat-autocomplete-panel::-webkit-scrollbar, .mat-tab-body-content::-webkit-scrollbar, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar, .mat-menu-panel::-webkit-scrollbar {\n            width: var(--_access-scrollbar-width, 6px);\n            background-color: var(--_access-scrollbar-background-color, #F5F5F5);\n        }\n        ._access-scrollbar::-webkit-scrollbar-thumb, .mat-autocomplete-panel::-webkit-scrollbar-thumb, .mat-tab-body-content::-webkit-scrollbar-thumb, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-thumb, .mat-menu-panel::-webkit-scrollbar-thumb {\n            background-color: var(--_access-scrollbar-thumb-background-color, #999999);\n        }\n        ._access-icon {\n            position: ".concat(this.options.icon.position.type, ";\n            background-repeat: no-repeat;\n            background-size: contain;\n            cursor: pointer;\n            opacity: 0;\n            transition-duration: .35s;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            ").concat(!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : '', "\n            transform: ").concat(!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(14deg)', ";\n        }\n        ._access-icon:hover {\n            ") + (this.options.animations.buttons && !this.options.icon.useEmojis ? "\n            box-shadow: 1px 1px 10px rgba(0,0,0,.9);\n            transform: scale(1.1);\n            " : '') + "\n        }\n        .circular._access-icon {\n            border-radius: 50%;\n            border: .5px solid white;\n        }\n        " + (this.options.animations.buttons && this.options.icon.circularBorder ? "\n        .circular._access-icon:hover {\n            border: 5px solid white;\n            border-style: double;\n            font-size: 35px!important;\n            vertical-align: middle;\n            padding-top: 2px;\n            text-align: center;\n        }\n        " : '') + "\n        .access_read_guide_bar {\n            box-sizing: border-box;\n            background: ".concat(this.options.guide.cBackground, ";\n            width: 100%!important;\n            min-width: 100%!important;\n            position: fixed!important;\n            height: ").concat(this.options.guide.height, " !important;\n            border: solid 3px ").concat(this.options.guide.cBorder, ";\n            border-radius: 5px;\n            top: 15px;\n            z-index: 2147483647;\n        }\n        .access-high-contrast * {\n            background-color: #000 !important;\n            background-image: none !important;\n            border-color: #fff !important;\n            -webkit-box-shadow: none !important;\n            box-shadow: none !important;\n            color: #fff !important;\n            text-indent: 0 !important;\n            text-shadow: none !important;\n        }\n        ._access-menu {\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            -ms-user-select: none;\n            user-select: none;\n            position: fixed;\n            width: ").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n            height: ").concat(this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units, ";\n            transition-duration: var(--_access-menu-transition-duration, .35s);\n            z-index: ").concat(this.options.icon.zIndex + 1, ";\n            opacity: 1;\n            background-color: var(--_access-menu-background-color, #fff);\n            color: var(--_access-menu-color, #000);\n            border-radius: var(--_access-menu-border-radius, 3px);\n            border: var(--_access-menu-border, solid 1px #f1f0f1);\n            font-family: ").concat(this.options.menu.fontFamily, ";\n            min-width: var(--_access-menu-min-width, 300px);\n            box-shadow: var(--_access-menu-box-shadow, 0px 0px 1px #aaa);\n            max-height: calc(100vh - 80px);\n            ").concat(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '', "\n        }\n        ._access-menu.close {\n            z-index: -1;\n            width: 0;\n            opacity: 0;\n            background-color: transparent;\n        }\n        ._access-menu.bottom {\n            bottom: 0;\n        }\n        ._access-menu.top {\n            top: 0;\n        }\n        ._access-menu.left {\n            left: 0;\n        }\n        ._access-menu.close.left {\n            left: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu.right {\n            right: 0;\n        }\n        ._access-menu.close.right {\n            right: -").concat(this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units, ";\n        }\n        ._access-menu ._text-center {\n            font-size: var(--_access-menu-header-font-size, 22px);\n            font-weight: var(--_access-menu-header-font-weight, nornal);\n            margin: var(--_access-menu-header-margin, 20px 0 10px);\n            padding: 0;\n            color: var(--_access-menu-header-color, rgba(0,0,0,.87));\n            letter-spacing: var(--_access-menu-header-letter-spacing, initial);\n            word-spacing: var(--_access-menu-header-word-spacing, initial);\n            text-align: var(--_access-menu-header-text-align, center);\n        }\n        ._access-menu ._menu-close-btn {\n            left: 5px;\n            color: #d63c3c;\n            transition: .3s ease;\n            transform: rotate(0deg);\n            font-style: normal !important;\n        }\n        ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {\n            ").concat(this.options.animations.buttons ? 'transform: rotate(180deg);' : '', "\n        }\n        ._access-menu ._menu-reset-btn {\n            right: 5px;\n            color: #4054b2;\n            transition: .3s ease;\n            transform: rotate(0deg);\n            font-style: normal !important;\n        }\n        ._access-menu ._menu-btn {\n            position: absolute;\n            top: 5px;\n            cursor: pointer;\n            font-size: 24px !important;\n            font-weight: bold;\n            background: transparent;\n            border: none;\n        }\n        ._access-menu ul {\n            padding: 0 0 5px;\n            position: relative;\n            font-size: var(--_access-menu-font-size, 18px);\n            margin: 0;\n            overflow: auto;\n            max-height: var(--_access-menu-max-height, calc(100vh - 77px));\n            display: flex;\n            flex-flow: column;\n            gap: 5px;\n        }\n        html._access_cursor * {\n            cursor: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz48IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSIyOS4xODhweCIgaGVpZ2h0PSI0My42MjVweCIgdmlld0JveD0iMCAwIDI5LjE4OCA0My42MjUiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDI5LjE4OCA0My42MjUiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxnPjxwb2x5Z29uIGZpbGw9IiNGRkZGRkYiIHN0cm9rZT0iI0Q5REFEOSIgc3Ryb2tlLXdpZHRoPSIxLjE0MDYiIHN0cm9rZS1taXRlcmxpbWl0PSIxMCIgcG9pbnRzPSIyLjgsNC41NDkgMjYuODQ3LDE5LjkwMiAxNi45NjQsMjIuNzAxIDI0LjIzOSwzNy43NDkgMTguMjc4LDQyLjAxNyA5Ljc0MSwzMC43MjQgMS4xMzgsMzUuODA5ICIvPjxnPjxnPjxnPjxwYXRoIGZpbGw9IiMyMTI2MjciIGQ9Ik0yOS4xNzUsMjEuMTU1YzAuMDcxLTAuNjEzLTAuMTY1LTEuMjUzLTAuNjM1LTEuNTczTDIuMTY1LDAuMjU4Yy0wLjQyNC0wLjMyLTAuOTg4LTAuMzQ2LTEuNDM1LTAuMDUzQzAuMjgyLDAuNDk3LDAsMS4wMywwLDEuNjE3djM0LjE3MWMwLDAuNjEzLDAuMzA2LDEuMTQ2LDAuNzc2LDEuNDM5YzAuNDcxLDAuMjY3LDEuMDU5LDAuMjEzLDEuNDgyLTAuMTZsNy40ODItNi4zNDRsNi44NDcsMTIuMTU1YzAuMjU5LDAuNDgsMC43MjksMC43NDYsMS4yLDAuNzQ2YzAuMjM1LDAsMC40OTQtMC4wOCwwLjcwNi0wLjIxM2w2Ljk4OC00LjU4NWMwLjMyOS0wLjIxMywwLjU2NS0wLjU4NiwwLjY1OS0xLjAxM2MwLjA5NC0wLjQyNiwwLjAyNC0wLjg4LTAuMTg4LTEuMjI2bC02LjM3Ni0xMS4zODJsOC42MTEtMi43NDVDMjguNzA1LDIyLjI3NCwyOS4xMDUsMjEuNzY4LDI5LjE3NSwyMS4xNTV6IE0xNi45NjQsMjIuNzAxYy0wLjQyNCwwLjEzMy0wLjc3NiwwLjUwNi0wLjk0MSwwLjk2Yy0wLjE2NSwwLjQ4LTAuMTE4LDEuMDEzLDAuMTE4LDEuNDM5bDYuNTg4LDExLjc4MWwtNC41NDEsMi45ODVsLTYuODk0LTEyLjMxNWMtMC4yMTItMC4zNzMtMC41NDEtMC42NC0wLjk0MS0wLjcyYy0wLjA5NC0wLjAyNy0wLjE2NS0wLjAyNy0wLjI1OS0wLjAyN2MtMC4zMDYsMC0wLjU4OCwwLjEwNy0wLjg0NywwLjMyTDIuOCwzMi41OVY0LjU0OWwyMS41OTksMTUuODA2TDE2Ljk2NCwyMi43MDF6Ii8+PC9nPjwvZz48L2c+PC9nPjwvc3ZnPg==),auto!important;\n        }\n        .texting {\n            height:50px;\n            text-align: center;\n            border: solid 2.4px #f1f0f1;\n            border-radius: 4px;\n            width: 100%;\n            display: inline-block;\n        }\n        .screen-reader-wrapper {\n            margin: 0 10px;\n            position: absolute;\n            bottom: -3px;\n            width: calc(100% - 2px);\n            left: 1px;\n        }\n        .screen-reader-wrapper-step-1 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        .screen-reader-wrapper-step-2 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        .screen-reader-wrapper-step-3 {\n            float: left;\n            background: white;\n            width: 33%;\n            height: 3px;\n            border-radius: 10px;\n        }\n        ._access-menu ul li {\n            position: relative;\n            list-style-type: none;\n            -ms-user-select: none;\n            -moz-user-select: none;\n            -webkit-user-select: none;\n            user-select: none;\n            margin: 0 5px 0 8px;\n            font-size: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            line-height: ").concat(this.options.buttons.font.size + this.options.buttons.font.units, " !important;\n            color: var(--_access-menu-item-color, rgba(0,0,0,.6));\n            letter-spacing: var(--_access-menu-item-letter-spacing, initial);\n            word-spacing: var(--_access-menu-item-word-spacing, initial);\n            width: calc(100% - 17px);\n        }\n        ._access-menu ul li button {\n            background: var(--_access-menu-item-button-background, #f9f9f9);\n            padding: var(--_access-menu-item-button-padding, 10px 0);\n            width: 100%;\n            text-indent: var(--_access-menu-item-button-text-indent, 35px);\n            text-align: start;\n            position: relative;\n            transition-duration: var(--_access-menu-item-button-transition-duration, .35s);\n            transition-timing-function: var(--_access-menu-item-button-transition-timing-function, ease-in-out);\n            border: var(--_access-menu-item-button-border, solid 1px #f1f0f1);\n            border-radius: var(--_access-menu-item-button-border-radius, 4px);\n            cursor: pointer;\n        }\n        ._access-menu ul li.position {\n            display: inline-block;\n            width: auto;\n        }\n        ._access-menu ul.before-collapse li button {\n            opacity: 0.05;\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover {\n            background-color: var(--_access-menu-item-button-active-background-color, #000);\n        }\n        ._access-menu div.active {\n            color: var(--_access-menu-div-active-color, #fff);\n            background-color: var(--_access-menu-div-active-background-color, #000);\n        }\n        ._access-menu ul li button.active, ._access-menu ul li button.active:hover, ._access-menu ul li button.active:before, ._access-menu ul li button.active:hover:before {\n            color: var(--_access-menu-item-button-active-color, #fff);\n        }\n        ._access-menu ul li button:hover {\n            color: var(--_access-menu-item-button-hover-color, rgba(0,0,0,.8));\n            background-color: var(--_access-menu-item-button-hover-background-color, #eaeaea);\n        }\n        ._access-menu ul li.not-supported {\n            display: none;\n        }\n        ._access-menu ul li button:before {\n            content: ' ';\n            ").concat(!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : '', "\n            text-rendering: optimizeLegibility;\n            font-feature-settings: \"liga\" 1;\n            font-style: normal;\n            text-transform: none;\n            line-height: ").concat(!this.options.icon.useEmojis ? '1' : '1.1', ";\n            font-size: ").concat(!this.options.icon.useEmojis ? '24px' : '20px', " !important;\n            width: 30px;\n            height: 30px;\n            display: inline-block;\n            overflow: hidden;\n            -webkit-font-smoothing: antialiased;\n            top: 7px;\n            left: 5px;\n            position: absolute;\n            color: rgba(0,0,0,.6);\n            direction: ltr;\n            text-indent: 0;\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        @keyframes _access-dialog-backdrop {\n            0% {\n                background: var(--_access-menu-dialog-backdrop-background-start, rgba(0, 0, 0, 0.1))\n            }\n            100% {\n                background: var(--_access-menu-dialog-backdrop-background-end, rgba(0, 0, 0, 0.5))\n            }\n        }\n        dialog._access::backdrop, dialog._access {\n            transition-duration: var(--_access-menu-dialog-backdrop-transition-duration, 0.35s);\n            transition-timing-function: var(--_access-menu-dialog-backdrop-transition-timing-function, ease-in-out);\n        }\n        dialog._access:modal {\n            border-color: transparent;\n            border-width: 0;\n            padding: 0;\n        }\n        dialog._access[open]::backdrop {\n            background: var(--_access-menu-dialog-backdrop-background-end, rgba(0, 0, 0, 0.5))\n            animation: _access-dialog-backdrop var(--_access-menu-dialog-backdrop-transition-duration, 0.35s) ease-in-out;\n        }\n        dialog._access.closing[open]::backdrop {\n            background: var(--_access-menu-dialog-backdrop-background-start, rgba(0, 0, 0, 0.1));\n        }\n        dialog._access.closing[open] {\n            opacity: 0;\n        }\n        ._access-menu ul li button svg path {\n            fill: rgba(0,0,0,.6);\n            transition-duration: .35s;\n            transition-timing-function: ease-in-out;\n        }\n        ._access-menu ul li button:hover svg path {\n            fill: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active svg path {\n            fill: #fff;\n        }\n        ._access-menu ul li:hover button:before {\n            color: rgba(0,0,0,.8);\n        }\n        ._access-menu ul li button.active button:before {\n            color: #fff;\n        }\n        ._access-menu ul li button[data-access-action=\"increaseText\"]:before {\n            content: var(--_access-menu-item-icon-increase-text, ").concat(!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseText\"]:before {\n            content: var(--_access-menu-item-icon-decrease-text, ").concat(!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"increaseTextSpacing\"]:before {\n            content: var(--_access-menu-item-icon-increase-text-spacing, ").concat(!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"', ");\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseTextSpacing\"]:before {\n            content: var(--_access-menu-item-icon-decrease-text-spacing, ").concat(!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"', ");\n            transform: rotate(90deg) translate(-7px, 2px);\n            top: 14px;\n            left: 0;\n        }\n        ._access-menu ul li button[data-access-action=\"invertColors\"]:before {\n            content: var(--_access-menu-item-icon-invert-colors, ").concat(!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"grayHues\"]:before {\n            content: var(--_access-menu-item-icon-gray-hues, ").concat(!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"underlineLinks\"]:before {\n            content: var(--_access-menu-item-icon-underline-links, ").concat(!this.options.icon.useEmojis ? '"format_underlined"' : '"🔗"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"bigCursor\"]:before {\n            /*content: 'touch_app';*/\n        }\n        ._access-menu ul li button[data-access-action=\"readingGuide\"]:before {\n            content: var(--_access-menu-item-icon-reading-guide, ").concat(!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"textToSpeech\"]:before {\n            content: var(--_access-menu-item-icon-text-to-speech, ").concat(!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"speechToText\"]:before {\n            content: var(--_access-menu-item-icon-speech-to-text, ").concat(!this.options.icon.useEmojis ? '"mic"' : '"🎤"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"disableAnimations\"]:before {\n            content: var(--_access-menu-item-icon-disable-animations, ").concat(!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"iframeModals\"]:before {\n            content: var(--_access-menu-item-icon-iframe-modals, ").concat(!this.options.icon.useEmojis ? '"policy"' : '"⚖️"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"customFunctions\"]:before {\n            content: var(--_access-menu-item-icon-custom-functions, ").concat(!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"increaseLineHeight\"]:before {\n            content: var(--_access-menu-item-icon-increase-line-height, ").concat(!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"', ");\n        }\n        ._access-menu ul li button[data-access-action=\"decreaseLineHeight\"]:before {\n            content: var(--_access-menu-item-icon-increase-decrease-line-height, ").concat(!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"', ");\n        }");
+      var className = Accessibility.CSS_CLASS_NAME;
       this._common.injectStyle(css, {
         className: className
       });
-      this._common.deployedObjects.set('.' + className, false);
+      this._common.deployedObjects.set(".".concat(className), false);
+    }
+  }, {
+    key: "removeCSS",
+    value: function removeCSS() {
+      var existing = document.querySelector(".".concat(Accessibility.CSS_CLASS_NAME));
+      if (existing) existing.remove();
     }
   }, {
     key: "injectIcon",
@@ -375,7 +408,7 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "injectMenu",
     value: function injectMenu() {
-      var _this2 = this;
+      var _this3 = this;
       var json = {
         type: 'div',
         attrs: {
@@ -601,17 +634,17 @@ var Accessibility = /*#__PURE__*/function () {
             }]
           };
           var icon = null;
-          if (im.icon && !_this2.options.icon.useEmojis) icon = im.icon;else if (im.emoji && _this2.options.icon.useEmojis) icon = im.emoji;
+          if (im.icon && !_this3.options.icon.useEmojis) icon = im.icon;else if (im.emoji && _this3.options.icon.useEmojis) icon = im.emoji;
           if (icon) {
             btn.children[0].attrs['data-access-iframe-index'] = i;
             var css = "._access-menu ul li button[data-access-action=\"iframeModals\"][data-access-iframe-index=\"".concat(i, "\"]:before {\n                        content: \"").concat(icon, "\";\n                    }");
             var className = '_data-access-iframe-index-' + i;
-            _this2._common.injectStyle(css, {
+            _this3._common.injectStyle(css, {
               className: className
             });
-            _this2._common.deployedObjects.set('.' + className, false);
+            _this3._common.deployedObjects.set('.' + className, false);
           }
-          if (_this2.options.modules.textToSpeech) json.children[1].children.splice(json.children[1].children.length - 2, 0, btn);else json.children[1].children.push(btn);
+          if (_this3.options.modules.textToSpeech) json.children[1].children.splice(json.children[1].children.length - 2, 0, btn);else json.children[1].children.push(btn);
         });
       }
       if (this.options.customFunctions) {
@@ -632,16 +665,16 @@ var Accessibility = /*#__PURE__*/function () {
             }]
           };
           var icon = null;
-          if (cf.icon && !_this2.options.icon.useEmojis) icon = cf.icon;else if (cf.emoji && _this2.options.icon.useEmojis) icon = cf.emoji;
+          if (cf.icon && !_this3.options.icon.useEmojis) icon = cf.icon;else if (cf.emoji && _this3.options.icon.useEmojis) icon = cf.emoji;
           if (icon) {
             var css = "._access-menu ul li button[data-access-action=\"customFunctions\"][data-access-custom-id=\"".concat(cf.id, "\"]:before {\n                        content: \"").concat(icon, "\";\n                    }");
             var className = '_data-access-custom-id-' + cf.id;
-            _this2._common.injectStyle(css, {
+            _this3._common.injectStyle(css, {
               className: className
             });
-            _this2._common.deployedObjects.set('.' + className, false);
+            _this3._common.deployedObjects.set('.' + className, false);
           }
-          if (_this2.options.modules.textToSpeech) json.children[1].children.splice(json.children[1].children.length - 2, 0, btn);else json.children[1].children.push(btn);
+          if (_this3.options.modules.textToSpeech) json.children[1].children.splice(json.children[1].children.length - 2, 0, btn);else json.children[1].children.push(btn);
         });
       }
       var menuElem = this._common.jsonToHtml(json);
@@ -662,7 +695,7 @@ var Accessibility = /*#__PURE__*/function () {
         closeBtn.addEventListener(evt, function (e) {
           var et = e || window.event;
           if (et.detail === 0 && et.key !== 'Enter') return;
-          _this2.toggleMenu();
+          _this3.toggleMenu();
         }, false);
       });
       var resetBtn = document.querySelector('._access-menu ._menu-reset-btn');
@@ -670,7 +703,7 @@ var Accessibility = /*#__PURE__*/function () {
         resetBtn.addEventListener(evt, function (e) {
           var et = e || window.event;
           if (et.detail === 0 && et.key !== 'Enter') return;
-          _this2.resetAll();
+          _this3.resetAll();
         }, false);
       });
       return menuElem;
@@ -790,7 +823,7 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "addListeners",
     value: function addListeners() {
-      var _this3 = this;
+      var _this4 = this;
       var lis = document.querySelectorAll('._access-menu ul li');
       var step1 = document.getElementsByClassName('screen-reader-wrapper-step-1');
       var step2 = document.getElementsByClassName('screen-reader-wrapper-step-2');
@@ -800,7 +833,7 @@ var Accessibility = /*#__PURE__*/function () {
           return lis[i].addEventListener(evt, function (e) {
             var evt = e || window.event;
             if (evt.detail === 0 && evt.key !== 'Enter') return;
-            _this3.invoke(evt.target.getAttribute('data-access-action'), evt.target);
+            _this4.invoke(evt.target.getAttribute('data-access-action'), evt.target);
           });
         });
       };
@@ -810,23 +843,56 @@ var Accessibility = /*#__PURE__*/function () {
       [].concat(_toConsumableArray(Array.from(step1)), _toConsumableArray(Array.from(step2)), _toConsumableArray(Array.from(step3))).forEach(function (el) {
         return el.addEventListener('click', function (e) {
           var evt = e || window.event;
-          _this3.invoke(evt.target.parentElement.parentElement.getAttribute('data-access-action'), evt.target);
+          _this4.invoke(evt.target.parentElement.parentElement.getAttribute('data-access-action'), evt.target);
         }, false);
       });
     }
   }, {
-    key: "disableUnsupportedModules",
-    value: function disableUnsupportedModules() {
-      for (var i in this.options.modules) {
-        var m = this.options.modules;
-        m = m[i];
-        if (!m) {
-          var moduleLi = document.querySelector('button[data-access-action="' + i + '"]');
-          if (moduleLi) {
-            moduleLi.parentElement.classList.add('not-supported');
-          }
+    key: "sortModuleTypes",
+    value: function sortModuleTypes() {
+      this.options.modulesOrder.sort(function (a, b) {
+        return a.order - b.order;
+      });
+    }
+  }, {
+    key: "disableUnsupportedModulesAndSort",
+    value: function disableUnsupportedModulesAndSort() {
+      var _this5 = this;
+      this.sortModuleTypes();
+      var ul = document.querySelector('._access-menu ul');
+      this.options.modulesOrder.forEach(function (item) {
+        var i = item.type;
+        var module = _accessibility.AccessibilityModulesType[i];
+        var m = _this5.options.modules;
+        m = m[module];
+        var moduleLi = document.querySelector('button[data-access-action="' + module + '"]');
+        if (moduleLi) {
+          moduleLi.parentElement.remove();
+          ul.appendChild(moduleLi.parentElement);
+          if (!m) moduleLi.parentElement.classList.add('not-supported');
         }
-      }
+      });
+      // for (let i in this.options.modulesOrder) {
+      //     const module = AccessibilityModulesType[i];
+      //     let m = this.options.modules as any;
+      //     m = m[i];
+      //     if (!m) {
+      //         let moduleLi = document.querySelector('button[data-access-action="' + i + '"]');
+      //         if (moduleLi) {
+      //             moduleLi.parentElement.classList.add('not-supported');
+      //         }
+      //     }
+      // }
+      // for (let i in this.options.modules) {
+      //     let m = this.options.modules as any;
+      //     m = m[i];
+      //     if (!m) {
+      //         let moduleLi = document.querySelector('button[data-access-action="' + i + '"]');
+      //         if (moduleLi) {
+      //             moduleLi.parentElement.classList.add('not-supported');
+      //         }
+      //     }
+      // }
     }
   }, {
     key: "resetAll",
@@ -1015,7 +1081,7 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "speechToText",
     value: function speechToText() {
-      var _this4 = this;
+      var _this6 = this;
       if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
         this._recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         this._recognition.continuous = true;
@@ -1025,10 +1091,10 @@ var Accessibility = /*#__PURE__*/function () {
           // console.log('listening . . .');
           // if (this.speechToTextTarget)
           //     this.speechToTextTarget.parentElement.classList.add('_access-listening');
-          _this4._body.classList.add('_access-listening');
+          _this6._body.classList.add('_access-listening');
         };
         this._recognition.onend = function () {
-          _this4._body.classList.remove('_access-listening');
+          _this6._body.classList.remove('_access-listening');
         };
         this._recognition.onresult = function (event) {
           var finalTranscript = '';
@@ -1040,12 +1106,12 @@ var Accessibility = /*#__PURE__*/function () {
               finalTranscript += event.results[i][0].transcript;
             }
           }
-          if (finalTranscript && _this4._speechToTextTarget) {
-            _this4._speechToTextTarget.parentElement.classList.remove('_access-listening');
-            if (_this4._speechToTextTarget.tagName.toLowerCase() === 'input' || _this4._speechToTextTarget.tagName.toLowerCase() === 'textarea') {
-              _this4._speechToTextTarget.value = finalTranscript;
-            } else if (_this4._speechToTextTarget.getAttribute('contenteditable') !== null) {
-              _this4._speechToTextTarget.innerText = finalTranscript;
+          if (finalTranscript && _this6._speechToTextTarget) {
+            _this6._speechToTextTarget.parentElement.classList.remove('_access-listening');
+            if (_this6._speechToTextTarget.tagName.toLowerCase() === 'input' || _this6._speechToTextTarget.tagName.toLowerCase() === 'textarea') {
+              _this6._speechToTextTarget.value = finalTranscript;
+            } else if (_this6._speechToTextTarget.getAttribute('contenteditable') !== null) {
+              _this6._speechToTextTarget.innerText = finalTranscript;
             }
           }
         };
@@ -1056,7 +1122,7 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "textToSpeech",
     value: function textToSpeech(text) {
-      var _this5 = this;
+      var _this7 = this;
       var windowAny = window;
       if (!windowAny.SpeechSynthesisUtterance || !windowAny.speechSynthesis) return;
       var msg = new windowAny.SpeechSynthesisUtterance(text);
@@ -1064,7 +1130,7 @@ var Accessibility = /*#__PURE__*/function () {
       msg.lang = this.options.textToSpeechLang;
       msg.rate = this._stateValues.speechRate;
       msg.onend = function () {
-        _this5._isReading = false;
+        _this7._isReading = false;
       };
       var voices = windowAny.speechSynthesis.getVoices();
       var isLngSupported = false;
@@ -1176,11 +1242,11 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "toggleMenu",
     value: function toggleMenu() {
-      var _this6 = this;
+      var _this8 = this;
       var shouldClose = this._menu.classList.contains('close');
       if (this.options.animations && this.options.animations.buttons) {
         setTimeout(function () {
-          _this6._menu.querySelector('ul').classList.toggle('before-collapse');
+          _this8._menu.querySelector('ul').classList.toggle('before-collapse');
         }, shouldClose ? 500 : 10);
       }
       this._menu.classList.toggle('close');
@@ -1203,7 +1269,7 @@ var Accessibility = /*#__PURE__*/function () {
   }, {
     key: "build",
     value: function build() {
-      var _this7 = this;
+      var _this9 = this;
       this._stateValues = {
         underlineLinks: false,
         textToSpeech: false,
@@ -1216,17 +1282,17 @@ var Accessibility = /*#__PURE__*/function () {
       this._body = document.body || document.getElementsByTagName('body')[0];
       this._html = document.documentElement || document.getElementsByTagName('html')[0];
       if (this.options.textEmlMode) this.initFontSize();
-      this.injectCss();
+      if (!this.options.suppressCssInjection) this.injectCss();
       this._icon = this.injectIcon();
       this._menu = this.injectMenu();
       this.injectTts();
       setTimeout(function () {
-        _this7.addListeners();
-        _this7.disableUnsupportedModules();
+        _this9.addListeners();
+        _this9.disableUnsupportedModulesAndSort();
       }, 10);
       if (this.options.hotkeys.enabled) {
         document.onkeydown = function (e) {
-          var act = Object.entries(_this7.options.hotkeys.keys).find(function (val) {
+          var act = Object.entries(_this9.options.hotkeys.keys).find(function (val) {
             var pass = true;
             for (var i = 0; i < val[1].length; i++) {
               if (Number.isInteger(val[1][i])) {
@@ -1242,20 +1308,20 @@ var Accessibility = /*#__PURE__*/function () {
             return pass;
           });
           if (act !== undefined) {
-            _this7.runHotkey(act[0]);
+            _this9.runHotkey(act[0]);
           }
         };
       }
       this._icon.addEventListener('click', function () {
-        _this7.toggleMenu();
+        _this9.toggleMenu();
       }, false);
       this._icon.addEventListener('keyup', function (event) {
         if (event.key === 'Enter') {
-          _this7.toggleMenu();
+          _this9.toggleMenu();
         }
       }, false);
       setTimeout(function () {
-        _this7._icon.style.opacity = '1';
+        _this9._icon.style.opacity = '1';
       }, 10);
       this.updateReadGuide = function (e) {
         var newPos = 0;
@@ -1264,7 +1330,7 @@ var Accessibility = /*#__PURE__*/function () {
         } else {
           newPos = e.y;
         }
-        document.getElementById('access_read_guide_bar').style.top = newPos - (parseInt(_this7.options.guide.height.replace('px', '')) + 5) + 'px';
+        document.getElementById('access_read_guide_bar').style.top = newPos - (parseInt(_this9.options.guide.height.replace('px', '')) + 5) + 'px';
       };
       this.menuInterface = new _menuInterface.MenuInterface(this);
       if (this.options.session.persistent) this.setSessionFromCache();
@@ -1357,6 +1423,7 @@ var Accessibility = /*#__PURE__*/function () {
   return Accessibility;
 }();
 exports.Accessibility = Accessibility;
+_defineProperty(Accessibility, "CSS_CLASS_NAME", '_access-main-css');
 Accessibility.init = function (opt) {
   console.warn('"Accessibility.init()" is deprecated! Please use "new Accessibility()" instead');
   new Accessibility(opt);
