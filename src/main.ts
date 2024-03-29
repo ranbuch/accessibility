@@ -492,7 +492,7 @@ export class Accessibility implements IAccessibility {
             font-size: var(--_access-menu-font-size, 18px);
             margin: 0;
             overflow: auto;
-            max-height: var(--_access-menu-max-height, calc(100vh - 77px));
+            max-height: var(--_access-menu-max-height, calc(100vh - 145px));
             display: flex;
             flex-flow: column;
             gap: 5px;
@@ -509,32 +509,21 @@ export class Accessibility implements IAccessibility {
             display: inline-block;
         }
         .screen-reader-wrapper {
-            margin: 0 10px;
+            margin: 0;
             position: absolute;
-            bottom: -3px;
+            bottom: -4px;
             width: calc(100% - 2px);
             left: 1px;
         }
-        .screen-reader-wrapper-step-1 {
+        .screen-reader-wrapper-step-1, .screen-reader-wrapper-step-2,.screen-reader-wrapper-step-3 {
             float: left;
-            background: white;
-            width: 33%;
+            background: var(--_access-menu-background-color, #fff);
+            width: 33.33%;
             height: 3px;
             border-radius: 10px;
         }
-        .screen-reader-wrapper-step-2 {
-            float: left;
-            background: white;
-            width: 33%;
-            height: 3px;
-            border-radius: 10px;
-        }
-        .screen-reader-wrapper-step-3 {
-            float: left;
-            background: white;
-            width: 33%;
-            height: 3px;
-            border-radius: 10px;
+        .screen-reader-wrapper-step-1.active, .screen-reader-wrapper-step-2.active,.screen-reader-wrapper-step-3.active {
+            background: var(--_access-menu-item-button-background, #f9f9f9);
         }
         ._access-menu ul li {
             position: relative;
@@ -605,7 +594,7 @@ export class Accessibility implements IAccessibility {
             top: 7px;
             left: 5px;
             position: absolute;
-            color: rgba(0,0,0,.6);
+            color: var(--_access-menu-item-icon-color, rgba(0,0,0,.6));
             direction: ltr;
             text-indent: 0;
             transition-duration: .35s;
@@ -639,21 +628,21 @@ export class Accessibility implements IAccessibility {
             opacity: 0;
         }
         ._access-menu ul li button svg path {
-            fill: rgba(0,0,0,.6);
+            fill: var(--_access-menu-item-icon-color, rgba(0,0,0,.6));
             transition-duration: .35s;
             transition-timing-function: ease-in-out;
         }
         ._access-menu ul li button:hover svg path {
-            fill: rgba(0,0,0,.8);
+            fill: var(--_access-menu-item-hover-icon-color, rgba(0,0,0,.8));
         }
         ._access-menu ul li button.active svg path {
-            fill: #fff;
+            fill: var(--_access-menu-item-active-icon-color, #fff);
         }
         ._access-menu ul li:hover button:before {
-            color: rgba(0,0,0,.8);
+            color: var(--_access-menu-item-hover-icon-color, rgba(0,0,0,.8));
         }
         ._access-menu ul li button.active button:before {
-            color: #fff;
+            color: var(--_access-menu-item-active-icon-color, #fff);
         }
         ._access-menu ul li button[data-access-action="increaseText"]:before {
             content: var(--_access-menu-item-icon-increase-text, ${!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"'});

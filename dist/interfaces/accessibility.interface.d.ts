@@ -26,6 +26,7 @@ export interface IAccessibility {
     onChange(updateSession: boolean): void;
     createScreenShot(url: string): Promise<string>;
     injectCss(): void;
+    removeCSS(): void;
 }
 export interface IAccessibilityOptions {
     icon?: IAccessibilityIconOptions;

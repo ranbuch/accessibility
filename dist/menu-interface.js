@@ -231,9 +231,9 @@ var MenuInterface = /*#__PURE__*/function () {
       };
       if (destroy) {
         tSpeechList.classList.remove('active');
-        step1[0].style.background = '#ffffff';
-        step2[0].style.background = '#ffffff';
-        step3[0].style.background = '#ffffff';
+        step1[0].classList.remove('active');
+        step2[0].classList.remove('active');
+        step3[0].classList.remove('active');
         this._acc.stateValues.textToSpeech = false;
         window.speechSynthesis.cancel();
         return remove();
@@ -242,22 +242,22 @@ var MenuInterface = /*#__PURE__*/function () {
         this._acc.stateValues.textToSpeech = true;
         this._acc.textToSpeech('Screen Reader enabled. Reading Pace - Normal');
         tSpeechList.classList.add('active');
-        step1[0].style.background = '#000000';
-        step2[0].style.background = '#000000';
-        step3[0].style.background = '#000000';
+        step1[0].classList.add('active');
+        step2[0].classList.add('active');
+        step3[0].classList.add('active');
       } else if (this._acc.stateValues.speechRate === 1 && tSpeechList.classList.contains('active')) {
         this._acc.stateValues.speechRate = 1.5;
         this._acc.textToSpeech('Reading Pace - Fast');
-        step1[0].style.background = '#ffffff';
+        step1[0].classList.remove('active');
       } else if (this._acc.stateValues.speechRate === 1.5 && tSpeechList.classList.contains('active')) {
         this._acc.stateValues.speechRate = 0.7;
         this._acc.textToSpeech('Reading Pace - Slow');
-        step2[0].style.background = '#ffffff';
+        step2[0].classList.remove('active');
       } else {
         this._acc.stateValues.speechRate = 1;
         this._acc.textToSpeech('Screen Reader - Disabled');
         tSpeechList.classList.remove('active');
-        step3[0].style.background = '#ffffff';
+        step3[0].classList.remove('active');
         var timeout = setInterval(function () {
           if (_this2._acc.isReading) {
             return;

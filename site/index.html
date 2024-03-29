@@ -182,7 +182,7 @@
             </div>
 
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="known-issues">
                 <h3 class="ui header">Limitations and Known Issues</h3>
                 <p>
                     Works with html5 browsers only (no IE8 and below)
@@ -192,7 +192,7 @@
                 </p>
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="multi-language">
                 <h3 class="ui header">multi language example</h3>
 
                 <p>
@@ -224,7 +224,7 @@
                 </p>
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="disable-features-example">
                 <h3 class="ui header">disable features example</h3>
 
                 <p>
@@ -253,7 +253,7 @@
                 </p>
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="hotkeys-module">
                 <h3 class="ui header">hotkeys module</h3>
 
                 <p>
@@ -315,7 +315,7 @@
                 </p>
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="text-size-approaches">
                 <h3 class="ui header">text size manipulation approaches</h3>
                 <p>
                     The default approach is <code>textEmlMode: false</code> meaning we are changing the
@@ -341,7 +341,7 @@
                 </code>
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="animations">
                 <h3 class="ui header">animations</h3>
 
                 <p>
@@ -352,7 +352,7 @@
                 </code>
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="free">
                 <h3 class="ui header">free</h3>
 
                 <div class="ui list">
@@ -396,7 +396,7 @@
                 </p>
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="positioning">
                 <h3 class="ui header">positioning</h3>
 
                 <p>
@@ -543,7 +543,7 @@
                 </p>
             </div>
 
-            <div class="ui raised segment" id="icon-image">
+            <div class="ui raised segment" id="persistent-session">
                 <h3 class="ui header">persistent session</h3>
 
                 <p>
@@ -575,7 +575,7 @@
 
             </div>
 
-            <div class="ui raised segment" id="icon-image">
+            <div class="ui raised segment" id="direct-api-access">
                 <h3 class="ui header">direct access to the API</h3>
 
                 <p>
@@ -642,7 +642,7 @@
 
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="add-custom-iframe">
                 <h3 class="ui header">add custom iframe</h3>
                 <p>
                     You can add buttons that will open a model with custom iframes (for accessibility terms for example)
@@ -691,7 +691,7 @@
                 </p>
             </div>
 
-            <div class="ui raised segment">
+            <div class="ui raised segment" id="add-custom-functions">
                 <h3 class="ui header">add custom functions</h3>
                 <p>
                     You can add buttons that will invoke custom functions like so:
@@ -762,6 +762,116 @@
                 </p>
             </div>
 
+            <div class="ui raised segment" id="customize-styling">
+                <h3 class="ui header">customize styling</h3>
+                <p>
+                    You can use CSS variables to change the styling of the menu. Here is an example of how you can change the exposed variables in order to change the theme to dark mode:
+                </p>
+                <code>
+                    :root {
+                    <p class="b-space-1">
+                        --_access-menu-background-color: #000;
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-item-button-background: #222;
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-item-color: rgba(255,255,255,.6);
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-header-color: rgba(255,255,255,.87);
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-item-button-active-color: #000;
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-item-button-active-background-color: #fff;
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-div-active-background-color: #fff;
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-item-button-hover-color: rgba(255,255,255,.8);
+                    <p class="b-space-1">
+                        --_access-menu-item-button-hover-background-color: #121212;
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-item-icon-color: rgba(255,255,255,.6);
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-item-hover-icon-color: rgba(255,255,255,.8);
+                    </p>
+                    <p class="b-space-1">
+                        --_access-menu-item-active-icon-color: #000;
+                    </p>
+                    <p>
+                        }
+                    </p>
+                </code>
+                <br>
+                <p>
+                    Alternatively, you can suppress the default CSS injection altogether (not recommended):
+                </p>
+                <p>
+                    <code>
+                        new Accessibility({suppressCssInjection: true});
+                    </code>
+                </p>
+                <p>
+                    You can also replace the icons by replacing the <code>content</code> attribute with the CSS variables currently being used.
+                </p>
+                <p>
+                    You might need to replace the font-face-src:
+                </p>
+                <code>
+                    const options = {
+                    <p class="b-space-1">
+                        icon: {
+                    </p>
+                    <p class="b-space-2">
+                            fontFaceSrc: ['https://fonts.bunny.net/icon?family=Material+Icons']
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    };
+                    <p>
+                    new Accessibility(options);
+                    </p>
+                </code>
+            </div>
+
+            <div class="ui raised segment" id="module-order">
+                <h3 class="ui header">change modules order</h3>
+                <p>
+                    You can determine the order of the modules:
+                </p>
+                <code>
+                    new Accessibility({
+                    <p class="b-space-1">
+                        modulesOrder: [
+                    </p>
+                    <p class="b-space-2">
+                            {
+                    </p>
+                    <p class="b-space-3">
+                                type: AccessibilityModulesType.textToSpeech,
+                    </p>
+                    <p class="b-space-3">
+                                order: 0
+                    </p>
+                    <p class="b-space-2">
+                            }
+                    </p>
+                    <p class="b-space-1">
+                        ]
+                    </p>
+                    <p>
+                    })
+                    </p>
+                </code>
+            </div>
+
             <div class="ui raised segment">
                 <h3> Pause animations</h3> 
                 <img src="https://c.tenor.com/D12KYBUCOBAAAAAd/git-merge.gif" width="400px">
@@ -813,6 +923,22 @@
     <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
     <script src="../dist/main.bundle.js"></script>
     <script src="script/main.js"></script>
+    <style>
+        :root {
+            --_access-menu-background-color: #000;
+            --_access-menu-item-button-background: #222;
+            --_access-menu-item-color: rgba(255,255,255,.6);
+            --_access-menu-header-color: rgba(255,255,255,.87);
+            --_access-menu-item-button-active-color: #000;
+            --_access-menu-item-button-active-background-color: #fff;
+            --_access-menu-div-active-background-color: #fff;
+            --_access-menu-item-button-hover-color: rgba(255,255,255,.8);
+            --_access-menu-item-button-hover-background-color: #121212;
+            --_access-menu-item-icon-color: rgba(255,255,255,.6);
+            --_access-menu-item-hover-icon-color: rgba(255,255,255,.8);
+            --_access-menu-item-active-icon-color: #000;
+        }
+    </style>
     <!--<script id="dsq-count-scr" src="//ranbuch.disqus.com/count.js" async></script>-->
 </body>
 
