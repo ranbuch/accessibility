@@ -839,6 +839,44 @@
                     new Accessibility(options);
                     </p>
                 </code>
+                <br>
+                <p>
+                    Another example with <code>font-awesome</code> icons:
+                </p>
+                <code>
+                    const options = {
+                    <p class="b-space-1">
+                        icon: {
+                    </p>
+                    <p class="b-space-2">
+                        fontFaceSrc: ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/v4-font-face.min.css'],
+                    </p>
+                    <p class="b-space-2">
+                        fontFamily: '"FontAwesome"'
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    };
+                    <p>
+                    new Accessibility(options);
+                    </p>
+                    <p>
+                        :root {
+                        <p class="b-space-1">
+                            --_access-menu-item-icon-increase-text: "\f062";
+                        </p>
+                        <p class="b-space-1">
+                            --_access-menu-item-icon-decrease-text: "\f063";
+                        </p>
+                        <p>
+                        }
+                        </p>
+                    </p>
+                </code>
+                <p>
+                    Obviously you will need to add the missing variables for the rest of the fonts.
+                </p>
             </div>
 
             <div class="ui raised segment" id="module-order">
