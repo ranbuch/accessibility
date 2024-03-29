@@ -155,7 +155,6 @@ export interface IAccessibilityMenuLabelsOptions {
     disableAnimations: string;
     increaseLineHeight: string;
     decreaseLineHeight: string;
-    screenReader: string;
 }
 
 export interface IAccessibilityAnimationsOptions {

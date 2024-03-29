@@ -229,8 +229,7 @@ export class Accessibility implements IAccessibility {
                 speechToText: 'speech to text',
                 disableAnimations: 'disable animations',
                 increaseLineHeight: 'increase line height',
-                decreaseLineHeight: 'decrease line height',
-                screenReader: 'screen reader'
+                decreaseLineHeight: 'decrease line height'
             },
             textPixelMode: false,
             textEmlMode: true,
