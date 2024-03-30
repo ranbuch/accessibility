@@ -338,6 +338,7 @@ export class Accessibility implements IAccessibility {
     }
 
     public injectCss() {
+        const iconTop = '7px', iconLeft = '5px';
         let css = `
         ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {
             -webkit-box-shadow: var(--_access-scrollbar-track-box-shadow, inset 0 0 6px rgba(0,0,0,0.3));
@@ -647,57 +648,100 @@ export class Accessibility implements IAccessibility {
         }
         ._access-menu ul li button[data-access-action="increaseText"]:before {
             content: var(--_access-menu-item-icon-increase-text, ${!this.options.icon.useEmojis ? '"zoom_in"' : '"🔼"'});
+            transform: var(--_access-menu-item-icon-increase-text-transform, unset);
+            top: var(--_access-menu-item-icon-increase-text-top, ${iconTop});
+            left: var(--_access-menu-item-icon-increase-text-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="decreaseText"]:before {
             content: var(--_access-menu-item-icon-decrease-text, ${!this.options.icon.useEmojis ? '"zoom_out"' : '"🔽"'});
+            transform: var(--_access-menu-item-icon-decrease-text-spacing-transform, unset);
+            top: var(--_access-menu-item-icon-decrease-text-spacing-top, ${iconTop});
+            left: var(--_access-menu-item-icon-decrease-text-spacing-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="increaseTextSpacing"]:before {
             content: var(--_access-menu-item-icon-increase-text-spacing, ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'});
-            transform: rotate(90deg) translate(-7px, 2px);
-            top: 14px;
-            left: 0;
+            transform: var(--_access-menu-item-icon-increase-text-spacing-transform, rotate(90deg) translate(-7px, 2px));
+            top: var(--_access-menu-item-icon-increase-text-spacing-top, 14px);
+            left: var(--_access-menu-item-icon-increase-text-spacing-left, 0);
         }
         ._access-menu ul li button[data-access-action="decreaseTextSpacing"]:before {
             content: var(--_access-menu-item-icon-decrease-text-spacing, ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'});
-            transform: rotate(90deg) translate(-7px, 2px);
-            top: 14px;
-            left: 0;
+            transform: var(--_access-menu-item-icon-decrease-text-spacing-transform, rotate(90deg) translate(-7px, 2px));
+            top: var(--_access-menu-item-icon-decrease-text-spacing-top, 14px);
+            left: var(--_access-menu-item-icon-decrease-text-spacing-left, 0);
         }
         ._access-menu ul li button[data-access-action="invertColors"]:before {
             content: var(--_access-menu-item-icon-invert-colors, ${!this.options.icon.useEmojis ? '"invert_colors"' : '"🎆"'});
+            transform: var(--_access-menu-item-icon-invert-colors-transform, unset);
+            top: var(--_access-menu-item-icon-invert-colors-top, ${iconTop});
+            left: var(--_access-menu-item-icon-invert-colors-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="grayHues"]:before {
             content: var(--_access-menu-item-icon-gray-hues, ${!this.options.icon.useEmojis ? '"format_color_reset"' : '"🌫️"'});
+            transform: var(--_access-menu-item-icon-gray-hues-transform, unset);
+            top: var(--_access-menu-item-icon-gray-hues-top, ${iconTop});
+            left: var(--_access-menu-item-icon-gray-hues-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="underlineLinks"]:before {
             content: var(--_access-menu-item-icon-underline-links, ${!this.options.icon.useEmojis ? '"format_underlined"' : '"🔗"'});
+            transform: var(--_access-menu-item-icon-underline-links-transform, unset);
+            top: var(--_access-menu-item-icon-underline-links-top, ${iconTop});
+            left: var(--_access-menu-item-icon-underline-links-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="bigCursor"]:before {
             /*content: 'touch_app';*/
+            content: var(--_access-menu-item-icon-big-cursor, inherit);
+            transform: var(--_access-menu-item-icon-big-cursor-transform, unset);
+            top: var(--_access-menu-item-icon-big-cursor-top, ${iconTop});
+            left: var(--_access-menu-item-icon-big-cursor-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="readingGuide"]:before {
             content: var(--_access-menu-item-icon-reading-guide, ${!this.options.icon.useEmojis ? '"border_horizontal"' : '"↔️"'});
+            transform: var(--_access-menu-item-icon-reading-guide-transform, unset);
+            top: var(--_access-menu-item-icon-reading-guide-top, ${iconTop});
+            left: var(--_access-menu-item-icon-reading-guide-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="textToSpeech"]:before {
             content: var(--_access-menu-item-icon-text-to-speech, ${!this.options.icon.useEmojis ? '"record_voice_over"' : '"⏺️"'});
+            transform: var(--_access-menu-item-icon-text-to-speech-transform, unset);
+            top: var(--_access-menu-item-icon-text-to-speech-top, ${iconTop});
+            left: var(--_access-menu-item-icon-text-to-speech-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="speechToText"]:before {
             content: var(--_access-menu-item-icon-speech-to-text, ${!this.options.icon.useEmojis ? '"mic"' : '"🎤"'});
+            transform: var(--_access-menu-item-icon-speech-to-text-transform, unset);
+            top: var(--_access-menu-item-icon-speech-to-text-top, ${iconTop});
+            left: var(--_access-menu-item-icon-speech-to-text-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="disableAnimations"]:before {
             content: var(--_access-menu-item-icon-disable-animations, ${!this.options.icon.useEmojis ? '"animation"' : '"🏃‍♂️"'});
+            transform: var(--_access-menu-item-icon-disable-animations-transform, unset);
+            top: var(--_access-menu-item-icon-disable-animations-top, ${iconTop});
+            left: var(--_access-menu-item-icon-disable-animations-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="iframeModals"]:before {
             content: var(--_access-menu-item-icon-iframe-modals, ${!this.options.icon.useEmojis ? '"policy"' : '"⚖️"'});
+            transform: var(--_access-menu-item-icon-iframe-transform, unset);
+            top: var(--_access-menu-item-icon-iframe-top, ${iconTop});
+            left: var(--_access-menu-item-icon-iframe-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="customFunctions"]:before {
             content: var(--_access-menu-item-icon-custom-functions, ${!this.options.icon.useEmojis ? '"psychology_alt"' : '"❓"'});
+            transform: var(--_access-menu-item-icon-custom-functions-transform, unset);
+            top: var(--_access-menu-item-icon-custom-functions-top, ${iconTop});
+            left: var(--_access-menu-item-icon-custom-functions-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="increaseLineHeight"]:before {
             content: var(--_access-menu-item-icon-increase-line-height, ${!this.options.icon.useEmojis ? '"unfold_more"' : '"🔼"'});
+            transform: var(--_access-menu-item-icon-increase-line-height-transform, unset);
+            top: var(--_access-menu-item-icon-increase-line-height-top, ${iconTop});
+            left: var(--_access-menu-item-icon-increase-line-height-left, ${iconLeft});
         }
         ._access-menu ul li button[data-access-action="decreaseLineHeight"]:before {
-            content: var(--_access-menu-item-icon-increase-decrease-line-height, ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'});
+            content: var(--_access-menu-item-icon-decrease-line-height, ${!this.options.icon.useEmojis ? '"unfold_less"' : '"🔽"'});
+            transform: var(--_access-menu-item-icon-decrease-line-height-transform, unset);
+            top: var(--_access-menu-item-icon-decrease-line-height-top, ${iconTop});
+            left: var(--_access-menu-item-icon-decrease-line-height-left, ${iconLeft});
         }`;
         const className = Accessibility.CSS_CLASS_NAME;
         this._common.injectStyle(css, { className: className });
