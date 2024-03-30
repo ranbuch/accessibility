@@ -18,6 +18,7 @@ export declare class Accessibility implements IAccessibility {
     private _stateValues;
     private _recognition;
     private _speechToTextTarget;
+    private _onKeyDownBind;
     menuInterface: IMenuInterface;
     options: IAccessibilityOptions;
     constructor(options?: IAccessibilityOptions);
@@ -59,6 +60,7 @@ export declare class Accessibility implements IAccessibility {
     runHotkey(name: string): void;
     toggleMenu(): void;
     invoke(action: string, button: HTMLElement): void;
+    onKeyDown(e: KeyboardEvent): void;
     build(): void;
     updateReadGuide(e: Event | TouchEvent | any): void;
     resetIfDefined(src: string, dest: any, prop: string): void;

@@ -44,6 +44,7 @@ var Accessibility = /*#__PURE__*/function () {
     _defineProperty(this, "_stateValues", void 0);
     _defineProperty(this, "_recognition", void 0);
     _defineProperty(this, "_speechToTextTarget", void 0);
+    _defineProperty(this, "_onKeyDownBind", void 0);
     _defineProperty(this, "menuInterface", void 0);
     _defineProperty(this, "options", void 0);
     this._common = new _common.Common();
@@ -59,6 +60,7 @@ var Accessibility = /*#__PURE__*/function () {
     //     }
     // }
     this.disabledUnsupportedFeatures();
+    this._onKeyDownBind = this.onKeyDown.bind(this);
     this._sessionState = {
       textSize: 0,
       textSpace: 0,
@@ -684,7 +686,7 @@ var Accessibility = /*#__PURE__*/function () {
       setTimeout(function () {
         var ic = document.getElementById('iconBigCursor');
         if (ic) {
-          ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;left: 17px;top: 9px; left: 9px;enable-background:new 0 0 512 512;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
+          ic.outerHTML = ic.outerHTML + '<svg version="1.1" id="iconBigCursorSvg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="position: absolute;width: 19px;height: 19px;top: 9px; left: 9px;" xml:space="preserve"><path d="M 423.547 323.115 l -320 -320 c -3.051 -3.051 -7.637 -3.947 -11.627 -2.304 s -6.592 5.547 -6.592 9.856 V 480 c 0 4.501 2.837 8.533 7.083 10.048 c 4.224 1.536 8.981 0.192 11.84 -3.285 l 85.205 -104.128 l 56.853 123.179 c 1.792 3.883 5.653 6.187 9.685 6.187 c 1.408 0 2.837 -0.277 4.203 -0.875 l 74.667 -32 c 2.645 -1.131 4.736 -3.285 5.76 -5.973 c 1.024 -2.688 0.939 -5.675 -0.277 -8.299 l -57.024 -123.52 h 132.672 c 4.309 0 8.213 -2.603 9.856 -6.592 C 427.515 330.752 426.598 326.187 423.547 323.115 Z"/></svg>';
           document.getElementById('iconBigCursor').remove();
         }
       }, 1);
@@ -1209,7 +1211,7 @@ var Accessibility = /*#__PURE__*/function () {
           this.toggleMenu();
           break;
         default:
-          if (this.menuInterface.hasOwnProperty(name)) {
+          if (typeof this.menuInterface[name] === 'function') {
             if (this._options.modules[name]) {
               this.menuInterface[name](false);
             }
@@ -1245,6 +1247,28 @@ var Accessibility = /*#__PURE__*/function () {
       if (typeof this.menuInterface[action] === 'function') this.menuInterface[action](undefined, button);
     }
   }, {
+    key: "onKeyDown",
+    value: function onKeyDown(e) {
+      var act = Object.entries(this.options.hotkeys.keys).find(function (val) {
+        var pass = true;
+        for (var i = 0; i < val[1].length; i++) {
+          if (Number.isInteger(val[1][i])) {
+            if (e.keyCode !== val[1][i]) {
+              pass = false;
+            }
+          } else {
+            if (e[val[1][i]] === undefined || e[val[1][i]] === false) {
+              pass = false;
+            }
+          }
+        }
+        return pass;
+      });
+      if (act !== undefined) {
+        this.runHotkey(act[0]);
+      }
+    }
+  }, {
     key: "build",
     value: function build() {
       var _this9 = this;
@@ -1269,26 +1293,7 @@ var Accessibility = /*#__PURE__*/function () {
         _this9.disableUnsupportedModulesAndSort();
       }, 10);
       if (this.options.hotkeys.enabled) {
-        document.onkeydown = function (e) {
-          var act = Object.entries(_this9.options.hotkeys.keys).find(function (val) {
-            var pass = true;
-            for (var i = 0; i < val[1].length; i++) {
-              if (Number.isInteger(val[1][i])) {
-                if (e.keyCode !== val[1][i]) {
-                  pass = false;
-                }
-              } else {
-                if (e[val[1][i]] === undefined || e[val[1][i]] === false) {
-                  pass = false;
-                }
-              }
-            }
-            return pass;
-          });
-          if (act !== undefined) {
-            _this9.runHotkey(act[0]);
-          }
-        };
+        document.addEventListener('keydown', this._onKeyDownBind, false);
       }
       this._icon.addEventListener('click', function () {
         _this9.toggleMenu();
@@ -1396,6 +1401,7 @@ var Accessibility = /*#__PURE__*/function () {
         var elem = document.querySelector(key);
         if (elem) elem.parentElement.removeChild(elem);
       });
+      document.removeEventListener('keydown', this._onKeyDownBind, false);
     }
   }]);
   return Accessibility;

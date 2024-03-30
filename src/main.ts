@@ -24,6 +24,7 @@ export class Accessibility implements IAccessibility {
     private _stateValues: IStateValues;
     private _recognition: any; // SpeechRecognition;
     private _speechToTextTarget: HTMLElement;
+    private _onKeyDownBind: any;
     public menuInterface: IMenuInterface;
     public options: IAccessibilityOptions;
     constructor(options = {} as IAccessibilityOptions) {
@@ -40,6 +41,7 @@ export class Accessibility implements IAccessibility {
         //     }
         // }
         this.disabledUnsupportedFeatures();
+        this._onKeyDownBind = this.onKeyDown.bind(this);
         this._sessionState = {
             textSize: 0,
             textSpace: 0,
@@ -1647,7 +1649,7 @@ export class Accessibility implements IAccessibility {
                 this.toggleMenu();
                 break;
             default:
-                if (this.menuInterface.hasOwnProperty(name)) {
+                if (typeof (this.menuInterface as any)[name] === 'function') {
                     if ((this._options.modules as any)[name]) {
                         (this.menuInterface as any)[name](false);
                     }
@@ -1683,6 +1685,27 @@ export class Accessibility implements IAccessibility {
             (this.menuInterface as any)[action](undefined, button);
     }
 
+    onKeyDown(e: KeyboardEvent) {
+        let act = Object.entries(this.options.hotkeys.keys).find(function (val) {
+            let pass = true;
+            for (var i = 0; i < val[1].length; i++) {
+                if (Number.isInteger((val[1])[i])) {
+                    if (e.keyCode !== (val[1])[i]) {
+                        pass = false;
+                    }
+                } else {
+                    if ((e as any)[(val[1])[i]] === undefined || (e as any)[(val[1])[i]] === false) {
+                        pass = false;
+                    }
+                }
+            }
+            return pass;
+        });
+        if (act !== undefined) {
+            this.runHotkey(act[0]);
+        }
+    }
+
     build() {
         this._stateValues = {
             underlineLinks: false,
@@ -1707,26 +1730,7 @@ export class Accessibility implements IAccessibility {
             this.disableUnsupportedModulesAndSort();
         }, 10);
         if (this.options.hotkeys.enabled) {
-            document.onkeydown = (e: KeyboardEvent) => {
-                let act = Object.entries(this.options.hotkeys.keys).find(function (val) {
-                    let pass = true;
-                    for (var i = 0; i < val[1].length; i++) {
-                        if (Number.isInteger((val[1])[i])) {
-                            if (e.keyCode !== (val[1])[i]) {
-                                pass = false;
-                            }
-                        } else {
-                            if ((e as any)[(val[1])[i]] === undefined || (e as any)[(val[1])[i]] === false) {
-                                pass = false;
-                            }
-                        }
-                    }
-                    return pass;
-                });
-                if (act !== undefined) {
-                    this.runHotkey(act[0]);
-                }
-            };
+            document.addEventListener('keydown', this._onKeyDownBind, false);
         }
 
         this._icon.addEventListener('click', () => {
@@ -1843,6 +1847,7 @@ export class Accessibility implements IAccessibility {
             if (elem)
                 elem.parentElement.removeChild(elem);
         });
+        document.removeEventListener('keydown', this._onKeyDownBind, false);
     }
 }
 
