@@ -389,7 +389,7 @@ var Accessibility = /*#__PURE__*/function () {
         attrs: {
           'class': className,
           'style': iStyle,
-          'title': this.options.labels.menuTitle,
+          'title': this.options.hotkeys.enabled ? this.parseKeys(this.options.hotkeys.keys.toggleMenu) : this.options.labels.menuTitle,
           'tabIndex': 0
         },
         children: [{
@@ -427,7 +427,7 @@ var Accessibility = /*#__PURE__*/function () {
             type: 'button',
             attrs: {
               'class': "_menu-close-btn _menu-btn ".concat(this.options.icon.fontClass),
-              'title': this.options.labels.closeTitle
+              'title': this.options.hotkeys.enabled ? this.parseKeys(this.options.hotkeys.keys.toggleMenu) : this.options.labels.closeTitle
             },
             children: [{
               type: '#text',
@@ -762,7 +762,8 @@ var Accessibility = /*#__PURE__*/function () {
                     children: [{
                       type: 'button',
                       attrs: {
-                        'data-access-action': 'textToSpeech'
+                        'data-access-action': 'textToSpeech',
+                        'title': this.parseKeys(this.options.hotkeys.keys.textToSpeech)
                       },
                       children: [{
                         type: '#text',
@@ -799,7 +800,8 @@ var Accessibility = /*#__PURE__*/function () {
                     children: [{
                       type: 'button',
                       attrs: {
-                        'data-access-action': 'speechToText'
+                        'data-access-action': 'speechToText',
+                        'title': this.parseKeys(this.options.hotkeys.keys.speechToText)
                       },
                       children: [{
                         type: '#text',

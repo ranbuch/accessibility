@@ -776,7 +776,7 @@ export class Accessibility implements IAccessibility {
             attrs: {
                 'class': className,
                 'style': iStyle,
-                'title': this.options.labels.menuTitle,
+                'title': this.options.hotkeys.enabled ? this.parseKeys(this.options.hotkeys.keys.toggleMenu) : this.options.labels.menuTitle,
                 'tabIndex': 0
             },
             children: [
@@ -814,7 +814,7 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'class': `_menu-close-btn _menu-btn ${this.options.icon.fontClass}`,
-                                'title': this.options.labels.closeTitle
+                                'title': this.options.hotkeys.enabled ? this.parseKeys(this.options.hotkeys.keys.toggleMenu) : this.options.labels.closeTitle
                             },
                             children: [
                                 {
@@ -1228,7 +1228,8 @@ export class Accessibility implements IAccessibility {
                         {
                             type: 'button',
                             attrs: {
-                                'data-access-action': 'textToSpeech'
+                                'data-access-action': 'textToSpeech',
+                                'title': this.parseKeys(this.options.hotkeys.keys.textToSpeech)
                             },
                             children: [
                                 {
@@ -1277,7 +1278,8 @@ export class Accessibility implements IAccessibility {
                         {
                             type: 'button',
                             attrs: {
-                                'data-access-action': 'speechToText'
+                                'data-access-action': 'speechToText',
+                                'title': this.parseKeys(this.options.hotkeys.keys.speechToText)
                             },
                             children: [
                                 {

@@ -1,7 +1,7 @@
 var options = {
-    hotkeys: {
-        enabled: true
-    },
+    // hotkeys: {
+    //     enabled: true
+    // },
     icon: {
         circular: true
     },
