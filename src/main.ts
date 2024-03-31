@@ -1063,7 +1063,9 @@ export class Accessibility implements IAccessibility {
                                 {
                                     type: 'button',
                                     attrs: {
-                                        'data-access-action': 'disableAnimations'
+                                        'data-access-action': 'disableAnimations',
+                                        'title': this.parseKeys(this.options.hotkeys.keys.disableAnimations),
+                                        'tabIndex': '-1'
                                     },
                                     children: [
                                         {
