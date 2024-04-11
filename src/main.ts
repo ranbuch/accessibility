@@ -231,7 +231,8 @@ export class Accessibility implements IAccessibility {
                 speechToText: 'speech to text',
                 disableAnimations: 'disable animations',
                 increaseLineHeight: 'increase line height',
-                decreaseLineHeight: 'decrease line height'
+                decreaseLineHeight: 'decrease line height',
+                hotkeyPrefix: 'Hotkey: '
             },
             textPixelMode: false,
             textEmlMode: true,
@@ -793,7 +794,7 @@ export class Accessibility implements IAccessibility {
     }
 
     parseKeys(arr: Array<any>) {
-        return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? 'Hotkey: ' + arr.map(function (val) { return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', ''); }).join('+') : '') : '');
+        return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? this.options.labels.hotkeyPrefix + arr.map(function (val) { return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', ''); }).join('+') : '') : '');
     }
 
     injectMenu(): HTMLElement {

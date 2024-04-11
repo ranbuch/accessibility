@@ -141,6 +141,7 @@ export interface IAccessibilityMenuLabelsOptions {
     disableAnimations: string;
     increaseLineHeight: string;
     decreaseLineHeight: string;
+    hotkeyPrefix: string;
 }
 export interface IAccessibilityAnimationsOptions {
     buttons: boolean;

@@ -64,7 +64,8 @@ var labels = {
     readingGuide: 'reading guide (in my language)',
     textToSpeech: 'text to speech (in my language)',
     speechToText: 'speech to text (in my language)',
-    disableAnimations: 'disable animations (in my language)'
+    disableAnimations: 'disable animations (in my language)',
+    hotkeyPrefix: 'Hotkey: (in my language)',
 };
 ```
 
