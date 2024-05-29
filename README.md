@@ -276,6 +276,12 @@ new Accessibility({suppressCssInjection: true});
 ```
 You can also replace the icons by replacing the content attribute with the CSS variables currently being used.
 
+You can suppress the default HTML injection altogether:
+```javascript
+const instance = new Accessibility({suppressDomInjection: true});
+```
+You will need to provide your own DOM and call `menuInterface` functions.
+
 You might need to replace the font-face-src:
 ```javascript
 const options = {

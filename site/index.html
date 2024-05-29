@@ -826,6 +826,9 @@
                     You can also replace the icons by replacing the <code>content</code> attribute with the CSS variables currently being used.
                 </p>
                 <p>
+                    You can suppress the default HTML injection altogether: <code>const instance = new Accessibility({suppressDomInjection: true});</code>. You will need to provide your own DOM and call <code>menuInterface</code> functions.
+                </p>
+                <p>
                     You might need to replace the font-face-src:
                 </p>
                 <code>

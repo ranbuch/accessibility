@@ -26,7 +26,7 @@ export interface IAccessibility {
     resetIfDefined(src: string, dest: any, prop: string): void;
     onChange(updateSession: boolean): void;
     createScreenShot(url: string): Promise<string>;
-    injectCss(): void;
+    injectCss(injectFull: boolean): void;
     removeCSS(): void;
 }
 
@@ -51,6 +51,7 @@ export interface IAccessibilityOptions {
     feedback?: IAccessibilityUrlOptions;
     language?: IAccessibilityLanguageOptions;
     suppressCssInjection?: boolean;
+    suppressDomInjection?: boolean;
 }
 
 export interface ICustomFunction {

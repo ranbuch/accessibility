@@ -35,7 +35,7 @@ export declare class Accessibility implements IAccessibility {
     deleteOppositesIfDefined(options: IAccessibilityOptions): IAccessibilityOptions;
     addModuleOrderIfNotDefined(): void;
     disabledUnsupportedFeatures(): void;
-    injectCss(): void;
+    injectCss(injectFull: boolean): void;
     removeCSS(): void;
     injectIcon(): HTMLElement;
     parseKeys(arr: Array<any>): string;

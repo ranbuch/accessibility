@@ -35,7 +35,8 @@ export class MenuInterface implements IMenuInterface {
         if (destroy) {
             this._acc.resetIfDefined(this._acc.stateValues.html.backgroundColor, this._acc.html.style, 'backgroundColor');
             this._acc.resetIfDefined(this._acc.stateValues.html.color, this._acc.html.style, 'color');
-            document.querySelector('._access-menu [data-access-action="invertColors"]').classList.remove('active');
+            if (!this._acc.options.suppressDomInjection)
+                document.querySelector('._access-menu [data-access-action="invertColors"]').classList.remove('active');
             this._acc.stateValues.invertColors = false;
             this._acc.sessionState.invertColors = this._acc.stateValues.invertColors;
             this._acc.onChange(true);
@@ -46,7 +47,8 @@ export class MenuInterface implements IMenuInterface {
         if (this._acc.stateValues.invertColors && this._acc.stateValues.textToSpeech) {
             this._acc.textToSpeech('Colors Set To Normal');
         }
-        document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
+        if (!this._acc.options.suppressDomInjection)
+            document.querySelector('._access-menu [data-access-action="invertColors"]').classList.toggle('active');
         this._acc.stateValues.invertColors = !this._acc.stateValues.invertColors;
         this._acc.sessionState.invertColors = this._acc.stateValues.invertColors;
         this._acc.onChange(true);
@@ -75,7 +77,8 @@ export class MenuInterface implements IMenuInterface {
             this._acc.stateValues.html.msFilter = (getComputedStyle(this._acc.html) as any).msFilter;
 
         if (destroy) {
-            document.querySelector('._access-menu [data-access-action="grayHues"]').classList.remove('active');
+            if (!this._acc.options.suppressDomInjection)
+                document.querySelector('._access-menu [data-access-action="grayHues"]').classList.remove('active');
             this._acc.stateValues.grayHues = false;
             this._acc.sessionState.grayHues = this._acc.stateValues.grayHues;
             this._acc.onChange(true);
@@ -86,7 +89,8 @@ export class MenuInterface implements IMenuInterface {
             return;
         }
 
-        document.querySelector('._access-menu [data-access-action="grayHues"]').classList.toggle('active');
+        if (!this._acc.options.suppressDomInjection)
+            document.querySelector('._access-menu [data-access-action="grayHues"]').classList.toggle('active');
         this._acc.stateValues.grayHues = !this._acc.stateValues.grayHues;
         this._acc.sessionState.grayHues = this._acc.stateValues.grayHues;
         this._acc.onChange(true);
@@ -124,11 +128,13 @@ export class MenuInterface implements IMenuInterface {
             this._acc.stateValues.underlineLinks = false;
             this._acc.sessionState.underlineLinks = this._acc.stateValues.underlineLinks;
             this._acc.onChange(true);
-            document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.remove('active');
+            if (!this._acc.options.suppressDomInjection)
+                document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.remove('active');
             return remove();
         }
 
-        document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.toggle('active');
+        if (!this._acc.options.suppressDomInjection)
+            document.querySelector('._access-menu [data-access-action="underlineLinks"]').classList.toggle('active');
         this._acc.stateValues.underlineLinks = !this._acc.stateValues.underlineLinks;
         this._acc.sessionState.underlineLinks = this._acc.stateValues.underlineLinks;
         this._acc.onChange(true);
@@ -155,14 +161,16 @@ export class MenuInterface implements IMenuInterface {
     bigCursor(destroy: boolean) {
         if (destroy) {
             this._acc.html.classList.remove('_access_cursor');
-            document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.remove('active');
+            if (!this._acc.options.suppressDomInjection)
+                document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.remove('active');
             this._acc.stateValues.bigCursor = false;
             this._acc.sessionState.bigCursor = false;
             this._acc.onChange(true);
             return;
         }
 
-        document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.toggle('active');
+        if (!this._acc.options.suppressDomInjection)
+            document.querySelector('._access-menu [data-access-action="bigCursor"]').classList.toggle('active');
         this._acc.stateValues.bigCursor = !this._acc.stateValues.bigCursor;
         this._acc.sessionState.bigCursor = this._acc.stateValues.bigCursor;
         this._acc.onChange(true);
@@ -176,7 +184,8 @@ export class MenuInterface implements IMenuInterface {
             if (document.getElementById('access_read_guide_bar')) {
                 document.getElementById('access_read_guide_bar').remove();
             }
-            document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.remove('active');
+            if (!this._acc.options.suppressDomInjection)
+                document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.remove('active');
             this._acc.stateValues.readingGuide = false;
             this._acc.sessionState.readingGuide = this._acc.stateValues.readingGuide;
             this._acc.onChange(true);
@@ -185,7 +194,8 @@ export class MenuInterface implements IMenuInterface {
             if (this._acc.stateValues.textToSpeech) this._acc.textToSpeech('Reading Guide Enabled');
             return;
         }
-        document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
+        if (!this._acc.options.suppressDomInjection)
+            document.querySelector('._access-menu [data-access-action="readingGuide"]').classList.toggle('active');
         this._acc.stateValues.readingGuide = !this._acc.stateValues.readingGuide;
         this._acc.sessionState.readingGuide = this._acc.stateValues.readingGuide;
         this._acc.onChange(true);
@@ -370,7 +380,8 @@ export class MenuInterface implements IMenuInterface {
         const className = '_access-disable-animations', autoplayStopped = 'data-autoplay-stopped';
 
         const remove = () => {
-            document.querySelector('._access-menu [data-access-action="disableAnimations"]').classList.remove('active');
+            if (!this._acc.options.suppressDomInjection)
+                document.querySelector('._access-menu [data-access-action="disableAnimations"]').classList.remove('active');
             this._acc.stateValues.disableAnimations = false;
             let style = document.querySelector('.' + className);
             if (style) {
@@ -400,7 +411,8 @@ export class MenuInterface implements IMenuInterface {
             return;
         }
 
-        document.querySelector('._access-menu [data-access-action="disableAnimations"]').classList.add('active');
+        if (!this._acc.options.suppressDomInjection)
+            document.querySelector('._access-menu [data-access-action="disableAnimations"]').classList.add('active');
         let css = `
                 body * {
                     animation-duration: 0.0ms !important;
