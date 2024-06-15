@@ -121,4 +121,4 @@ var _main = _interopRequireDefault(require("./main"));
 var _accessibility = require("./interfaces/accessibility.interface");
 var _menu = require("./interfaces/menu.interface");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-if (window) window.Accessibility = _main["default"];
+if (typeof window !== 'undefined') window.Accessibility = _main["default"];
