@@ -54,6 +54,12 @@ module.exports = {
         ]
     },
 
+    plugins: [
+        new webpack.ProvidePlugin({
+            window: 'global/window',
+        }),
+    ],
+
     devtool: 'cheap-module-source-map',
     devServer: {
         historyApiFallback: true,
