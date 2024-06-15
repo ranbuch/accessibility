@@ -16,7 +16,7 @@ export declare class Common implements ICommon {
     getFixedPseudoFont(name: string): any;
     isFontLoaded(fontFamily?: string, callback?: Function): any;
     warn(msg: string): void;
-    readonly deployedObjects: IDeployedObjects;
+    get deployedObjects(): IDeployedObjects;
     createScreenshot(url: string): Promise<string>;
     getFileExtension(filename: string): string;
 }

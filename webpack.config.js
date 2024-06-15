@@ -49,16 +49,10 @@ module.exports = {
             {
                 test: /\.ts$/,
                 exclude: [ /node_modules/ ],
-                use: 'awesome-typescript-loader'
+                use: 'ts-loader'
             }
         ]
     },
-
-    plugins: [
-        new webpack.ProvidePlugin({
-            window: 'global/window',
-        }),
-    ],
 
     devtool: 'cheap-module-source-map',
     devServer: {
