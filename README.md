@@ -297,7 +297,10 @@ Another example with font-awesome icons:
 const options = {
     icon: {
         fontFaceSrc: ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/v4-font-face.min.css'],
-        fontFamily: '"FontAwesome"'
+        fontFamily: '"FontAwesome"',
+        img: '[optional - URL for an image that will replace the menu icon]',
+        closeIcon: '[optional - replacement text for the close menu icon]',
+        resetIcon: '[optional - replacement text for the reset all icon]'
     }
 };
 new Accessibility(options);

@@ -80,6 +80,8 @@ export interface IAccessibilityIconOptions {
     fontFamily?: string;
     forceFont?: boolean;
     tabIndex?: number;
+    closeIcon?: string;
+    resetIcon?: string;
 }
 export interface IAccessibilityIconPositionOptions {
     top?: IUnitsDim;

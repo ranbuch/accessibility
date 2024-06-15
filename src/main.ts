@@ -145,7 +145,9 @@ export class Accessibility implements IAccessibility {
                 fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
                 fontFamily: this._common.getFixedFont('Material Icons'),
                 fontClass: 'material-icons',
-                useEmojis: false
+                useEmojis: false,
+                closeIcon: 'close',
+                resetIcon: 'refresh'
             },
             hotkeys: {
                 enabled: false,
@@ -512,7 +514,7 @@ export class Accessibility implements IAccessibility {
                 font-style: normal !important;
             }
             ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {
-                ${(this.options.animations.buttons ? 'transform: rotate(180deg);' : '')}
+                ${(this.options.animations.buttons ? 'transform: var(--_access-menu-header-btn-hover-rotate, rotate(180deg));' : '')}
             }
             ._access-menu ._menu-reset-btn {
                 right: 5px;
@@ -811,7 +813,7 @@ export class Accessibility implements IAccessibility {
                             children: [
                                 {
                                     type: '#text',
-                                    text: `${!this.options.icon.useEmojis ? 'close' : 'X'}`
+                                    text: `${!this.options.icon.useEmojis ? this.options.icon.closeIcon : 'X'}`
                                 }
                             ]
                         },
@@ -828,7 +830,7 @@ export class Accessibility implements IAccessibility {
                             children: [
                                 {
                                     type: '#text',
-                                    text: `${!this.options.icon.useEmojis ? 'refresh' : '♲'}`
+                                    text: `${!this.options.icon.useEmojis ? this.options.icon.resetIcon : '♲'}`
                                 }
                             ]
                         }

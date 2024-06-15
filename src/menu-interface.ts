@@ -333,7 +333,7 @@ export class MenuInterface implements IMenuInterface {
         if (this._acc.stateValues.speechToText) {
             let css = `
                 body:after {
-                    content: ${!this._acc.options.icon.useEmojis ? '"mic"' : '"🎤"'};
+                    content: ${!this._acc.options.icon.useEmojis ? '"mic"' : 'var(--_access-menu-item-icon-mic,"🎤")'};
                     ${!this._acc.options.icon.useEmojis ? `font-family: '` + this._acc.options.icon.fontFamily + `';` : ''}
                     position: fixed;
                     z-index: 1100;
@@ -482,7 +482,7 @@ export class MenuInterface implements IMenuInterface {
                                 type: 'button',
                                 attrs: {
                                     role: 'button',
-                                    'class': this._acc.options.icon.useEmojis ? '' : 'material-icons',
+                                    'class': this._acc.options.icon.useEmojis ? '' : this._acc.options.icon.fontClass,
                                     style: `position: absolute;
                                     top: 5px;
                                     cursor: pointer;

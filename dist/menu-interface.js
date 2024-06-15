@@ -310,7 +310,7 @@ var MenuInterface = /*#__PURE__*/function () {
       }
       this._acc.stateValues.speechToText = !this._acc.stateValues.speechToText;
       if (this._acc.stateValues.speechToText) {
-        var css = "\n                body:after {\n                    content: ".concat(!this._acc.options.icon.useEmojis ? '"mic"' : '"🎤"', ";\n                    ").concat(!this._acc.options.icon.useEmojis ? "font-family: '" + this._acc.options.icon.fontFamily + "';" : '', "\n                    position: fixed;\n                    z-index: 1100;\n                    top: 1vw;\n                    right: 1vw;\n                    width: 36px;\n                    height: 36px;\n                    font-size: 30px;\n                    line-height: 36px;\n                    border-radius: 50%;\n                    background: rgba(255,255,255,0.7);\n                    display: flex;\n                    justify-content: center;\n                    aling-items: center;\n                }\n\n                body._access-listening:after {\n                    animation: _access-listening-animation 2s infinite ease;\n                }\n\n                @keyframes _access-listening-animation {\n                    0%  {background-color: transparent;}\n                    50%  {background-color: #EF9A9A;}\n                }\n            ");
+        var css = "\n                body:after {\n                    content: ".concat(!this._acc.options.icon.useEmojis ? '"mic"' : 'var(--_access-menu-item-icon-mic,"🎤")', ";\n                    ").concat(!this._acc.options.icon.useEmojis ? "font-family: '" + this._acc.options.icon.fontFamily + "';" : '', "\n                    position: fixed;\n                    z-index: 1100;\n                    top: 1vw;\n                    right: 1vw;\n                    width: 36px;\n                    height: 36px;\n                    font-size: 30px;\n                    line-height: 36px;\n                    border-radius: 50%;\n                    background: rgba(255,255,255,0.7);\n                    display: flex;\n                    justify-content: center;\n                    aling-items: center;\n                }\n\n                body._access-listening:after {\n                    animation: _access-listening-animation 2s infinite ease;\n                }\n\n                @keyframes _access-listening-animation {\n                    0%  {background-color: transparent;}\n                    50%  {background-color: #EF9A9A;}\n                }\n            ");
         this._acc.common.injectStyle(css, {
           className: className
         });
@@ -466,7 +466,7 @@ var MenuInterface = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 role: 'button',
-                'class': this._acc.options.icon.useEmojis ? '' : 'material-icons',
+                'class': this._acc.options.icon.useEmojis ? '' : this._acc.options.icon.fontClass,
                 style: "position: absolute;\n                                    top: 5px;\n                                    cursor: pointer;\n                                    font-size: 24px !important;\n                                    font-weight: bold;\n                                    background: transparent;\n                                    border: none;\n                                    left: 5px;\n                                    color: #d63c3c;\n                                    padding: 0;"
               },
               children: [{
