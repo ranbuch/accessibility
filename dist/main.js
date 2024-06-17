@@ -437,6 +437,7 @@ var Accessibility = /*#__PURE__*/function () {
             type: 'button',
             attrs: {
               'class': "_menu-close-btn _menu-btn ".concat(this.options.icon.fontClass),
+              'style': "font-family: ".concat(this.options.icon.fontFamily),
               'title': this.options.hotkeys.enabled ? this.parseKeys(this.options.hotkeys.keys.toggleMenu) : this.options.labels.closeTitle
             },
             children: [{
@@ -450,6 +451,7 @@ var Accessibility = /*#__PURE__*/function () {
             type: 'button',
             attrs: {
               'class': "_menu-reset-btn _menu-btn ".concat(this.options.icon.fontClass),
+              'style': "font-family: ".concat(this.options.icon.fontFamily),
               'title': this.options.labels.resetTitle
             },
             children: [{

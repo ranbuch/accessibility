@@ -808,6 +808,7 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'class': `_menu-close-btn _menu-btn ${this.options.icon.fontClass}`,
+                                'style': `font-family: ${this.options.icon.fontFamily}`,
                                 'title': this.options.hotkeys.enabled ? this.parseKeys(this.options.hotkeys.keys.toggleMenu) : this.options.labels.closeTitle
                             },
                             children: [
@@ -825,6 +826,7 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'class': `_menu-reset-btn _menu-btn ${this.options.icon.fontClass}`,
+                                'style': `font-family: ${this.options.icon.fontFamily}`,
                                 'title': this.options.labels.resetTitle
                             },
                             children: [
