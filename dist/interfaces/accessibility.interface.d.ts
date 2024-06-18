@@ -1,4 +1,4 @@
-import { ICommon, IUnitsDim } from './common.interface';
+import { ICommon, IJsonToHtml, IUnitsDim } from './common.interface';
 import { IMenuInterface } from './menu.interface';
 export interface IAccessibility {
     menuInterface: IMenuInterface;
@@ -10,6 +10,7 @@ export interface IAccessibility {
     readonly html: HTMLElement;
     readonly body: HTMLBodyElement;
     readonly recognition: any;
+    readonly fixedDefaultFont: string;
     alterTextSize(isIncrease: boolean): void;
     alterTextSpace(isIncrease: boolean): void;
     alterLineHeight(isIncrease: boolean): void;
@@ -31,15 +32,12 @@ export interface IAccessibility {
 export interface IAccessibilityOptions {
     icon?: IAccessibilityIconOptions;
     hotkeys?: IAccessibilityHotkeysOptions;
-    buttons?: IAccessibilityButtonsOptions;
     guide?: IAccessibilityGuideOptions;
-    menu?: IAccessibilityMenuOptions;
     labels?: IAccessibilityMenuLabelsOptions;
     textToSpeechLang?: string;
     speechToTextLang?: string;
     textPixelMode?: boolean;
     textEmlMode?: boolean;
-    animations?: IAccessibilityAnimationsOptions;
     modules?: IAccessibilityModulesOptions;
     modulesOrder?: Array<IAccessibilityModuleOrder>;
     session?: IAccessibilitySessionOptions;
@@ -66,22 +64,17 @@ export interface IIframeModal {
     emoji?: string;
 }
 export interface IAccessibilityIconOptions {
-    position?: IAccessibilityIconPositionOptions;
-    dimensions?: IAccessibilityIconDimensionsOptions;
-    zIndex?: string;
-    backgroundColor?: string;
-    color?: string;
     img?: string;
-    circular?: boolean;
-    circularBorder?: true | false;
+    imgElem?: IJsonToHtml;
     fontFaceSrc?: Array<string>;
     fontClass?: string;
     useEmojis?: boolean;
-    fontFamily?: string;
-    forceFont?: boolean;
+    fontFamilyValidation?: string;
     tabIndex?: number;
     closeIcon?: string;
     resetIcon?: string;
+    closeIconElem?: IJsonToHtml;
+    resetIconElem?: IJsonToHtml;
 }
 export interface IAccessibilityIconPositionOptions {
     top?: IUnitsDim;
@@ -110,17 +103,10 @@ export interface IAccessibilityHotkeysKeysOptions {
     speechToText: Array<any>;
     disableAnimations: Array<any>;
 }
-export interface IAccessibilityButtonsOptions {
-    font: IUnitsDim;
-}
 export interface IAccessibilityGuideOptions {
     cBorder: string;
     cBackground: string;
     height: string;
-}
-export interface IAccessibilityMenuOptions {
-    dimensions: IAccessibilityMenuDimensionsOptions;
-    fontFamily: string;
 }
 export interface IAccessibilityMenuDimensionsOptions {
     width: IUnitsDim;
@@ -145,9 +131,6 @@ export interface IAccessibilityMenuLabelsOptions {
     increaseLineHeight: string;
     decreaseLineHeight: string;
     hotkeyPrefix: string;
-}
-export interface IAccessibilityAnimationsOptions {
-    buttons: boolean;
 }
 export interface IAccessibilityModulesOptions {
     increaseText: boolean;

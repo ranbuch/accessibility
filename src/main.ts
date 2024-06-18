@@ -10,6 +10,7 @@ import { Storage } from './storage';
 
 export class Accessibility implements IAccessibility {
     static CSS_CLASS_NAME = '_access-main-css';
+    static MENU_WIDTH = '25vw';
     private _isReading: boolean;
     private _common: Common;
     private _storage: Storage;
@@ -25,15 +26,17 @@ export class Accessibility implements IAccessibility {
     private _recognition: any; // SpeechRecognition;
     private _speechToTextTarget: HTMLElement;
     private _onKeyDownBind: any;
+    private _fixedDefaultFont: string;
     public menuInterface: IMenuInterface;
     public options: IAccessibilityOptions;
     constructor(options = {} as IAccessibilityOptions) {
         this._common = new Common();
         this._storage = new Storage();
+        this._fixedDefaultFont = this._common.getFixedFont('Material Icons');
         this._options = this.defaultOptions;
-        options = this.deleteOppositesIfDefined(options);
         this.options = this._common.extend(this._options, options);
         this.addModuleOrderIfNotDefined();
+        this.addDefaultOptions(options);
         // Consider adding this:
         // if (options) {
         //     if (!options.textToSpeechLang && document.querySelector('html').getAttribute('lang')) {
@@ -59,11 +62,12 @@ export class Accessibility implements IAccessibility {
         else {
             this._common.injectIconsFont(this.options.icon.fontFaceSrc, (hasError: boolean) => {
                 this.build();
-                if (!this.options.icon.forceFont) {
+                if (this.options.icon.fontFamilyValidation) {
                     setTimeout(() => {
-                        this._common.isFontLoaded(this.options.icon.fontFamily, (isLoaded: boolean) => {
+                        this._common.isFontLoaded(this.options.icon.fontFamilyValidation, (isLoaded: boolean) => {
                             if (!isLoaded || hasError) {
-                                this._common.warn(`${this.options.icon.fontFamily} font was not loaded, using emojis instead`);
+                                console.log('!isLoaded || hasError', !isLoaded || hasError);
+                                this._common.warn(`${this.options.icon.fontFamilyValidation} font was not loaded, using emojis instead`);
                                 this.fontFallback();
                                 this.destroy();
                                 this.build();
@@ -123,31 +127,20 @@ export class Accessibility implements IAccessibility {
         this._isReading = value;
     }
 
+    get fixedDefaultFont() {
+        return this._fixedDefaultFont;
+    }
+
     // Default options
     private get defaultOptions(): IAccessibilityOptions {
         const res = {
             icon: {
-                position: {
-                    bottom: { size: 50, units: 'px' },
-                    right: { size: 10, units: 'px' },
-                    type: 'fixed'
-                },
-                dimensions: {
-                    width: { size: 50, units: 'px' },
-                    height: { size: 50, units: 'px' }
-                },
-                zIndex: '9999',
-                backgroundColor: '#4054b2',
-                color: '#fff',
                 img: 'accessibility',
-                circular: false,
-                circularBorder: false,
                 fontFaceSrc: ['https://fonts.googleapis.com/icon?family=Material+Icons'],
-                fontFamily: this._common.getFixedFont('Material Icons'),
                 fontClass: 'material-icons',
                 useEmojis: false,
                 closeIcon: 'close',
-                resetIcon: 'refresh'
+                resetIcon: 'refresh',
             },
             hotkeys: {
                 enabled: false,
@@ -200,20 +193,10 @@ export class Accessibility implements IAccessibility {
                     ]
                 }
             },
-            buttons: {
-                font: { size: 18, units: 'px' }
-            },
             guide: {
                 cBorder: '#20ff69',
                 cBackground: '#000000',
                 height: '12px'
-            },
-            menu: {
-                dimensions: {
-                    width: { size: 25, units: 'vw' },
-                    height: { size: 'auto', units: '' }
-                },
-                fontFamily: 'RobotoDraft, Roboto, sans-serif, Arial'
             },
             suppressCssInjection: false,
             suppressDomInjection: false,
@@ -303,23 +286,32 @@ export class Accessibility implements IAccessibility {
 
     fontFallback() {
         this.options.icon.useEmojis = true;
-        this.options.icon.fontFamily = null;
         this.options.icon.img = '♿';
         this.options.icon.fontClass = '';
     }
 
-    deleteOppositesIfDefined(options: IAccessibilityOptions) {
-        if (options.icon && options.icon.position) {
-            if (options.icon.position.left) {
-                delete this._options.icon.position.right;
-                this._options.icon.position.left = options.icon.position.left;
-            }
-            if (options.icon.position.top) {
-                delete this._options.icon.position.bottom;
-                this._options.icon.position.top = options.icon.position.top;
-            }
-        }
-        return options;
+    addDefaultOptions(options: IAccessibilityOptions) {
+        if (options.icon?.closeIconElem)
+            this.options.icon.closeIconElem = options.icon.closeIconElem;
+        if (options.icon?.resetIconElem)
+            this.options.icon.resetIconElem = options.icon.resetIconElem;
+        if (options.icon?.imgElem)
+            this.options.icon.imgElem = options.icon.imgElem;
+        if (!this.options.icon.closeIconElem)
+            this.options.icon.closeIconElem = {
+                type: '#text',
+                text: `${!this.options.icon.useEmojis ? this.options.icon.closeIcon : 'X'}`
+            };
+        if (!this.options.icon.resetIconElem)
+            this.options.icon.resetIconElem = {
+                type: '#text',
+                text: `${!this.options.icon.useEmojis ? this.options.icon.resetIcon : '♲'}`
+            };
+        if (!this.options.icon.imgElem)
+            this.options.icon.imgElem = {
+                type: '#text',
+                text: this.options.icon.img
+            };
     }
 
     addModuleOrderIfNotDefined() {
@@ -366,7 +358,7 @@ export class Accessibility implements IAccessibility {
             padding: 0;
         }
         dialog._access[open]::backdrop {
-            background: var(--_access-menu-dialog-backdrop-background-end, rgba(0, 0, 0, 0.5))
+            background: var(--_access-menu-dialog-backdrop-background-end, rgba(0, 0, 0, 0.5));
             animation: _access-dialog-backdrop var(--_access-menu-dialog-backdrop-transition-duration, 0.35s) ease-in-out;
         }
         dialog._access.closing[open]::backdrop {
@@ -394,12 +386,12 @@ export class Accessibility implements IAccessibility {
         }
         .access_read_guide_bar {
             box-sizing: border-box;
-            background: ${this.options.guide.cBackground};
+            background: var(--_access-menu-read-guide-bg, ${this.options.guide.cBackground});
             width: 100%!important;
             min-width: 100%!important;
             position: fixed!important;
-            height: ${this.options.guide.height} !important;
-            border: solid 3px ${this.options.guide.cBorder};
+            height: var(--_access-menu-read-guide-height, ${this.options.guide.height}) !important;
+            border: var(--_access-menu-read-guide-border, solid 3px ${this.options.guide.cBorder});
             border-radius: 5px;
             top: 15px;
             z-index: 2147483647;
@@ -418,7 +410,17 @@ export class Accessibility implements IAccessibility {
                 background-color: var(--_access-scrollbar-thumb-background-color, #999999);
             }
             ._access-icon {
-                position: ${this.options.icon.position.type};
+                position: var(--_access-icon-position, fixed);
+                width: var(--_access-icon-width, 50px);
+                height: var(--_access-icon-height, 50px);
+                bottom: var(--_access-icon-bottom, 50px);
+                top: var(--_access-icon-top, unset);
+                left: var(--_access-icon-left, unset);
+                right: var(--_access-icon-right, 10px);
+                z-index: var(--_access-icon-z-index, 9999);
+                font: var(--_access-icon-font, 40px / 45px "Material Icons");
+                background: var(--_access-icon-bg, #4054b2);
+                color: var(--_access-icon-color, #fff);
                 background-repeat: no-repeat;
                 background-size: contain;
                 cursor: pointer;
@@ -430,71 +432,46 @@ export class Accessibility implements IAccessibility {
                 user-select: none;
                 ${!this.options.icon.useEmojis ? 'box-shadow: 1px 1px 5px rgba(0,0,0,.5);' : ''}
                 transform: ${!this.options.icon.useEmojis ? 'scale(1)' : 'skewX(14deg)'};
+                border-radius: var(--_access-icon-border-radius);
+                border: var(--_access-icon-border);
+                text-align: var(--_access-icon-text-align, center);
             }
             ._access-icon:hover {
-                ` + (this.options.animations.buttons && !this.options.icon.useEmojis ? `
-                box-shadow: 1px 1px 10px rgba(0,0,0,.9);
-                transform: scale(1.1);
-                ` : '') + `
+                transform: var(--_access-icon-transform-hover, scale(1.1));
+                vertical-align: var(--_access-icon-vertical-align-hover);
             }
-            .circular._access-icon {
-                border-radius: 50%;
-                border: .5px solid white;
-            }
-            ` + (this.options.animations.buttons && this.options.icon.circularBorder ? `
-            .circular._access-icon:hover {
-                border: 5px solid white;
-                border-style: double;
-                font-size: 35px!important;
-                vertical-align: middle;
-                padding-top: 2px;
-                text-align: center;
-            }
-            ` : '') + `
             ._access-menu {
                 -moz-user-select: none;
                 -webkit-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
                 position: fixed;
-                width: ${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
-                height: ${this.options.menu.dimensions.height.size + this.options.menu.dimensions.height.units};
+                width: var(--_access-menu-width, ${Accessibility.MENU_WIDTH});
+                height: var(--_access-menu-height, auto);
                 transition-duration: var(--_access-menu-transition-duration, .35s);
-                z-index: ${this.options.icon.zIndex + 1};
+                z-index: var(--_access-menu-z-index, 99991);
                 opacity: 1;
                 background-color: var(--_access-menu-background-color, #fff);
                 color: var(--_access-menu-color, #000);
                 border-radius: var(--_access-menu-border-radius, 3px);
                 border: var(--_access-menu-border, solid 1px #f1f0f1);
-                font-family: ${this.options.menu.fontFamily};
+                font-family: var(--_access-menu-font-family, RobotoDraft, Roboto, sans-serif, Arial);
                 min-width: var(--_access-menu-min-width, 300px);
                 box-shadow: var(--_access-menu-box-shadow, 0px 0px 1px #aaa);
                 max-height: calc(100vh - 80px);
                 ${(getComputedStyle(this._body).direction === 'rtl' ? 'text-indent: -5px' : '')}
+                top: var(--_access-menu-top, unset);
+                left: var(--_access-menu-left, unset);
+                bottom: var(--_access-menu-bottom, 0);
+                right: var(--_access-menu-right, 0);
             }
             ._access-menu.close {
                 z-index: -1;
                 width: 0;
                 opacity: 0;
                 background-color: transparent;
-            }
-            ._access-menu.bottom {
-                bottom: 0;
-            }
-            ._access-menu.top {
-                top: 0;
-            }
-            ._access-menu.left {
-                left: 0;
-            }
-            ._access-menu.close.left {
-                left: -${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
-            }
-            ._access-menu.right {
-                right: 0;
-            }
-            ._access-menu.close.right {
-                right: -${this.options.menu.dimensions.width.size + this.options.menu.dimensions.width.units};
+                left: calc(-1 * var(--_access-menu-left), unset);
+                right: calc(-1 * var(--_access-menu-width, ${Accessibility.MENU_WIDTH}));
             }
             ._access-menu ._text-center {
                 font-size: var(--_access-menu-header-font-size, 22px);
@@ -514,7 +491,7 @@ export class Accessibility implements IAccessibility {
                 font-style: normal !important;
             }
             ._access-menu ._menu-reset-btn:hover,._access-menu ._menu-close-btn:hover {
-                ${(this.options.animations.buttons ? 'transform: var(--_access-menu-header-btn-hover-rotate, rotate(180deg));' : '')}
+                transform: var(--_access-menu-header-btn-hover-rotate, rotate(180deg));
             }
             ._access-menu ._menu-reset-btn {
                 right: 5px;
@@ -552,8 +529,9 @@ export class Accessibility implements IAccessibility {
                 -webkit-user-select: none;
                 user-select: none;
                 margin: 0 5px 0 8px;
-                font-size: ${this.options.buttons.font.size + this.options.buttons.font.units} !important;
-                line-height: ${this.options.buttons.font.size + this.options.buttons.font.units} !important;
+                font: { size: 18, units: 'px' }
+                font-size: var(--_access-menu-item-font-size, 18px) !important;
+                line-height: var(--_access-menu-item-line-height, 18px) !important;
                 color: var(--_access-menu-item-color, rgba(0,0,0,.6));
                 letter-spacing: var(--_access-menu-item-letter-spacing, initial);
                 word-spacing: var(--_access-menu-item-word-spacing, initial);
@@ -577,7 +555,7 @@ export class Accessibility implements IAccessibility {
                 width: auto;
             }
             ._access-menu ul.before-collapse li button {
-                opacity: 0.05;
+                opacity: var(--_access-menu-item-button-before-collapse-opacity, 0.05);
             }
             ._access-menu ul li button.active, ._access-menu ul li button.active:hover {
                 background-color: var(--_access-menu-item-button-active-background-color, #000);
@@ -598,7 +576,7 @@ export class Accessibility implements IAccessibility {
             }
             ._access-menu ul li button:before {
                 content: ' ';
-                ${!this.options.icon.useEmojis ? 'font-family: ' + this._common.getFixedPseudoFont(this.options.icon.fontFamily) + ';' : ''}
+                font-family: var(--_access-menu-button-font-family-before, ${this._fixedDefaultFont});
                 text-rendering: optimizeLegibility;
                 font-feature-settings: "liga" 1;
                 font-style: normal;
@@ -749,36 +727,31 @@ export class Accessibility implements IAccessibility {
     }
 
     injectIcon(): HTMLElement {
-        let fontSize = (this.options.icon.dimensions.width.size as number) * 0.8;
-        let lineHeight = (this.options.icon.dimensions.width.size as number) * 0.9;
-        let textIndent = (this.options.icon.dimensions.width.size as number) * 0.1;
-        let iStyle = `width: ${this.options.icon.dimensions.width.size + this.options.icon.dimensions.width.units}
-            ;height: ${this.options.icon.dimensions.height.size + this.options.icon.dimensions.height.units}
-            ;font-size: ${fontSize + this.options.icon.dimensions.width.units}
-            ;line-height: ${lineHeight + this.options.icon.dimensions.width.units}
-            ;text-indent: ${textIndent + this.options.icon.dimensions.width.units}
-            ;background-color: ${!this.options.icon.useEmojis ? this.options.icon.backgroundColor : 'transparent'};color: ${this.options.icon.color}`;
-        for (let i in this.options.icon.position) {
-            let pos = this.options.icon.position as any;
-            pos = pos[i];
-            iStyle += ';' + i + ':' + pos.size + pos.units;
-        }
-        iStyle += `;z-index: ${this.options.icon.zIndex}`;
-        let className = `_access-icon ${this.options.icon.fontClass} _access` + (this.options.icon.circular ? ' circular' : '');
+        // let fontSize = (this.options.icon.dimensions.width.size as number) * 0.8;
+        // let lineHeight = (this.options.icon.dimensions.width.size as number) * 0.9;
+        // let textIndent = (this.options.icon.dimensions.width.size as number) * 0.1;
+        // let iStyle = `width: ${this.options.icon.dimensions.width.size + this.options.icon.dimensions.width.units}
+        //     ;height: ${this.options.icon.dimensions.height.size + this.options.icon.dimensions.height.units}
+        //     ;font-size: ${fontSize + this.options.icon.dimensions.width.units}
+        //     ;line-height: ${lineHeight + this.options.icon.dimensions.width.units}
+        //     ;text-indent: ${textIndent + this.options.icon.dimensions.width.units}
+        //     ;background-color: ${!this.options.icon.useEmojis ? this.options.icon.backgroundColor : 'transparent'};color: ${this.options.icon.color}`;
+        // for (let i in this.options.icon.position) {
+        //     let pos = this.options.icon.position as any;
+        //     pos = pos[i];
+        //     iStyle += ';' + i + ':' + pos.size + pos.units;
+        // }
+        // iStyle += `;z-index: ${this.options.icon.zIndex}`;
+        let className = `_access-icon ${this.options.icon.fontClass} _access`;
         let iconElem = this._common.jsonToHtml({
             type: 'i',
             attrs: {
                 'class': className,
-                'style': iStyle,
+                // 'style': iStyle,
                 'title': this.options.hotkeys.enabled ? this.parseKeys(this.options.hotkeys.keys.toggleMenu) : this.options.labels.menuTitle,
                 'tabIndex': 0
             },
-            children: [
-                {
-                    type: '#text',
-                    text: this.options.icon.img
-                }
-            ]
+            children: [this.options.icon.imgElem]
         });
 
         this._body.appendChild(iconElem);
@@ -808,15 +781,10 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'class': `_menu-close-btn _menu-btn ${this.options.icon.fontClass}`,
-                                'style': `font-family: ${this.options.icon.fontFamily}`,
+                                'style': `font-family: var(--_access-menu-close-btn-font-family, ${this._fixedDefaultFont})`,
                                 'title': this.options.hotkeys.enabled ? this.parseKeys(this.options.hotkeys.keys.toggleMenu) : this.options.labels.closeTitle
                             },
-                            children: [
-                                {
-                                    type: '#text',
-                                    text: `${!this.options.icon.useEmojis ? this.options.icon.closeIcon : 'X'}`
-                                }
-                            ]
+                            children: [this.options.icon.closeIconElem]
                         },
                         {
                             type: '#text',
@@ -826,22 +794,17 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'class': `_menu-reset-btn _menu-btn ${this.options.icon.fontClass}`,
-                                'style': `font-family: ${this.options.icon.fontFamily}`,
+                                'style': `font-family: var(--_access-menu-reset-btn-font-family, ${this._fixedDefaultFont})`,
                                 'title': this.options.labels.resetTitle
                             },
-                            children: [
-                                {
-                                    type: '#text',
-                                    text: `${!this.options.icon.useEmojis ? this.options.icon.resetIcon : '♲'}`
-                                }
-                            ]
+                            children: [this.options.icon.resetIconElem]
                         }
                     ]
                 },
                 {
                     type: 'ul',
                     attrs: {
-                        'class': (this.options.animations.buttons ? 'before-collapse _access-scrollbar' : '_access-scrollbar')
+                        'class': 'before-collapse _access-scrollbar'
                     },
                     children: [
                         {
@@ -1157,10 +1120,6 @@ export class Accessibility implements IAccessibility {
             });
         }
         let menuElem = this._common.jsonToHtml(json);
-
-        for (let i in this.options.icon.position) {
-            menuElem.classList.add(i);
-        }
 
         this._body.appendChild(menuElem);
         setTimeout(function () {
@@ -1703,13 +1662,9 @@ export class Accessibility implements IAccessibility {
     }
     toggleMenu() {
         const shouldClose = this._menu.classList.contains('close');
-
-        if (this.options.animations && this.options.animations.buttons) {
-            setTimeout(() => {
-                this._menu.querySelector('ul').classList.toggle('before-collapse');
-            }, shouldClose ? 500 : 10);
-        }
-
+        setTimeout(() => {
+            this._menu.querySelector('ul').classList.toggle('before-collapse');
+        }, shouldClose ? 500 : 10);
         this._menu.classList.toggle('close');
 
         this.options.icon.tabIndex = shouldClose ? 0 : -1;

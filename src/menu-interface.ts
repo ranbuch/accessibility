@@ -334,7 +334,7 @@ export class MenuInterface implements IMenuInterface {
             let css = `
                 body:after {
                     content: ${!this._acc.options.icon.useEmojis ? '"mic"' : 'var(--_access-menu-item-icon-mic,"🎤")'};
-                    ${!this._acc.options.icon.useEmojis ? `font-family: '` + this._acc.options.icon.fontFamily + `';` : ''}
+                    ${!this._acc.options.icon.useEmojis ? `font-family: var(--_access-menu-item-icon-font-family-after, ${this._acc.fixedDefaultFont}` : ''}
                     position: fixed;
                     z-index: 1100;
                     top: 1vw;

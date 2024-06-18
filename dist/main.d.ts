@@ -4,6 +4,7 @@ import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues } fr
 import { IMenuInterface } from './interfaces/menu.interface';
 export declare class Accessibility implements IAccessibility {
     static CSS_CLASS_NAME: string;
+    static MENU_WIDTH: string;
     private _isReading;
     private _common;
     private _storage;
@@ -19,6 +20,7 @@ export declare class Accessibility implements IAccessibility {
     private _recognition;
     private _speechToTextTarget;
     private _onKeyDownBind;
+    private _fixedDefaultFont;
     menuInterface: IMenuInterface;
     options: IAccessibilityOptions;
     constructor(options?: IAccessibilityOptions);
@@ -32,10 +34,11 @@ export declare class Accessibility implements IAccessibility {
     get recognition(): any;
     get isReading(): boolean;
     set isReading(value: boolean);
+    get fixedDefaultFont(): string;
     private get defaultOptions();
     initFontSize(): void;
     fontFallback(): void;
-    deleteOppositesIfDefined(options: IAccessibilityOptions): IAccessibilityOptions;
+    addDefaultOptions(options: IAccessibilityOptions): void;
     addModuleOrderIfNotDefined(): void;
     disabledUnsupportedFeatures(): void;
     injectCss(injectFull: boolean): void;

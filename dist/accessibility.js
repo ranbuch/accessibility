@@ -15,18 +15,6 @@ Object.defineProperty(exports, "IAccessibility", {
     return _accessibility.IAccessibility;
   }
 });
-Object.defineProperty(exports, "IAccessibilityAnimationsOptions", {
-  enumerable: true,
-  get: function get() {
-    return _accessibility.IAccessibilityAnimationsOptions;
-  }
-});
-Object.defineProperty(exports, "IAccessibilityButtonsOptions", {
-  enumerable: true,
-  get: function get() {
-    return _accessibility.IAccessibilityButtonsOptions;
-  }
-});
 Object.defineProperty(exports, "IAccessibilityGuideOptions", {
   enumerable: true,
   get: function get() {
@@ -73,12 +61,6 @@ Object.defineProperty(exports, "IAccessibilityMenuLabelsOptions", {
   enumerable: true,
   get: function get() {
     return _accessibility.IAccessibilityMenuLabelsOptions;
-  }
-});
-Object.defineProperty(exports, "IAccessibilityMenuOptions", {
-  enumerable: true,
-  get: function get() {
-    return _accessibility.IAccessibilityMenuOptions;
   }
 });
 Object.defineProperty(exports, "IAccessibilityModulesOptions", {
