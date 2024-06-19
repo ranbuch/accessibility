@@ -113,32 +113,14 @@ new Accessibility({animations: {buttons: false}})
 
 ### POSITIONING:
 You can position the accessibility icon in any place on the screen. The default position is bottom right:
-```javascript
-var options = {
-    icon: {
-        position: {
-            bottom: { size: 50, units: 'px' },
-            right: { size: 0, units: 'px' },
-            type: 'fixed'
-        }
-    }
-};
-new Accessibility(options);
+```css
+body {
+    --_access-icon-top: 50px;
+    --_access-icon-left: 50px;
+    --_access-icon-right: unset;
+    --_access-icon-bottom: unset;
+}
 ```
-But you can also position the icon in the upper left corner of the screen and cancel the fixed positioning:
-```javascript
-var options = {
-    icon: {
-        position: {
-            top: { size: 2, units: 'vh' },
-            left: { size: 2, units: '%' },
-            type: 'absolute'
-        }
-    }
-};
-new Accessibility(options);
-```
-
 
 
 ### ICON IMAGE:
@@ -300,7 +282,28 @@ const options = {
         fontFamily: '"FontAwesome"',
         img: '[optional - URL for an image that will replace the menu icon]',
         closeIcon: '[optional - replacement text for the close menu icon]',
-        resetIcon: '[optional - replacement text for the reset all icon]'
+        resetIcon: '[optional - replacement text for the reset all icon]',
+        closeIconElem: {
+            type: 'i',
+            attrs: {
+                'class': 'fa fa-window-close',
+                'aria-hidden': 'true'
+            }
+        },
+        imgElem: {
+            type: 'i',
+            attrs: {
+                'class': 'fa fa-universal-access',
+                'aria-hidden': 'true'
+            }
+        },
+        resetIconElem: {
+            type: 'i',
+            attrs: {
+                'class': 'fa fa-refresh',
+                'aria-hidden': 'true'
+            }
+        }
     }
 };
 new Accessibility(options);

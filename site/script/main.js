@@ -3,7 +3,6 @@ var options = {
         enabled: true
     },
     // icon: {
-    //     circular: true,
     //     closeIconElem: {
     //         type: 'i',
     //         attrs: {
@@ -26,7 +25,7 @@ var options = {
         speechToTextLang: 'en-US'
     },
     iframeModals: [{
-        iframeUrl: 'http://localhost:8080/',
+        iframeUrl: 'https://github.com/ranbuch/accessibility',
         buttonText: 'terms'
     }],
     customFunctions: [{

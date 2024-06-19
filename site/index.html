@@ -425,69 +425,26 @@
                     right:
                 </p>
                 <code>
-                    var options = {
+                    &lt;style&gt;
                     <p class="b-space-1">
-                        icon: {
+                        body {
                     </p>
                     <p class="b-space-2">
-                        position: {
-                    </p>
-                    <p class="b-space-3">
-                        bottom: { size: 50, units: 'px' },
-                    </p>
-                    <p class="b-space-3">
-                        right: { size: 0, units: 'px' },
-                    </p>
-                    <p class="b-space-3">
-                        type: 'fixed'
+                        --_access-icon-top: 50px;
                     </p>
                     <p class="b-space-2">
-                        }
+                        --_access-icon-left: 50px;
+                    </p>
+                    <p class="b-space-2">
+                        --_access-icon-right: unset;
+                    </p>
+                    <p class="b-space-2">
+                        --_access-icon-bottom: unset;
                     </p>
                     <p class="b-space-1">
                         }
                     </p>
-                    <p>
-                        }
-                    </p>
-                    <p>
-                        new Accessibility(options);
-                    </p>
-                </code>
-                <br>
-                <p>
-                    But you can also position the icon in the upper left corner of the screen and cancel the fixed
-                    positioning:
-                </p>
-                <code>
-                    var options = {
-                    <p class="b-space-1">
-                        icon: {
-                    </p>
-                    <p class="b-space-2">
-                        position: {
-                    </p>
-                    <p class="b-space-3">
-                        top: { size: 2, units: 'vh' },
-                    </p>
-                    <p class="b-space-3">
-                        left: { size: 2, units: '%' },
-                    </p>
-                    <p class="b-space-3">
-                        type: 'absolute'
-                    </p>
-                    <p class="b-space-2">
-                        }
-                    </p>
-                    <p class="b-space-1">
-                        }
-                    </p>
-                    <p>
-                        }
-                    </p>
-                    <p>
-                        new Accessibility(options);
-                    </p>
+                    &lt;style&gt;
                 </code>
             </div>
 
@@ -510,12 +467,26 @@
                 </p>
 
                 <code>
+                    &lt;style&gt;
+                    <p class="b-space-1">
+                        body {
+                    </p>
+                    <p class="b-space-2">
+                            --_access-icon-border-radius: 50%;
+                    </p>
+                    <p class="b-space-2">
+                            --_access-icon-border: .5px solid white;
+                    </p>
+                    <p class="b-space-1">
+                        }
+                    </p>
+                    &lt;style&gt;
+                    <br>
+                    &lt;script&gt;
+                    <br>
                     var options = {
                     <p class="b-space-1">
                         icon: {
-                    </p>
-                    <p class="b-space-2">
-                        circular: [true/false],
                     </p>
                     <p class="b-space-2">
                         img: ['accessibility'/'accessible'],
@@ -529,6 +500,7 @@
                     <p>
                         new Accessibility(options);
                     </p>
+                    &lt;script&gt;
                 </code>
                 <br>
                 <p>
@@ -868,6 +840,7 @@
                     Another example with <code>font-awesome</code> icons:
                 </p>
                 <code>
+                    &lt;script&gt;
                     const options = {
                     <p class="b-space-1">
                         icon: {
@@ -876,7 +849,70 @@
                         fontFaceSrc: ['https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/v4-font-face.min.css'],
                     </p>
                     <p class="b-space-2">
-                        fontFamily: '"FontAwesome"'
+                        fontFamily: '"FontAwesome"',
+                    </p>
+                    <p class="b-space-2">
+                        closeIconElem: {
+                    </p>
+                    <p class="b-space-3">
+                        type: 'i',
+                    </p>
+                    <p class="b-space-3">
+                        attrs: {
+                    </p>
+                    <p class="b-space-4">
+                        'class': 'fa fa-window-close',
+                    </p>
+                    <p class="b-space-4">
+                        'aria-hidden': 'true'
+                    </p>
+                    <p class="b-space-3">
+                        }
+                    </p>
+                    <p class="b-space-2">
+                        },
+                    </p>
+                    <p class="b-space-2">
+                        imgElem: {
+                    </p>
+                    <p class="b-space-3">
+                        type: 'i',
+                    </p>
+                    <p class="b-space-3">
+                        attrs: {
+                    </p>
+                    <p class="b-space-4">
+                        'class': 'fa fa-universal-access',
+                    </p>
+                    <p class="b-space-4">
+                        'aria-hidden': 'true'
+                    </p>
+                    <p class="b-space-3">
+                        }
+                    </p>
+                    <p class="b-space-2">
+                        },
+                    </p>
+                    <p class="b-space-2">
+                        resetIconElem: {
+                    </p>
+                    <p class="b-space-3">
+                        type: 'i',
+                    </p>
+                    <p class="b-space-3">
+                        attrs: {
+                    </p>
+                    <p class="b-space-4">
+                        'class': 'fa fa-refresh',
+                    </p>
+                    <p class="b-space-4">
+                        'aria-hidden': 'true'
+                    </p>
+                    <p class="b-space-3">
+                        }
+                    </p>
+                    <p class="b-space-2">
+                        },
                     </p>
                     <p class="b-space-1">
                         }
@@ -885,6 +921,9 @@
                     <p>
                     new Accessibility(options);
                     </p>
+                    &lt;script&gt;
+                    <br>
+                    &lt;style&gt;
                     <p>
                         :root {
                         <p class="b-space-1">
@@ -897,6 +936,7 @@
                         }
                         </p>
                     </p>
+                    &lt;style&gt;
                 </code>
                 <p>
                     Obviously you will need to add the missing variables for the rest of the fonts.
