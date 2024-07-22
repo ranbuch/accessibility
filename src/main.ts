@@ -1,12 +1,21 @@
 'use strict';
 // Do not delete this as it allows importing the package with other projects
 import 'regenerator-runtime/runtime.js';
-import { Common } from './common';
-import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues, AccessibilityModulesType, IIframeModal, ICustomFunction, IAccessibilityModuleOrder } from './interfaces/accessibility.interface';
-import { IFormattedDim, IJsonToHtml } from './interfaces/common.interface';
-import { IMenuInterface } from './interfaces/menu.interface';
-import { MenuInterface } from './menu-interface';
-import { Storage } from './storage';
+import {Common} from './common';
+import {
+    IAccessibility,
+    IAccessibilityOptions,
+    ISessionState,
+    IStateValues,
+    AccessibilityModulesType,
+    IIframeModal,
+    ICustomFunction,
+    IAccessibilityModuleOrder
+} from './interfaces/accessibility.interface';
+import {IFormattedDim, IJsonToHtml} from './interfaces/common.interface';
+import {IMenuInterface} from './interfaces/menu.interface';
+import {MenuInterface} from './menu-interface';
+import {Storage} from './storage';
 
 export class Accessibility implements IAccessibility {
     static CSS_CLASS_NAME = '_access-main-css';
@@ -29,6 +38,7 @@ export class Accessibility implements IAccessibility {
     private _fixedDefaultFont: string;
     public menuInterface: IMenuInterface;
     public options: IAccessibilityOptions;
+
     constructor(options = {} as IAccessibilityOptions) {
         this._common = new Common();
         this._storage = new Storage();
@@ -58,8 +68,7 @@ export class Accessibility implements IAccessibility {
         if (this.options.icon.useEmojis) {
             this.fontFallback();
             this.build();
-        }
-        else {
+        } else {
             this._common.injectIconsFont(this.options.icon.fontFaceSrc, (hasError: boolean) => {
                 this.build();
                 if (this.options.icon.fontFamilyValidation) {
@@ -262,7 +271,7 @@ export class Accessibility implements IAccessibility {
         };
         const keys = Object.keys(AccessibilityModulesType);
         keys.forEach((key, index) => {
-            const keyNum  = parseInt(key);
+            const keyNum = parseInt(key);
             if (!isNaN(keyNum)) {
                 res.modulesOrder.push({
                     type: keyNum,
@@ -397,7 +406,7 @@ export class Accessibility implements IAccessibility {
             z-index: 2147483647;
         }`;
         if (injectFull) {
-        css = `
+            css = `
             ._access-scrollbar::-webkit-scrollbar-track, .mat-autocomplete-panel::-webkit-scrollbar-track, .mat-tab-body-content::-webkit-scrollbar-track, .mat-select-panel:not([class*='mat-elevation-z'])::-webkit-scrollbar-track, .mat-menu-panel::-webkit-scrollbar-track {
                 -webkit-box-shadow: var(--_access-scrollbar-track-box-shadow, inset 0 0 6px rgba(0,0,0,0.3));
                 background-color: var(--_access-scrollbar-track-background-color, #F5F5F5);
@@ -711,12 +720,11 @@ export class Accessibility implements IAccessibility {
                 top: var(--_access-menu-item-icon-decrease-line-height-top, ${iconTop});
                 left: var(--_access-menu-item-icon-decrease-line-height-left, ${iconLeft});
             }`;
-        }
-        else {
+        } else {
             css = mandatory;
         }
         const className = Accessibility.CSS_CLASS_NAME;
-        this._common.injectStyle(css, { className: className });
+        this._common.injectStyle(css, {className: className});
         this._common.deployedObjects.set(`.${className}`, false);
     }
 
@@ -760,7 +768,9 @@ export class Accessibility implements IAccessibility {
     }
 
     parseKeys(arr: Array<any>) {
-        return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? this.options.labels.hotkeyPrefix + arr.map(function (val) { return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', ''); }).join('+') : '') : '');
+        return (this.options.hotkeys.enabled ? (this.options.hotkeys.helpTitles ? this.options.labels.hotkeyPrefix + arr.map(function (val) {
+            return Number.isInteger(val) ? String.fromCharCode(val).toLowerCase() : val.replace('Key', '');
+        }).join('+') : '') : '');
     }
 
     injectMenu(): HTMLElement {
@@ -1070,7 +1080,7 @@ export class Accessibility implements IAccessibility {
                         content: "${icon}";
                     }`;
                     let className = '_data-access-iframe-index-' + i;
-                    this._common.injectStyle(css, { className: className });
+                    this._common.injectStyle(css, {className: className});
                     this._common.deployedObjects.set('.' + className, false);
                 }
                 if (this.options.modules.textToSpeech)
@@ -1110,7 +1120,7 @@ export class Accessibility implements IAccessibility {
                         content: "${icon}";
                     }`;
                     let className = '_data-access-custom-id-' + cf.id;
-                    this._common.injectStyle(css, { className: className });
+                    this._common.injectStyle(css, {className: className});
                     this._common.deployedObjects.set('.' + className, false);
                 }
                 if (this.options.modules.textToSpeech)
@@ -1369,6 +1379,7 @@ export class Accessibility implements IAccessibility {
         let factor = 12.5;
         if (!isIncrease)
             factor *= -1;
+
         if (this.options.textPixelMode) {
             let all = document.querySelectorAll('*:not(._access)');
 
@@ -1382,19 +1393,25 @@ export class Accessibility implements IAccessibility {
                 }
                 if (this._stateValues.textToSpeech) this.textToSpeech(`Text Size ${isIncrease ? 'Increased' : 'Decreased'}`);
             }
-        }
-        else if (this.options.textEmlMode) {
+
+            // Also adjust the body font size
+            let bodyFontSize = getComputedStyle(this._body).fontSize;
+            if (bodyFontSize && (bodyFontSize.indexOf('px') > -1)) {
+                if (!this._body.getAttribute('data-init-font-size'))
+                    this._body.setAttribute('data-init-font-size', bodyFontSize);
+                bodyFontSize = parseInt(bodyFontSize.replace('px', '')) + factor as any;
+                (this._body as HTMLElement).style.fontSize = bodyFontSize + 'px';
+            }
+        } else if (this.options.textEmlMode) {
             let fp = this._html.style.fontSize;
             if (fp.indexOf('%')) {
                 fp = parseInt(fp.replace('%', '')) as any;
                 this._html.style.fontSize = (fp + factor) + '%';
                 if (this._stateValues.textToSpeech) this.textToSpeech(`Text Size ${isIncrease ? 'Increased' : 'Decreased'}`);
-            }
-            else {
+            } else {
                 this._common.warn('Accessibility.textEmlMode, html element is not set in %.');
             }
-        }
-        else {
+        } else {
             let fSize = this._common.getFormattedDim(getComputedStyle(this._body).fontSize);
             if (typeof this._stateValues.body.fontSize === 'undefined')
                 this._stateValues.body.fontSize = fSize.size + fSize.suffix;
@@ -1403,6 +1420,7 @@ export class Accessibility implements IAccessibility {
             }
         }
     }
+
 
     alterLineHeight(isIncrease: boolean) {
         this.sessionState.lineHeight += isIncrease ? 1 : -1;
@@ -1430,9 +1448,7 @@ export class Accessibility implements IAccessibility {
                     (all[i] as HTMLElement).style.lineHeight = `${newPixel}px`;
                 }
                 if (this._stateValues.textToSpeech) this.textToSpeech(`Line Height ${isIncrease ? 'Increased' : 'Decreased'}`);
-            }
-
-            else if (this.options.textEmlMode) {
+            } else if (this.options.textEmlMode) {
                 let lTextSize = getComputedStyle(all[i]).fontSize;
                 let lHeight = getComputedStyle(all[i]).lineHeight;
                 if (lHeight === 'normal')
@@ -1489,8 +1505,7 @@ export class Accessibility implements IAccessibility {
                 }
             }
             if (this._stateValues.textToSpeech) this.textToSpeech(`Text Spacing ${isIncrease ? 'Increased' : 'Decreased'}`);
-        }
-        else {
+        } else {
             // wordSpacing
             let fSpacing = this._common.getFormattedDim(getComputedStyle(this._body).wordSpacing) as any;
             if (typeof this._stateValues.body.wordSpacing === 'undefined')
@@ -1540,8 +1555,7 @@ export class Accessibility implements IAccessibility {
                     this._speechToTextTarget.parentElement.classList.remove('_access-listening');
                     if (this._speechToTextTarget.tagName.toLowerCase() === 'input' || this._speechToTextTarget.tagName.toLowerCase() === 'textarea') {
                         (this._speechToTextTarget as HTMLInputElement).value = finalTranscript;
-                    }
-                    else if (this._speechToTextTarget.getAttribute('contenteditable') !== null) {
+                    } else if (this._speechToTextTarget.getAttribute('contenteditable') !== null) {
                         this._speechToTextTarget.innerText = finalTranscript;
                     }
                 }
@@ -1601,7 +1615,8 @@ export class Accessibility implements IAccessibility {
                 let res;
                 try {
                     res = canvas.toDataURL('image/png');
-                } catch (e) { }
+                } catch (e) {
+                }
                 resolve(res);
                 canvas.remove();
             };
@@ -1627,8 +1642,8 @@ export class Accessibility implements IAccessibility {
                 e.preventDefault();
                 e.stopPropagation();
             }
+        } catch (ex) {
         }
-        catch (ex) { }
 
         let allContent = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
         for (const key in allContent) {
@@ -1641,8 +1656,7 @@ export class Accessibility implements IAccessibility {
         if (this._isReading) {
             window.speechSynthesis.cancel();
             this._isReading = false;
-        }
-        else
+        } else
             this.textToSpeech((window.event.target as HTMLElement).innerText);
     }
 
@@ -1660,6 +1674,7 @@ export class Accessibility implements IAccessibility {
                 break;
         }
     }
+
     toggleMenu() {
         const shouldClose = this._menu.classList.contains('close');
         setTimeout(() => {
@@ -1792,8 +1807,7 @@ export class Accessibility implements IAccessibility {
                     while (textSize--) {
                         this.alterTextSize(true);
                     }
-                }
-                else {
+                } else {
                     while (textSize++) {
                         this.alterTextSize(false);
                     }
@@ -1805,8 +1819,7 @@ export class Accessibility implements IAccessibility {
                     while (textSpace--) {
                         this.alterTextSpace(true);
                     }
-                }
-                else {
+                } else {
                     while (textSpace++) {
                         this.alterTextSpace(false);
                     }
@@ -1818,8 +1831,7 @@ export class Accessibility implements IAccessibility {
                     while (lineHeight--) {
                         this.alterLineHeight(true);
                     }
-                }
-                else {
+                } else {
                     while (lineHeight--) {
                         this.alterLineHeight(false);
                     }
