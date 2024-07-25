@@ -361,7 +361,7 @@ export class MenuInterface implements IMenuInterface {
             `;
             this._acc.common.injectStyle(css, { className: className });
             this._acc.common.deployedObjects.set('.' + className, true);
-            let inputs = document.querySelectorAll('input[type="text"], input[type="search"], textarea, [contenteditable]');
+            let inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="search"], textarea, [contenteditable]');
             for (let i = 0; i < inputs.length; i++) {
                 inputs[i].addEventListener('blur', () => {
                     if (typeof this._acc.recognition === 'object' && typeof this._acc.recognition.stop === 'function')
