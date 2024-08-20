@@ -18,8 +18,8 @@ import {
 } from './interfaces/accessibility.interface';
 import { IMenuInterface } from './interfaces/menu.interface';
 
-if (typeof window !== 'undefined')
-    (window as any).Accessibility = Accessibility;
+if (typeof globalThis !== 'undefined')
+    (globalThis as any).Accessibility = Accessibility;
 
 export {
     Accessibility,
