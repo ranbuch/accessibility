@@ -78,9 +78,9 @@ export class Accessibility implements IAccessibility {
             });
         }
         if (this.options.modules.speechToText) {
-            window.addEventListener('beforeunload', () => {
+            globalThis.addEventListener('beforeunload', () => {
                 if (this._isReading) {
-                    window.speechSynthesis.cancel();
+                    globalThis.speechSynthesis.cancel();
                     this._isReading = false;
                 }
             });
@@ -322,12 +322,12 @@ export class Accessibility implements IAccessibility {
     }
 
     disabledUnsupportedFeatures() {
-        if (!('webkitSpeechRecognition' in window) || location.protocol !== 'https:') {
+        if (!('webkitSpeechRecognition' in globalThis) || location.protocol !== 'https:') {
             this._common.warn('speech to text isn\'t supported in this browser or in http protocol (https required)');
             this.options.modules.speechToText = false;
         }
-        const windowAny = window as any;
-        if (!windowAny.SpeechSynthesisUtterance || !windowAny.speechSynthesis) {
+        const globalThisAny = globalThis as any;
+        if (!globalThisAny.SpeechSynthesisUtterance || !globalThisAny.speechSynthesis) {
             this._common.warn('text to speech isn\'t supported in this browser');
             this.options.modules.textToSpeech = false;
         }
@@ -1134,7 +1134,7 @@ export class Accessibility implements IAccessibility {
         let closeBtn = document.querySelector('._access-menu ._menu-close-btn');
         ['click', 'keyup'].forEach(evt => {
             closeBtn.addEventListener(evt, (e: Event | KeyboardEvent) => {
-                let et = e || window.event;
+                let et = e || globalThis.event;
                 if ((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== 'Enter') return;
                 this.toggleMenu();
             }, false);
@@ -1143,7 +1143,7 @@ export class Accessibility implements IAccessibility {
         let resetBtn = document.querySelector('._access-menu ._menu-reset-btn');
         ['click', 'keyup'].forEach(evt => {
             resetBtn.addEventListener(evt, (e: Event | KeyboardEvent) => {
-                let et = e || window.event;
+                let et = e || globalThis.event;
                 if ((et as KeyboardEvent).detail === 0 && (et as KeyboardEvent).key !== 'Enter') return;
                 this.resetAll();
             }, false);
@@ -1154,7 +1154,7 @@ export class Accessibility implements IAccessibility {
 
     getVoices(): Promise<SpeechSynthesisVoice[]> {
         return new Promise((resolve => {
-            let synth = window.speechSynthesis;
+            let synth = globalThis.speechSynthesis;
             let id: ReturnType<typeof setInterval>;
 
             id = setInterval(() => {
@@ -1263,7 +1263,7 @@ export class Accessibility implements IAccessibility {
         for (let i = 0; i < lis.length; i++) {
             ['click', 'keyup'].forEach(evt =>
                 lis[i].addEventListener(evt, (e: Event | KeyboardEvent) => {
-                    let evt = e || window.event;
+                    let evt = e || globalThis.event;
                     if ((evt as KeyboardEvent).detail === 0 && (evt as KeyboardEvent).key !== 'Enter') return;
                     this.invoke((evt.target as HTMLElement).getAttribute('data-access-action'), evt.target as HTMLElement);
                 })
@@ -1272,7 +1272,7 @@ export class Accessibility implements IAccessibility {
 
         [...Array.from(step1), ...Array.from(step2), ...Array.from(step3)].forEach(el =>
             el.addEventListener('click', (e: Event) => {
-                let evt = e || window.event;
+                let evt = e || globalThis.event;
                 this.invoke((evt.target as HTMLElement).parentElement.parentElement.getAttribute('data-access-action'), evt.target as HTMLElement);
             }, false)
         );
@@ -1510,8 +1510,8 @@ export class Accessibility implements IAccessibility {
     }
 
     speechToText() {
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            this._recognition = new ((window as any).SpeechRecognition || (window as any).webkitSpeechRecognition)();
+        if ('webkitSpeechRecognition' in globalThis || 'SpeechRecognition' in globalThis) {
+            this._recognition = new ((globalThis as any).SpeechRecognition || (globalThis as any).webkitSpeechRecognition)();
             this._recognition.continuous = true;
             this._recognition.interimResults = true;
             this._recognition.onstart = () => {
@@ -1552,16 +1552,16 @@ export class Accessibility implements IAccessibility {
     }
 
     textToSpeech(text: string) {
-        const windowAny = window as any;
-        if (!windowAny.SpeechSynthesisUtterance || !windowAny.speechSynthesis) return;
-        let msg = new windowAny.SpeechSynthesisUtterance(text);
+        const globalThisAny = globalThis as any;
+        if (!globalThisAny.SpeechSynthesisUtterance || !globalThisAny.speechSynthesis) return;
+        let msg = new globalThisAny.SpeechSynthesisUtterance(text);
         msg.lang = this.options.language.textToSpeechLang;
         msg.lang = this.options.textToSpeechLang;
         msg.rate = this._stateValues.speechRate;
         msg.onend = () => {
             this._isReading = false;
         };
-        let voices = windowAny.speechSynthesis.getVoices();
+        let voices = globalThisAny.speechSynthesis.getVoices();
         let isLngSupported = false;
         for (let i = 0; i < voices.length; i++) {
             if (voices[i].lang === msg.lang) {
@@ -1573,11 +1573,11 @@ export class Accessibility implements IAccessibility {
         if (!isLngSupported) {
             this._common.warn('text to speech language not supported!');
         }
-        if (window.speechSynthesis.pending || window.speechSynthesis.speaking) {
-            window.speechSynthesis.pause;
-            window.speechSynthesis.cancel();
+        if (globalThis.speechSynthesis.pending || globalThis.speechSynthesis.speaking) {
+            globalThis.speechSynthesis.pause;
+            globalThis.speechSynthesis.cancel();
         }
-        window.speechSynthesis.speak(msg);
+        globalThis.speechSynthesis.speak(msg);
         this._isReading = true;
     }
 
@@ -1616,13 +1616,13 @@ export class Accessibility implements IAccessibility {
         if (typeof this._recognition === 'object' && typeof this._recognition.stop === 'function')
             this._recognition.stop();
 
-        this._speechToTextTarget = window.event.target as HTMLElement;
+        this._speechToTextTarget = globalThis.event.target as HTMLElement;
         this.speechToText();
     }
 
     read(e: Event) {
         try {
-            e = window.event || e || arguments[0];
+            e = globalThis.event || e || arguments[0];
             if (e && e.preventDefault) {
                 e.preventDefault();
                 e.stopPropagation();
@@ -1632,18 +1632,18 @@ export class Accessibility implements IAccessibility {
 
         let allContent = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
         for (const key in allContent) {
-            if (allContent[key] === window.event.target && (e instanceof MouseEvent)) return;
+            if (allContent[key] === globalThis.event.target && (e instanceof MouseEvent)) return;
         }
         if (e instanceof KeyboardEvent && (e.shiftKey && e.key === 'Tab' || e.key === 'Tab')) {
-            this.textToSpeech((window.event.target as HTMLElement).innerText);
+            this.textToSpeech((globalThis.event.target as HTMLElement).innerText);
             return;
         }
         if (this._isReading) {
-            window.speechSynthesis.cancel();
+            globalThis.speechSynthesis.cancel();
             this._isReading = false;
         }
         else
-            this.textToSpeech((window.event.target as HTMLElement).innerText);
+            this.textToSpeech((globalThis.event.target as HTMLElement).innerText);
     }
 
     runHotkey(name: string) {
