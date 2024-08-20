@@ -234,8 +234,8 @@ export class MenuInterface implements IMenuInterface {
                 document.removeEventListener('keyup', this.readBind, false);
                 this._acc.common.deployedObjects.remove('.' + className);
             }
-            if (window.speechSynthesis)
-                window.speechSynthesis.cancel();
+            if (globalThis.speechSynthesis)
+                globalThis.speechSynthesis.cancel();
             this._acc.isReading = false;
         };
 
@@ -245,7 +245,7 @@ export class MenuInterface implements IMenuInterface {
             step2[0].classList.remove('active');
             step3[0].classList.remove('active');
             this._acc.stateValues.textToSpeech = false;
-            window.speechSynthesis.cancel();
+            globalThis.speechSynthesis.cancel();
             return remove();
         }
 
