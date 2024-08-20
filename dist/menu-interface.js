@@ -315,7 +315,7 @@ var MenuInterface = /*#__PURE__*/function () {
           className: className
         });
         this._acc.common.deployedObjects.set('.' + className, true);
-        var inputs = document.querySelectorAll('input[type="text"], input[type="search"], textarea, [contenteditable]');
+        var inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"], input[type="search"], textarea, [contenteditable]');
         for (var i = 0; i < inputs.length; i++) {
           inputs[i].addEventListener('blur', function () {
             if (_typeof(_this3._acc.recognition) === 'object' && typeof _this3._acc.recognition.stop === 'function') _this3._acc.recognition.stop();
