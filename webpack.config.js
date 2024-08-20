@@ -15,7 +15,8 @@ module.exports = {
     output: {
         filename: '[name].bundle.js',
         libraryTarget: 'umd',
-        path: DESTINATION
+        path: DESTINATION,
+        globalObject: 'globalThis',
     },
 
     resolve: {
