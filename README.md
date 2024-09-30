@@ -104,6 +104,10 @@ In that case you can initialize the accessibility tool like this:
 ```javascript
 new Accessibility({textPixelMode: true})
 ```
+You can change the factor of the font size difference between every iteration (default is 12.5):
+```javascript
+new Accessibility({textSizeFactor: 4})
+```
 
 ### ANIMATIONS:
 Cancel all buttons animations:  

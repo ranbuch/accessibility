@@ -210,6 +210,7 @@ var Accessibility = /*#__PURE__*/function () {
         },
         textPixelMode: false,
         textEmlMode: true,
+        textSizeFactor: 12.5,
         animations: {
           buttons: true
         },
@@ -914,7 +915,7 @@ var Accessibility = /*#__PURE__*/function () {
     value: function alterTextSize(isIncrease) {
       this._sessionState.textSize += isIncrease ? 1 : -1;
       this.onChange(true);
-      var factor = 12.5;
+      var factor = this.options.textSizeFactor;
       if (!isIncrease) factor *= -1;
       if (this.options.textPixelMode) {
         var all = document.querySelectorAll('*:not(._access)');
@@ -922,10 +923,23 @@ var Accessibility = /*#__PURE__*/function () {
           var fSize = getComputedStyle(all[i]).fontSize;
           if (fSize && fSize.indexOf('px') > -1) {
             if (!all[i].getAttribute('data-init-font-size')) all[i].setAttribute('data-init-font-size', fSize);
-            fSize = parseInt(fSize.replace('px', '')) + factor;
-            all[i].style.fontSize = fSize + 'px';
+          }
+        }
+        for (var _i2 = 0; _i2 < all.length; _i2++) {
+          var _fSize = getComputedStyle(all[_i2]).fontSize;
+          if (_fSize && _fSize.indexOf('px') > -1) {
+            _fSize = parseInt(_fSize.replace('px', '')) + factor;
+            all[_i2].style.fontSize = _fSize + 'px';
           }
           if (this._stateValues.textToSpeech) this.textToSpeech("Text Size ".concat(isIncrease ? 'Increased' : 'Decreased'));
+        }
+
+        // Also adjust the body font size
+        var bodyFontSize = getComputedStyle(this._body).fontSize;
+        if (bodyFontSize && bodyFontSize.indexOf('px') > -1) {
+          if (!this._body.getAttribute('data-init-font-size')) this._body.setAttribute('data-init-font-size', bodyFontSize);
+          bodyFontSize = parseInt(bodyFontSize.replace('px', '')) + factor;
+          this._body.style.fontSize = bodyFontSize + 'px';
         }
       } else if (this.options.textEmlMode) {
         var fp = this._html.style.fontSize;
@@ -937,10 +951,10 @@ var Accessibility = /*#__PURE__*/function () {
           this._common.warn('Accessibility.textEmlMode, html element is not set in %.');
         }
       } else {
-        var _fSize = this._common.getFormattedDim(getComputedStyle(this._body).fontSize);
-        if (typeof this._stateValues.body.fontSize === 'undefined') this._stateValues.body.fontSize = _fSize.size + _fSize.suffix;
-        if (_fSize && _fSize.suffix && !isNaN(_fSize.size * 1)) {
-          this._body.style.fontSize = _fSize.size * 1 + factor + _fSize.suffix;
+        var _fSize2 = this._common.getFormattedDim(getComputedStyle(this._body).fontSize);
+        if (typeof this._stateValues.body.fontSize === 'undefined') this._stateValues.body.fontSize = _fSize2.size + _fSize2.suffix;
+        if (_fSize2 && _fSize2.suffix && !isNaN(_fSize2.size * 1)) {
+          this._body.style.fontSize = _fSize2.size * 1 + factor + _fSize2.suffix;
         }
       }
     }

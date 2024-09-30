@@ -222,6 +222,7 @@ export class Accessibility implements IAccessibility {
             },
             textPixelMode: false,
             textEmlMode: true,
+            textSizeFactor: 12.5,
             animations: {
                 buttons: true
             },
@@ -1366,7 +1367,7 @@ export class Accessibility implements IAccessibility {
     alterTextSize(isIncrease: boolean) {
         this._sessionState.textSize += isIncrease ? 1 : -1;
         this.onChange(true);
-        let factor = 12.5;
+        let factor = this.options.textSizeFactor;
         if (!isIncrease)
             factor *= -1;
         if (this.options.textPixelMode) {
@@ -1377,10 +1378,24 @@ export class Accessibility implements IAccessibility {
                 if (fSize && (fSize.indexOf('px') > -1)) {
                     if (!all[i].getAttribute('data-init-font-size'))
                         all[i].setAttribute('data-init-font-size', fSize);
+                }
+            }
+            for (let i = 0; i < all.length; i++) {
+                let fSize = getComputedStyle(all[i]).fontSize;
+                if (fSize && (fSize.indexOf('px') > -1)) {
                     fSize = parseInt(fSize.replace('px', '')) + factor as any;
                     (all[i] as HTMLElement).style.fontSize = fSize + 'px';
                 }
                 if (this._stateValues.textToSpeech) this.textToSpeech(`Text Size ${isIncrease ? 'Increased' : 'Decreased'}`);
+            }
+
+            // Also adjust the body font size
+            let bodyFontSize = getComputedStyle(this._body).fontSize;
+            if (bodyFontSize && (bodyFontSize.indexOf('px') > -1)) {
+                if (!this._body.getAttribute('data-init-font-size'))
+                    this._body.setAttribute('data-init-font-size', bodyFontSize);
+                bodyFontSize = parseInt(bodyFontSize.replace('px', '')) + factor as any;
+                (this._body as HTMLElement).style.fontSize = bodyFontSize + 'px';
             }
         }
         else if (this.options.textEmlMode) {

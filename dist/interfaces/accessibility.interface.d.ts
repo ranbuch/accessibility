@@ -38,6 +38,7 @@ export interface IAccessibilityOptions {
     speechToTextLang?: string;
     textPixelMode?: boolean;
     textEmlMode?: boolean;
+    textSizeFactor?: number;
     modules?: IAccessibilityModulesOptions;
     modulesOrder?: Array<IAccessibilityModuleOrder>;
     session?: IAccessibilitySessionOptions;
