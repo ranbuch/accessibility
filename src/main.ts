@@ -32,6 +32,7 @@ export class Accessibility implements IAccessibility {
     constructor(options = {} as IAccessibilityOptions) {
         this._common = new Common();
         this._storage = new Storage();
+        this.menuInterface = new MenuInterface(this);
         this._fixedDefaultFont = this._common.getFixedFont('Material Icons');
         this._options = this.defaultOptions;
         this.options = this._common.extend(this._options, options);
@@ -1769,7 +1770,6 @@ export class Accessibility implements IAccessibility {
             document.getElementById('access_read_guide_bar').style.top = (newPos - (parseInt(this.options.guide.height.replace('px', '')) + 5)) + 'px';
         };
 
-        this.menuInterface = new MenuInterface(this);
         if (this.options.session.persistent)
             this.setSessionFromCache();
     }
