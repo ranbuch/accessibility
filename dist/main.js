@@ -1371,7 +1371,7 @@ var Accessibility = /*#__PURE__*/function () {
               this.alterLineHeight(true);
             }
           } else {
-            while (lineHeight--) {
+            while (lineHeight++) {
               this.alterLineHeight(false);
             }
           }

@@ -1835,7 +1835,7 @@ export class Accessibility implements IAccessibility {
                     }
                 }
                 else {
-                    while (lineHeight--) {
+                    while (lineHeight++) {
                         this.alterLineHeight(false);
                     }
                 }
