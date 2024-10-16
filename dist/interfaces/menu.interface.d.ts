@@ -13,4 +13,6 @@ export interface IMenuInterface {
     disableAnimations(destroy?: boolean): void;
     iframeModals(destroy?: boolean, button?: HTMLElement): void;
     customFunctions(destroy?: boolean, button?: HTMLElement): void;
+    increaseLineHeight(): void;
+    decreaseLineHeight(): void;
 }

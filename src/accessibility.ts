@@ -15,6 +15,7 @@ import {
     IAccessibilitySessionOptions,
     ISessionState,
     IStateValues,
+    AccessibilityModulesType
 } from './interfaces/accessibility.interface';
 import { IMenuInterface } from './interfaces/menu.interface';
 
@@ -38,4 +39,5 @@ export {
     IAccessibilitySessionOptions,
     ISessionState,
     IStateValues,
+    AccessibilityModulesType
 };

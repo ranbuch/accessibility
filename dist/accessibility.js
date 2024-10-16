@@ -9,6 +9,12 @@ Object.defineProperty(exports, "Accessibility", {
     return _main["default"];
   }
 });
+Object.defineProperty(exports, "AccessibilityModulesType", {
+  enumerable: true,
+  get: function get() {
+    return _accessibility.AccessibilityModulesType;
+  }
+});
 Object.defineProperty(exports, "IAccessibility", {
   enumerable: true,
   get: function get() {
