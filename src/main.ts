@@ -1676,6 +1676,7 @@ export class Accessibility implements IAccessibility {
         }
     }
     toggleMenu() {
+        // 최상위 close 클래스 , before-collapse 임마가 관여
         const shouldClose = this._menu.classList.contains('close');
         setTimeout(() => {
             this._menu.querySelector('ul').classList.toggle('before-collapse');
