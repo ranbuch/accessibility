@@ -1,6 +1,6 @@
 {
   "name": "accessibility",
-  "version": "6.0.6",
+  "version": "6.0.7",
   "description": "add accessibility to your website",
   "main": "index.js",
   "exports": {
