@@ -1049,7 +1049,8 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'data-access-action': 'iframeModals',
-                                'data-access-url': im.iframeUrl
+                                'data-access-url': im.iframeUrl,
+                                'tabIndex': '-1'
                             },
                             children: [
                                 {
@@ -1090,7 +1091,8 @@ export class Accessibility implements IAccessibility {
                             attrs: {
                                 'data-access-action': 'customFunctions',
                                 'data-access-custom-id': cf.id,
-                                'data-access-custom-index': i
+                                'data-access-custom-index': i,
+                                'tabIndex': '-1'
                             },
                             children: [
                                 {
@@ -1187,7 +1189,8 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'data-access-action': 'textToSpeech',
-                                'title': this.parseKeys(this.options.hotkeys.keys.textToSpeech)
+                                'title': this.parseKeys(this.options.hotkeys.keys.textToSpeech),
+                                'tabIndex': '-1'
                             },
                             children: [
                                 {
@@ -1237,7 +1240,8 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'data-access-action': 'speechToText',
-                                'title': this.parseKeys(this.options.hotkeys.keys.speechToText)
+                                'title': this.parseKeys(this.options.hotkeys.keys.speechToText),
+                                'tabIndex': '-1'
                             },
                             children: [
                                 {
@@ -1676,7 +1680,6 @@ export class Accessibility implements IAccessibility {
         }
     }
     toggleMenu() {
-        // 최상위 close 클래스 , before-collapse 임마가 관여
         const shouldClose = this._menu.classList.contains('close');
         setTimeout(() => {
             this._menu.querySelector('ul').classList.toggle('before-collapse');
