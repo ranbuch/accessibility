@@ -1672,12 +1672,10 @@ export class Accessibility implements IAccessibility {
 
         this.options.icon.tabIndex = shouldClose ? 0 : -1;
         this._menu.childNodes.forEach(child => {
-            (child as HTMLElement).tabIndex = 0;
             if (child.hasChildNodes()) {
-                (child as HTMLElement).tabIndex = -1;
-                child.childNodes.forEach(li => {
-                    (li as HTMLElement).tabIndex = shouldClose ? 0 : -1;
-                });
+                if (child.nodeType === Node.ELEMENT_NODE && (child as HTMLElement).tagName === 'P') {
+                   (child as HTMLElement).tabIndex = -1;
+                }
             }
         });
     }
