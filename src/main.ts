@@ -814,8 +814,7 @@ export class Accessibility implements IAccessibility {
                                 {
                                     type: 'button',
                                     attrs: {
-                                        'data-access-action': 'increaseText',
-                                        'tabIndex': '-1'
+                                        'data-access-action': 'increaseText'
                                     },
                                     children: [
                                         {
@@ -832,8 +831,7 @@ export class Accessibility implements IAccessibility {
                                 {
                                     type: 'button',
                                     attrs: {
-                                        'data-access-action': 'decreaseText',
-                                        'tabIndex': '-1'
+                                        'data-access-action': 'decreaseText'
                                     },
                                     children: [
                                         {
@@ -850,8 +848,7 @@ export class Accessibility implements IAccessibility {
                                 {
                                     type: 'button',
                                     attrs: {
-                                        'data-access-action': 'increaseTextSpacing',
-                                        'tabIndex': '-1'
+                                        'data-access-action': 'increaseTextSpacing'
                                     },
                                     children: [
                                         {
@@ -868,8 +865,7 @@ export class Accessibility implements IAccessibility {
                                 {
                                     type: 'button',
                                     attrs: {
-                                        'data-access-action': 'decreaseTextSpacing',
-                                        'tabIndex': '-1'
+                                        'data-access-action': 'decreaseTextSpacing'
                                     },
                                     children: [
                                         {
@@ -886,8 +882,7 @@ export class Accessibility implements IAccessibility {
                                 {
                                     type: 'button',
                                     attrs: {
-                                        'data-access-action': 'increaseLineHeight',
-                                        'tabIndex': '-1'
+                                        'data-access-action': 'increaseLineHeight'
                                     },
                                     children: [
                                         {
@@ -904,8 +899,7 @@ export class Accessibility implements IAccessibility {
                                 {
                                     type: 'button',
                                     attrs: {
-                                        'data-access-action': 'decreaseLineHeight',
-                                        'tabIndex': '-1'
+                                        'data-access-action': 'decreaseLineHeight'
                                     },
                                     children: [
                                         {
@@ -923,8 +917,7 @@ export class Accessibility implements IAccessibility {
                                     type: 'button',
                                     attrs: {
                                         'data-access-action': 'invertColors',
-                                        'title': this.parseKeys(this.options.hotkeys.keys.invertColors),
-                                        'tabIndex': '-1'
+                                        'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
                                     },
                                     children: [
                                         {
@@ -942,8 +935,7 @@ export class Accessibility implements IAccessibility {
                                     type: 'button',
                                     attrs: {
                                         'data-access-action': 'grayHues',
-                                        'title': this.parseKeys(this.options.hotkeys.keys.grayHues),
-                                        'tabIndex': '-1'
+                                        'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
                                     },
                                     children: [
                                         {
@@ -961,8 +953,7 @@ export class Accessibility implements IAccessibility {
                                     type: 'button',
                                     attrs: {
                                         'data-access-action': 'underlineLinks',
-                                        'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks),
-                                        'tabIndex': '-1'
+                                        'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
                                     },
                                     children: [
                                         {
@@ -980,8 +971,7 @@ export class Accessibility implements IAccessibility {
                                     type: 'button',
                                     attrs: {
                                         'data-access-action': 'bigCursor',
-                                        'title': this.parseKeys(this.options.hotkeys.keys.bigCursor),
-                                        'tabIndex': '-1'
+                                        'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
                                     },
                                     children: [
                                         {
@@ -1005,8 +995,7 @@ export class Accessibility implements IAccessibility {
                                     type: 'button',
                                     attrs: {
                                         'data-access-action': 'readingGuide',
-                                        'title': this.parseKeys(this.options.hotkeys.keys.readingGuide),
-                                        'tabIndex': '-1'
+                                        'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
                                     },
                                     children: [
                                         {
@@ -1024,8 +1013,7 @@ export class Accessibility implements IAccessibility {
                                     type: 'button',
                                     attrs: {
                                         'data-access-action': 'disableAnimations',
-                                        'title': this.parseKeys(this.options.hotkeys.keys.disableAnimations),
-                                        'tabIndex': '-1'
+                                        'title': this.parseKeys(this.options.hotkeys.keys.disableAnimations)
                                     },
                                     children: [
                                         {
@@ -1049,8 +1037,7 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'data-access-action': 'iframeModals',
-                                'data-access-url': im.iframeUrl,
-                                'tabIndex': '-1'
+                                'data-access-url': im.iframeUrl
                             },
                             children: [
                                 {
@@ -1091,8 +1078,7 @@ export class Accessibility implements IAccessibility {
                             attrs: {
                                 'data-access-action': 'customFunctions',
                                 'data-access-custom-id': cf.id,
-                                'data-access-custom-index': i,
-                                'tabIndex': '-1'
+                                'data-access-custom-index': i
                             },
                             children: [
                                 {
@@ -1189,8 +1175,7 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'data-access-action': 'textToSpeech',
-                                'title': this.parseKeys(this.options.hotkeys.keys.textToSpeech),
-                                'tabIndex': '-1'
+                                'title': this.parseKeys(this.options.hotkeys.keys.textToSpeech)
                             },
                             children: [
                                 {
@@ -1240,8 +1225,7 @@ export class Accessibility implements IAccessibility {
                             type: 'button',
                             attrs: {
                                 'data-access-action': 'speechToText',
-                                'title': this.parseKeys(this.options.hotkeys.keys.speechToText),
-                                'tabIndex': '-1'
+                                'title': this.parseKeys(this.options.hotkeys.keys.speechToText)
                             },
                             children: [
                                 {
