@@ -10,3 +10,4 @@ debug.log
 .DS_Store
 
 dist
+dist-cjs

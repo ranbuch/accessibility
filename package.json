@@ -2,17 +2,23 @@
   "name": "accessibility",
   "version": "6.1.0",
   "description": "add accessibility to your website",
-  "main": "./dist/main.js",
+  "main": "./dist-cjs/main.js",
+  "module": "./dist/main.js",
+  "exports": {
+    "import": "./dist/main.js",
+    "require": "./dist-cjs/main.js"
+  },
   "types": "./dist/main.d.ts",
   "type": "module",
   "files": [
     "dist/",
+    "dist-cjs/",
     "package.json",
     "LICENSE",
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc",
+    "build": "rm -rf dist dist-cjs && tsc && tsc -p tsconfig.cjs.json",
     "playground": "vite playground",
     "check-packages": "npm-check -u -E",
     "refresh-packages": "rm -rf node_modules && rm -rf package-lock.json && npm i"
