@@ -1465,6 +1465,8 @@ export class Accessibility implements IAccessibility {
                     inPercent = inPercent + factor;
                     (all[i] as HTMLElement).style.lineHeight = inPercent + '%';
                 }
+                if (typeof this._stateValues.body.lineHeight === 'undefined')
+                    this._stateValues.body.lineHeight = '';
                 if (this._stateValues.textToSpeech) this.textToSpeech(`Line height ${isIncrease ? 'Increased' : 'Decreased'}`);
             }
         }
