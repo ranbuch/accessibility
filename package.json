@@ -2,8 +2,8 @@
   "name": "accessibility",
   "version": "6.1.0",
   "description": "add accessibility to your website",
-  "main": "main.js",
-  "types": "main.d.ts",
+  "main": "index.js",
+  "types": "index.d.ts",
   "exports": {
     "import": "./dist/accessibility.js",
     "require": "./dist/main.bundle.js"
