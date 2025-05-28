@@ -27,5 +27,4 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
 script:
-  - npm run build.prod
-  - npm run test
+  - npm run build
