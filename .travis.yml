@@ -14,11 +14,11 @@ notifications:
     on_failure: change
 
 node_js:
-  - '6.14.3'
+  - '22.16.0'
 
 before_install:
   - export CHROME_BIN=chromium-browser
-  - npm i -g npm@^3.0.0
+  - npm i -g npm@11.4.1
   - npm install
 
 before_script:
