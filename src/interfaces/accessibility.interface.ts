@@ -1,5 +1,5 @@
-import { ICommon, IJsonToHtml, IUnitsDim } from './common.interface';
-import { IMenuInterface } from './menu.interface';
+import { ICommon, IJsonToHtml, IUnitsDim } from './common.interface.js';
+import { IMenuInterface } from './menu.interface.js';
 
 export interface IAccessibility {
     menuInterface: IMenuInterface;

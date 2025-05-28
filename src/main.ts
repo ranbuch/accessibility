@@ -1,12 +1,11 @@
 'use strict';
-// Do not delete this as it allows importing the package with other projects
-import 'regenerator-runtime/runtime.js';
-import { Common } from './common';
-import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues, AccessibilityModulesType, IIframeModal, ICustomFunction, IAccessibilityModuleOrder } from './interfaces/accessibility.interface';
-import { IFormattedDim, IJsonToHtml } from './interfaces/common.interface';
-import { IMenuInterface } from './interfaces/menu.interface';
-import { MenuInterface } from './menu-interface';
-import { Storage } from './storage';
+
+import { Common } from './common.js';
+import { IAccessibility, IAccessibilityOptions, ISessionState, IStateValues, AccessibilityModulesType, IIframeModal, ICustomFunction, IAccessibilityModuleOrder } from './interfaces/accessibility.interface.js';
+import { IFormattedDim, IJsonToHtml } from './interfaces/common.interface.js';
+import { IMenuInterface } from './interfaces/menu.interface.js';
+import { MenuInterface } from './menu-interface.js';
+import { Storage } from './storage.js';
 
 export class Accessibility implements IAccessibility {
     static CSS_CLASS_NAME = '_access-main-css';

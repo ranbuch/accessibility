@@ -3,9 +3,11 @@
     "outDir": "./dist/",
     "sourceMap": true,
     "noImplicitAny": true,
-    "module": "esnext",
+	  "module": "nodenext",
     "target": "ESNext",
     "declaration": true,
+	  "resolveJsonModule": true,
+	  "moduleResolution": "nodenext",
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -13,6 +15,6 @@
     "baseUrl": "./"
   },
   "include": [
-    "src"
+    "src/**/*"
   ]
 }

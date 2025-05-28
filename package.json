@@ -2,14 +2,17 @@
   "name": "accessibility",
   "version": "6.1.0",
   "description": "add accessibility to your website",
-  "main": "index.js",
-  "types": "index.d.ts",
-  "exports": {
-    "import": "./dist/accessibility.js",
-    "require": "./dist/main.bundle.js"
-  },
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "type": "module",
+  "files": [
+    "dist/",
+    "package.json",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "playground": "vite playground",
     "check-packages": "npm-check -u -E",
     "refresh-packages": "rm -rf node_modules && rm -rf package-lock.json && npm i"
@@ -42,9 +45,5 @@
     "tslint-loader": "3.6.0",
     "typescript": "5.8.3",
     "vite": "6.3.5"
-  },
-  "typings": "index.d.ts",
-  "dependencies": {
-    "regenerator-runtime": "0.14.1"
   }
 }

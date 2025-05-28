@@ -1,5 +1,5 @@
-import { IAccessibility } from './interfaces/accessibility.interface';
-import { IMenuInterface } from './interfaces/menu.interface';
+import { IAccessibility } from './interfaces/accessibility.interface.js';
+import { IMenuInterface } from './interfaces/menu.interface.js';
 
 export class MenuInterface implements IMenuInterface {
     private _acc: IAccessibility;
