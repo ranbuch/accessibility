@@ -4,9 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.AccessibilityModulesType = void 0;
-var AccessibilityModulesType;
-exports.AccessibilityModulesType = AccessibilityModulesType;
-(function (AccessibilityModulesType) {
+var AccessibilityModulesType = exports.AccessibilityModulesType = /*#__PURE__*/function (AccessibilityModulesType) {
   AccessibilityModulesType[AccessibilityModulesType["increaseText"] = 1] = "increaseText";
   AccessibilityModulesType[AccessibilityModulesType["decreaseText"] = 2] = "decreaseText";
   AccessibilityModulesType[AccessibilityModulesType["increaseTextSpacing"] = 3] = "increaseTextSpacing";
@@ -23,4 +21,5 @@ exports.AccessibilityModulesType = AccessibilityModulesType;
   AccessibilityModulesType[AccessibilityModulesType["disableAnimations"] = 14] = "disableAnimations";
   AccessibilityModulesType[AccessibilityModulesType["iframeModals"] = 15] = "iframeModals";
   AccessibilityModulesType[AccessibilityModulesType["customFunctions"] = 16] = "customFunctions";
-})(AccessibilityModulesType || (exports.AccessibilityModulesType = AccessibilityModulesType = {}));
+  return AccessibilityModulesType;
+}({});
