@@ -8,3 +8,5 @@ ts-out
 npm-debug.log
 debug.log
 .DS_Store
+
+dist

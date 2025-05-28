@@ -1,6 +1,6 @@
 {
   "name": "accessibility",
-  "version": "6.0.7",
+  "version": "6.1.0",
   "description": "add accessibility to your website",
   "main": "index.js",
   "exports": {
@@ -8,6 +8,7 @@
     "require": "./dist/main.bundle.js"
   },
   "scripts": {
+    "build": "tsc",
     "playground": "vite playground",
     "check-packages": "npm-check -u -E",
     "refresh-packages": "rm -rf node_modules && rm -rf package-lock.json && npm i"

@@ -13,7 +13,6 @@
     "baseUrl": "./"
   },
   "include": [
-    "src",
-    "playground"
+    "src"
   ]
 }
