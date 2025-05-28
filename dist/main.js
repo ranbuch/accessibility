@@ -432,8 +432,7 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'increaseText',
-                'tabIndex': '-1'
+                'data-access-action': 'increaseText'
               },
               children: [{
                 type: '#text',
@@ -445,8 +444,7 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'decreaseText',
-                'tabIndex': '-1'
+                'data-access-action': 'decreaseText'
               },
               children: [{
                 type: '#text',
@@ -458,8 +456,7 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'increaseTextSpacing',
-                'tabIndex': '-1'
+                'data-access-action': 'increaseTextSpacing'
               },
               children: [{
                 type: '#text',
@@ -471,8 +468,7 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'decreaseTextSpacing',
-                'tabIndex': '-1'
+                'data-access-action': 'decreaseTextSpacing'
               },
               children: [{
                 type: '#text',
@@ -484,8 +480,7 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'increaseLineHeight',
-                'tabIndex': '-1'
+                'data-access-action': 'increaseLineHeight'
               },
               children: [{
                 type: '#text',
@@ -497,8 +492,7 @@ var Accessibility = /*#__PURE__*/function () {
             children: [{
               type: 'button',
               attrs: {
-                'data-access-action': 'decreaseLineHeight',
-                'tabIndex': '-1'
+                'data-access-action': 'decreaseLineHeight'
               },
               children: [{
                 type: '#text',
@@ -511,8 +505,7 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'invertColors',
-                'title': this.parseKeys(this.options.hotkeys.keys.invertColors),
-                'tabIndex': '-1'
+                'title': this.parseKeys(this.options.hotkeys.keys.invertColors)
               },
               children: [{
                 type: '#text',
@@ -525,8 +518,7 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'grayHues',
-                'title': this.parseKeys(this.options.hotkeys.keys.grayHues),
-                'tabIndex': '-1'
+                'title': this.parseKeys(this.options.hotkeys.keys.grayHues)
               },
               children: [{
                 type: '#text',
@@ -539,8 +531,7 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'underlineLinks',
-                'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks),
-                'tabIndex': '-1'
+                'title': this.parseKeys(this.options.hotkeys.keys.underlineLinks)
               },
               children: [{
                 type: '#text',
@@ -553,8 +544,7 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'bigCursor',
-                'title': this.parseKeys(this.options.hotkeys.keys.bigCursor),
-                'tabIndex': '-1'
+                'title': this.parseKeys(this.options.hotkeys.keys.bigCursor)
               },
               children: [{
                 type: 'div',
@@ -572,8 +562,7 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'readingGuide',
-                'title': this.parseKeys(this.options.hotkeys.keys.readingGuide),
-                'tabIndex': '-1'
+                'title': this.parseKeys(this.options.hotkeys.keys.readingGuide)
               },
               children: [{
                 type: '#text',
@@ -586,8 +575,7 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'disableAnimations',
-                'title': this.parseKeys(this.options.hotkeys.keys.disableAnimations),
-                'tabIndex': '-1'
+                'title': this.parseKeys(this.options.hotkeys.keys.disableAnimations)
               },
               children: [{
                 type: '#text',
@@ -605,8 +593,7 @@ var Accessibility = /*#__PURE__*/function () {
               type: 'button',
               attrs: {
                 'data-access-action': 'iframeModals',
-                'data-access-url': im.iframeUrl,
-                'tabIndex': '-1'
+                'data-access-url': im.iframeUrl
               },
               children: [{
                 type: '#text',
@@ -637,8 +624,7 @@ var Accessibility = /*#__PURE__*/function () {
               attrs: {
                 'data-access-action': 'customFunctions',
                 'data-access-custom-id': cf.id,
-                'data-access-custom-index': i,
-                'tabIndex': '-1'
+                'data-access-custom-index': i
               },
               children: [{
                 type: '#text',
@@ -739,8 +725,7 @@ var Accessibility = /*#__PURE__*/function () {
                       type: 'button',
                       attrs: {
                         'data-access-action': 'textToSpeech',
-                        'title': this.parseKeys(this.options.hotkeys.keys.textToSpeech),
-                        'tabIndex': '-1'
+                        'title': this.parseKeys(this.options.hotkeys.keys.textToSpeech)
                       },
                       children: [{
                         type: '#text',
@@ -778,8 +763,7 @@ var Accessibility = /*#__PURE__*/function () {
                       type: 'button',
                       attrs: {
                         'data-access-action': 'speechToText',
-                        'title': this.parseKeys(this.options.hotkeys.keys.speechToText),
-                        'tabIndex': '-1'
+                        'title': this.parseKeys(this.options.hotkeys.keys.speechToText)
                       },
                       children: [{
                         type: '#text',
@@ -996,6 +980,7 @@ var Accessibility = /*#__PURE__*/function () {
             inPercent = inPercent + factor;
             all[i].style.lineHeight = inPercent + '%';
           }
+          if (typeof this._stateValues.body.lineHeight === 'undefined') this._stateValues.body.lineHeight = '';
           if (this._stateValues.textToSpeech) this.textToSpeech("Line height ".concat(isIncrease ? 'Increased' : 'Decreased'));
         }
       }
@@ -1225,12 +1210,10 @@ var Accessibility = /*#__PURE__*/function () {
       this._menu.classList.toggle('close');
       this.options.icon.tabIndex = shouldClose ? 0 : -1;
       this._menu.childNodes.forEach(function (child) {
-        child.tabIndex = 0;
         if (child.hasChildNodes()) {
-          child.tabIndex = -1;
-          child.childNodes.forEach(function (li) {
-            li.tabIndex = shouldClose ? 0 : -1;
-          });
+          if (child.nodeType === Node.ELEMENT_NODE && child.tagName === 'P') {
+            child.tabIndex = -1;
+          }
         }
       });
     }
