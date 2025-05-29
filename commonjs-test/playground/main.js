@@ -1,4 +1,4 @@
-import { Accessibility } from '../src/main';
+import { Accessibility } from 'accessibility';
 
 window.addEventListener('DOMContentLoaded', () => {
 	const output = document.getElementById('output');

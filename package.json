@@ -1,55 +1,55 @@
 {
-  "name": "accessibility",
-  "version": "6.1.0",
-  "description": "add accessibility to your website",
-  "main": "./dist-cjs/main.js",
-  "module": "./dist/main.js",
-  "exports": {
-    "import": "./dist/main.js",
-    "require": "./dist-cjs/main.js"
-  },
-  "types": "./dist/main.d.ts",
-  "type": "module",
-  "files": [
-    "dist/",
-    "dist-cjs/",
-    "package.json",
-    "LICENSE",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "rm -rf dist dist-cjs && tsc && tsc -p tsconfig.cjs.json",
-    "playground": "vite playground",
-    "check-packages": "npm-check -u -E",
-    "refresh-packages": "rm -rf node_modules && rm -rf package-lock.json && npm i"
-  },
-  "keywords": [
-    "accessibility",
-    "website",
-    "increase text size",
-    "underline links",
-    "text to speech",
-    "invert colors",
-    "gray hues",
-    "underline links",
-    "big cursor",
-    "reading guide",
-    "text to speech",
-    "speech to text",
-    "suppress animations"
-  ],
-  "author": "Ran Buchnik <ranbuch@gmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "@types/jest": "29.5.14",
-    "@types/node": "22.15.21",
-    "npm-check": "6.0.1",
-    "prettier": "3.5.3",
-    "source-map-loader": "5.0.0",
-    "ts-loader": "9.5.2",
-    "tslint": "6.1.3",
-    "tslint-loader": "3.6.0",
-    "typescript": "5.8.3",
-    "vite": "6.3.5"
-  }
+	"name": "accessibility",
+	"version": "6.1.0",
+	"description": "add accessibility to your website",
+	"main": "./dist-cjs/main.js",
+	"module": "./dist/main.js",
+	"exports": {
+		"import": "./dist/main.js",
+		"require": "./dist-cjs/main.js"
+	},
+	"types": "./dist/main.d.ts",
+	"files": [
+		"dist/",
+		"dist-cjs/",
+		"package.json",
+		"LICENSE",
+		"README.md"
+	],
+	"scripts": {
+		"build": "rm -rf dist dist-cjs && tsc && tsc -p tsconfig.cjs.json",
+		"commonjs-playground": "npm pack --pack-destination ./commonjs-test && cd ./commonjs-test && npm i && npm run playground",
+		"playground": "vite playground",
+		"check-packages": "npm-check -u -E",
+		"refresh-packages": "rm -rf node_modules && rm -rf package-lock.json && npm i"
+	},
+	"keywords": [
+		"accessibility",
+		"website",
+		"increase text size",
+		"underline links",
+		"text to speech",
+		"invert colors",
+		"gray hues",
+		"underline links",
+		"big cursor",
+		"reading guide",
+		"text to speech",
+		"speech to text",
+		"suppress animations"
+	],
+	"author": "Ran Buchnik <ranbuch@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/jest": "29.5.14",
+		"@types/node": "22.15.25",
+		"npm-check": "6.0.1",
+		"prettier": "3.5.3",
+		"source-map-loader": "5.0.0",
+		"ts-loader": "9.5.2",
+		"tslint": "6.1.3",
+		"tslint-loader": "3.6.0",
+		"typescript": "5.8.3",
+		"vite": "6.3.5"
+	}
 }
