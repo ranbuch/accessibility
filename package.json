@@ -1,64 +1,55 @@
 {
-  "name": "accessibility",
-  "version": "6.1.0",
-  "description": "add accessibility to your website",
-  "main": "index.js",
-  "exports": {
-    "import": "./dist/accessibility.js",
-    "require": "./dist/main.bundle.js"
-  },
-  "scripts": {
-    "start": "webpack serve --mode development",
-    "build": "webpack --config webpack.config.js --mode production",
-    "build.prod": "webpack --config webpack.config.js",
-    "build.esnext": "npm run build:types && npm run build:js",
-    "build:types": "tsc --emitDeclarationOnly",
-    "build:js": "babel src --out-dir dist --extensions \".ts,.tsx\"",
-    "build.all": "npm run build.prod && npm run build.esnext",
-    "test": "karma start karma.config.js"
-  },
-  "keywords": [
-    "accessibility",
-    "website",
-    "increase text size",
-    "underline links",
-    "text to speech",
-    "invert colors",
-    "gray hues",
-    "underline links",
-    "big cursor",
-    "reading guide",
-    "text to speech",
-    "speech to text",
-    "suppress animations"
-  ],
-  "author": "Ran Buchnik <ranbuch@gmail.com>",
-  "license": "MIT",
-  "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.4.0",
-    "@babel/plugin-proposal-class-properties": "^7.4.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.4.0",
-    "@babel/preset-env": "^7.4.1",
-    "@babel/preset-typescript": "^7.3.3",
-    "@types/jasmine": "2.8.7",
-    "@types/node": "7.0.0",
-    "jasmine-core": "3.1.0",
-    "karma": "^6.4.0",
-    "karma-jasmine": "1.1.2",
-    "karma-phantomjs-launcher": "1.0.4",
-    "karma-webpack": "5.0.0",
-    "source-map-loader": "4.0.1",
-    "tslint": "5.17.0",
-    "tslint-loader": "3.6.0",
-    "typescript": "5.4.5",
-    "webpack": "^5.65.0",
-    "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.9.3",
-    "ts-loader": "^9.4.2"
-  },
-  "typings": "index.d.ts",
-  "dependencies": {
-    "regenerator-runtime": "^0.14.1"
-  }
+	"name": "accessibility",
+	"version": "6.1.0",
+	"description": "add accessibility to your website",
+	"main": "./dist-cjs/main.js",
+	"module": "./dist/main.js",
+	"exports": {
+		"import": "./dist/main.js",
+		"require": "./dist-cjs/main.js"
+	},
+	"types": "./dist/main.d.ts",
+	"files": [
+		"dist/",
+		"dist-cjs/",
+		"package.json",
+		"LICENSE",
+		"README.md"
+	],
+	"scripts": {
+		"build": "rm -rf dist dist-cjs && tsc && tsc -p tsconfig.cjs.json",
+		"commonjs-playground": "npm pack --pack-destination ./commonjs-test && cd ./commonjs-test && npm i && npm run playground",
+		"playground": "vite playground",
+		"check-packages": "npm-check -u -E",
+		"refresh-packages": "rm -rf node_modules && rm -rf package-lock.json && npm i"
+	},
+	"keywords": [
+		"accessibility",
+		"website",
+		"increase text size",
+		"underline links",
+		"text to speech",
+		"invert colors",
+		"gray hues",
+		"underline links",
+		"big cursor",
+		"reading guide",
+		"text to speech",
+		"speech to text",
+		"suppress animations"
+	],
+	"author": "Ran Buchnik <ranbuch@gmail.com>",
+	"license": "MIT",
+	"devDependencies": {
+		"@types/jest": "29.5.14",
+		"@types/node": "22.15.25",
+		"npm-check": "6.0.1",
+		"prettier": "3.5.3",
+		"source-map-loader": "5.0.0",
+		"ts-loader": "9.5.2",
+		"tslint": "6.1.3",
+		"tslint-loader": "3.6.0",
+		"typescript": "5.8.3",
+		"vite": "6.3.5"
+	}
 }
