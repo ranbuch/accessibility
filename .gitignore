@@ -8,3 +8,8 @@ ts-out
 npm-debug.log
 debug.log
 .DS_Store
+
+dist
+dist-cjs
+
+accessibility-6.1.0.tgz
