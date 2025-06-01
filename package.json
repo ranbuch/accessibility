@@ -17,7 +17,7 @@
 		"README.md"
 	],
 	"scripts": {
-		"build": "rm -rf dist dist-cjs && tsc && tsc -p tsconfig.cjs.json",
+		"build": "tsc && tsc -p tsconfig.cjs.json",
 		"commonjs-playground": "npm pack --pack-destination ./commonjs-test && cd ./commonjs-test && npm i && npm run playground",
 		"playground": "vite playground",
 		"check-packages": "npm-check -u -E",
@@ -42,7 +42,7 @@
 	"license": "MIT",
 	"devDependencies": {
 		"@types/jest": "29.5.14",
-		"@types/node": "22.15.25",
+		"@types/node": "22.15.29",
 		"npm-check": "6.0.1",
 		"prettier": "3.5.3",
 		"source-map-loader": "5.0.0",
