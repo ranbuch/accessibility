@@ -741,13 +741,13 @@ export class Accessibility implements IAccessibility {
 		return this.options.hotkeys.enabled
 			? this.options.hotkeys.helpTitles
 				? this.options.labels.hotkeyPrefix +
-					arr
-						.map(function (val) {
-							return Number.isInteger(val)
-								? String.fromCharCode(val).toLowerCase()
-								: val.replace('Key', '');
-						})
-						.join('+')
+				arr
+					.map(function (val) {
+						return Number.isInteger(val)
+							? String.fromCharCode(val).toLowerCase()
+							: val.replace('Key', '');
+					})
+					.join('+')
 				: ''
 			: '';
 	}
@@ -1607,7 +1607,7 @@ export class Accessibility implements IAccessibility {
 				let res;
 				try {
 					res = canvas.toDataURL('image/png');
-				} catch (e) {}
+				} catch (e) { }
 				resolve(res);
 				canvas.remove();
 			};
@@ -1633,7 +1633,7 @@ export class Accessibility implements IAccessibility {
 				e.preventDefault();
 				e.stopPropagation();
 			}
-		} catch (ex) {}
+		} catch (ex) { }
 
 		let allContent = Array.prototype.slice.call(document.querySelectorAll('._access-menu *'));
 		for (const key in allContent) {

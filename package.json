@@ -1,6 +1,6 @@
 {
 	"name": "accessibility",
-	"version": "6.1.0",
+	"version": "7.0.0",
 	"description": "add accessibility to your website",
 	"main": "./dist-cjs/main.js",
 	"module": "./dist/main.js",
@@ -17,11 +17,17 @@
 		"README.md"
 	],
 	"scripts": {
-		"build": "rm -rf dist dist-cjs && tsc && tsc -p tsconfig.cjs.json",
-		"commonjs-playground": "npm pack --pack-destination ./commonjs-test && cd ./commonjs-test && npm i && npm run playground",
-		"playground": "vite playground",
-		"check-packages": "npm-check -u -E",
-		"refresh-packages": "rm -rf node_modules && rm -rf package-lock.json && npm i"
+    "clean": "rimraf dist dist-cjs",
+    "build:es":  "tsc",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "prebuild": "npm run clean",
+    "build": "npm run build:es && npm run build:cjs",
+    "pack:test": "npm pack --pack-destination ./commonjs-test",
+    "precommonjs-playground": "npm run build && npm run pack:test",
+    "commonjs-playground": "cd ./commonjs-test && npm ci --silent && npm run playground",
+    "playground": "vite playground",
+    "deps:check": "npm-check -u -E",
+    "deps:refresh": "rimraf node_modules package-lock.json && npm ci --silent"
 	},
 	"keywords": [
 		"accessibility",
