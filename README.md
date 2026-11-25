@@ -18,9 +18,9 @@ initialize component:
     new Accessibility();
 }, false);`
 
-### Full Documentation and [demo](https://ranbuch.github.io/accessibility/site/)
+### Full Documentation and [demo](https://ranbuch.github.io/accessibility/)
 
->We are proud to announce that [Joomla!](https://www.joomdev.com/blog/entry/enable-joomla-4-accessibility) are now using this repo as there built-in accessibility tool.
+>We are proud to announce that [Joomla!](https://www.joomdev.com/enable-joomla-4-accessibility/) are now using this repo as there built-in accessibility tool.
 
 ### DESCRIPTION:
 **Features:**
@@ -128,7 +128,7 @@ body {
 
 
 ### ICON IMAGE:
-You can change the default icon as described [here](https://ranbuch.github.io/accessibility/site/#icon-image)
+You can change the default icon as described [here](https://ranbuch.github.io/accessibility/#icon-image)
 
 ### PERSISTENT SESSION:
 From version 3.0.1 the session will be persistent even after the user will refresh the page.
